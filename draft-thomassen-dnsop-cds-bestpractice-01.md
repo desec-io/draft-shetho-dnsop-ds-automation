@@ -260,32 +260,47 @@ Based on the above analysis, we recommend:
 : The currently active DS configuration as well as the history of DS updates should be made accessible to the registrant (or their designated party) through the customer portal available for domain management.
 
 ## Consistency Considerations
+In this section, we consider the following questions: 
+: Are DS parameters best conveyed via CDS or CDNSKEY records, or both?
+: How are conflicts resolved when both are present?
+: How are conflicts resolved when CDS or CDNSKEY records differ across nameservers?
 
-Are DS parameters best conveyed via CDS or CDNSKEY records, or both?
-How are conflicts resolved when both are present?
-How are conflicts resolved when CDS or CDNSKEY records differ across nameservers?
-
-Analysis: 
 DS records can be generated from either CDS records or from CDNSKEY records. The former are in a format identical to that of DS records (so their content can be taken verbatim), while the latter are in the same format as DNSKEY records (and generation of a DS record involves computing a hash and other information based on the record content).
+
 Whether CDS or CDNSKEY is ingested by the Parent depends on the Parent’s preference:
 Conveying (and storing) parameters in DNSKEY format (such as via CDNSKEY records) allows the Parent to exert control over the choice of hash algorithms. The Parent may then unilaterally regenerate DS records with a different choice of hash algorithm(s) whenever deemed appropriate.
+
 Conveying parameters in DS format (such as via CDS records) allows the Child DNS operator to control the hash digest type used in computing DS records, enabling the Child DNS operator to deploy (for example) experimental hash digests and removing the need for registry-side changes when new digest types become available.
+
 Note that the need to make a choice in the face of this dichotomy is not particular to DS automation: Even when DNSSEC parameters are relayed to the Parent through conventional channels, the Parent has to make some choice about which format(s) to accept.
+
 Some registries have chosen to prefer DNSKEY-style input which seemingly comes with greater influence on the delegation’s security properties (in particular, the DS hash digest type). The SSAC notes that regardless of the choice of input format, the Parent cannot prevent the Child from following insecure cryptographic practices (such as insecure key storage, or using a key that lacks sufficient entropy). Besides, blatantly insecure hash digest types (based on RFC 8624) can still be rejected even when parameters are accepted as DS-style input.
+
 The fact that more than one input type is currently specified burdens both the Child DNS operators and Parents with the need to consider how to handle this dichotomy. While the SSAC points out that this state of things is suboptimal, other community venues such as the IETF are better suited to address the dichotomy and evaluate the possibility of deprecating one of these mechanisms, with Parents transitioning to accepting input of the other type exclusively.
+
 In the meantime, both the Child DNS operator and the Parent implementing automated DS maintenance should act as to maximize interoperability. Besides documenting the registry’s practices in the DNSSEC Practice Statement (DPS), this means that:
+
 There exists no discovery protocol for the Parent’s input format preference. Recognizing that Child DNS operators are generally ignorant about which format the Parent prefers, they are encouraged to publish both CDNSKEY records as well as CDS records. The choice of hash digest type should follow current best practice, currently RFC 8624.
-The SSAC would like to emphasize that while publishing the same information in two different formats is not ideal, it seems to be the simpler choice (as opposed to requiring the DNS operator to bear the cost of discovering which Parent prefers which format). In order to avoid operational issues, DNS operators should take great care to make sure that published records are consistent with each other, for example by programmatically updating them at once.
+
+While publishing the same information in two different formats is not ideal, it seems to be the simpler choice (as opposed to requiring the DNS operator to bear the cost of discovering which Parent prefers which format). In order to avoid operational issues, DNS operators should take great care to make sure that published records are consistent with each other, for example by programmatically updating them at once.
+
 Parents, independent of their input format preference, are advised to require publication of both CDS and CDNSKEY records, and to enforce consistency between them, as determined by matching CDS and CDNSKEY records using hash digest algorithms whose support is required according to RFC 8624 Section 3.3. (For CDS records using another, unsupported hash digest, consistency is undefined and thus not required.)
+
 By rejecting the DS update if either type is found missing or inconsistent with the other, Child DNS operators are held responsible for publishing contradicting information. Registries can retain whatever benefit their choice carries for them, while at the same time facilitating the possibility to later revise their choice. Similarly, this simplifies possible future deprecation of one of the two formats without breakage.
+
 In order to further reduce the risk of wrongful DS deployment such as from nameserver hijacking or negligent multi-signer operation, it seems helpful to ensure that CDS and CDNSKEY responses are consistent across nameservers. This can be achieved by attempting to collect them from all authoritative nameservers listed in the delegation. (One query per hostname suffices; it is not necessary to query each address or even anycast instance.)
+
 When a key is referenced in a CDS or CDNSKEY record set returned by one nameserver, but is missing from at least one other nameserver's answer, the Child's intent is unclear, and DS provisioning can be aborted.
-Suggestions: 
-Based on the above analysis, the SSAC suggests:
-… DNS operators to publish both CDNSKEY records as well as CDS records, as also recommended in Section 5 of RFC 7344, and follow best practice for the choice of hash digest type, currently published in RFC 8624.
-… Parents, independently of their choice for CDS or CDNSKEY, to require publication of both kinds of records, and not to proceed with updating the DS record set if one is shown to be missing or inconsistent with the other.
-… entities scanning for CDS/CDNSKEY records to attempt to collect CDS and CDNSKEY responses from all authoritative nameservers in the delegation (one query per type and hostname) and, if not found consistent across nameservers, cancel the update.
-… entities scanning for CDS/CDNSKEY records to verify that any published CDS and CDNSKEY records are consistent with each other, and otherwise cancel the update.
+
+Based on the above analysis, we suggest: 
+
+: DNS operators to publish both CDNSKEY records as well as CDS records, as also recommended in Section 5 of RFC 7344, and follow best practice for the choice of hash digest type, currently published in RFC 8624.
+
+: Parents, independently of their choice for CDS or CDNSKEY, to require publication of both kinds of records, and not to proceed with updating the DS record set if one is shown to be missing or inconsistent with the other.
+
+: entities scanning for CDS/CDNSKEY records to attempt to collect CDS and CDNSKEY responses from all authoritative nameservers in the delegation (one query per type and hostname) and, if not found consistent across nameservers, cancel the update.
+
+: entities scanning for CDS/CDNSKEY records to verify that any published CDS and CDNSKEY records are consistent with each other, and otherwise cancel the update.
 
 
 # IANA Considerations
