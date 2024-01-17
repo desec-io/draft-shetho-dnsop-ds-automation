@@ -1,10 +1,9 @@
 %%%
-Title = "Consistency for CDS/CDNSKEY and CSYNC is Mandatory"
-abbrev = "cds-consistency"
+Title = "Best Practice for CDS Scanning"
+abbrev = "cds-bestpractice"
 docname = "@DOCNAME@"
 category = "std"
 ipr = "trust200902"
-updates = [7344, 7477]
 area = "Internet"
 workgroup = "DNSOP Working Group"
 date = @TODAY@
@@ -31,21 +30,11 @@ organization = "SSE - Secure Systems Engineering GmbH"
 
 
 .# Abstract
+Enabling support for automatic acceptance of DS parameters directly from the Child DNS operator requires the registry/registrar to make a number of technical decisions. These includes: (1) Should DS parameters be conveyed via CDS or CDNSKEY records, or both? (2) What kind of validity checks should be performed when ingesting DS parameters? (3) Should those checks be performed upon acceptance, or also continually when in place? (4) How are conflicts resolved when DS parameters are accepted through multiple channels (e.g. via EPP and via CDS/CDNSKEY)? (5) If both the registry and the registrar are automating DS updates, how to resolve potential collisions? (6) What is the relationship with other registration state parameters, such as EPP locks? (7) Should a successful or rejected DS update trigger a notification to anyone? (8) What is a suitable scanning interval? How can the cost of scanning be reduced?
 
-Maintenance of DNS delegations requires occasional changes of the DS and
-NS record sets on the parent side of the delegation.
-RFC 7344 automates this for DS records by having the child publish
-CDS and/or CDNSKEY records which hold the prospective DS parameters.
-Similarly, RFC 7477 specifies CSYNC records to indicate a desired update
-of the delegation's NS (and glue) records.
-Parent-side entities (e.g. Registries, Registrars) typically discover
-these records by querying them from the child, and then use them to
-update the parent-side RRsets of the delegation accordingly.
+Not all existing DS automation deployments have made the same choices with respect to these questions, leading to somewhat inconsistent behavior across TLDs. From the perspective of a registrant with domain names under various TLDs, this is unexpected and confusing.
 
-This document specifies that when performing such queries, parent-side
-entities MUST ensure that updates triggered via CDS/CDNSKEY and CSYNC
-records are consistent across the child's authoritative nameservers,
-before taking any action based on these records.
+We propose a set of best practices for registries and registrars who wish to implement DS automation via CDS / CDNSKEY scanning. 
 
 {mainmatter}
 
