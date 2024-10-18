@@ -35,7 +35,7 @@ Enabling support for automatic acceptance of DS parameters directly from the Chi
 
 Not all existing DS automation deployments have made the same choices with respect to these questions, leading to somewhat inconsistent behavior across TLDs. From the perspective of a registrant with domain names under various TLDs, this is unexpected and confusing.
 
-We propose a set of best practices for registries and registrars who wish to implement DS automation via CDS / CDNSKEY scanning. 
+We propose a set of best practices for registries and registrars who wish to implement DS automation via CDS / CDNSKEY scanning.
 
 --- middle
 
@@ -51,54 +51,54 @@ Readers are expected to be familiar with DNSSEC, including [@!RFC4033], [@!RFC40
 
 ## Terminology
 
-Child zone: 
+Child zone:
 : A DNS zone whose delegation is in the Parent zone
 
-Child (DNS operator): 
+Child (DNS operator):
 : DNS operator responsible for a Child zone.
 
-DS (Delegation Signer) record: 
-: A DNS record located at a delegation in the Parent zone and containing the cryptographic fingerprint (hash digest, algorithm) of a DNSSEC public key (DNSKEY) whose private counterpart the Child uses (or intends to use) to sign its DNSKEY record set. The DS record set thus provides validation entry points to the Child zone and is signed by the Parent, thereby connecting the Child’s signing key(s) to the DNSSEC chain of trust that the Parent zone already has. There may be zero (DNSSEC off), one, or more DS records for any given delegation. 
+DS (Delegation Signer) record:
+: A DNS record located at a delegation in the Parent zone and containing the cryptographic fingerprint (hash digest, algorithm) of a DNSSEC public key (DNSKEY) whose private counterpart the Child uses (or intends to use) to sign its DNSKEY record set. The DS record set thus provides validation entry points to the Child zone and is signed by the Parent, thereby connecting the Child’s signing key(s) to the DNSSEC chain of trust that the Parent zone already has. There may be zero (DNSSEC off), one, or more DS records for any given delegation.
 
-DNSKEY record: 
-: A DNS record containing a public DNSSEC validation key (matching a private DNSSEC signing key at the DNS operator). The key pair for a given DNSKEY record may be (operationally) constrained to sign/validate the zone’s DNSKEY record set only (“key-signing key”, KSK), thus authorizing additional keys to sign the rest of the zone’s content (“zone-signing keys”, ZSK). 
+DNSKEY record:
+: A DNS record containing a public DNSSEC validation key (matching a private DNSSEC signing key at the DNS operator). The key pair for a given DNSKEY record may be (operationally) constrained to sign/validate the zone’s DNSKEY record set only (“key-signing key”, KSK), thus authorizing additional keys to sign the rest of the zone’s content (“zone-signing keys”, ZSK).
 
-DNS (Zone) Operator: 
+DNS (Zone) Operator:
 : The entity controlling the authoritative contents of (and delegations in) the zone file for a given domain name, and thus responsible for maintaining the “purposeful” records in the zone file (such as IP address, MX, or CDS/CDNSKEY records).
 
 The DNSSEC signing function, during whose execution additional records get added (such as RRSIG or NSEC(3) records), may be fulfilled by the same entity, or by one or more signing providers directly or indirectly appointed by the registrant. Zone contents are then made available for query by transferring them to the domain’s authoritative nameservers, which similarly may be operated by one or more entities. For the purpose of this definition, the details of how this is arranged are not relevant, as it is the content controlled by the DNS operator that eventually is served when queries are answered for the given zone.
 
 As a DNS query yields the response specified by the DNS operator, we thus say that the query is answered by the DNS operator. Other terms such as “DNS hosting provider”, “DNS provider”, “DNS service provider” are also often used to describe this concept.
 
-DNSSEC Signer: 
+DNSSEC Signer:
 : see DNS operator.
 
-EPP:  
+EPP:
 : The Extensible Provisioning Protocol (EPP), which is commonly used for communication of registration information between registries and registrars.  EPP is defined in [RFC5730].
 
-Parent zone: 
+Parent zone:
 : A DNS zone that holds a delegation for a Child zone
 
-Parent (DNS operator): 
+Parent (DNS operator):
 : The DNS operator responsible for a Parent zone, and thus involved with the maintenance of the delegation’s DNSSEC parameters (in particular, the acceptance of these parameters and the publication of corresponding DS records).
 
-Registrant: 
+Registrant:
 : The entity responsible for records associated with a particular domain name in a domain name registry (typically under a TLD such as .com or a SLD such as co.uk). The registrant maintains the records they are responsible for in the registry through the use of a registrar; the registrar acts as an intermediary for both the registry and the registrant.
 
-Registrar: 
+Registrar:
 : An entity through which registrants register domain names; the registrar performs this service by interacting directly with the registry in charge of the domain’s suffix. A registrar may also provide other services such as DNS service or web hosting for the registrant. In some cases, the registry directly offers registration services to the public, that is, the registry may also perform the registrar function.
 
-Registry: 
+Registry:
 : The entity that controls the registry database and authoritative DNS service of domain names registered under a particular suffix, for example a top-level domain (TLD). A registry receives requests through an interface (usually EPP) from registrars to read, add, delete, or modify domain name registrations, and then makes the requested changes in the registry database and associated DNS zone. In some cases, the registry directly offers registration services to the public, that is, the registry may also perform the registrar function.
 
-Reseller: 
+Reseller:
 : An entity through which registrants register domain names if they don’t interact with the registrar directly. The reseller is part of a registrar’s retail channel and relays the registration request to the registrar. A reseller may also provide other services such as DNS service or web hosting for the registrant.
 
-RRR Model: 
+RRR Model:
 : Refers to the registrant-registrar-registry interaction framework used for generic top level domains (gTLDs) as well as some country-code top-level domains (ccTLDs). In this model, registrants interact with a registrar to register and manage domain names. Registrars interact with the domain’s registry for the provision and management of domain names on the registrant’s behalf.
 
-TLS: 
-: An authentication and encryption protocol widely implemented in browsers and Web servers. HTTP traffic transmitted using TLS is known as HTTPS. 
+TLS:
+: An authentication and encryption protocol widely implemented in browsers and Web servers. HTTP traffic transmitted using TLS is known as HTTPS.
 
 Otherwise, the terminology in this document is as defined in [@!RFC7344].
 
@@ -108,7 +108,7 @@ Otherwise, the terminology in this document is as defined in [@!RFC7344].
 
 What kind of validity checks should be performed when ingesting DS parameters? Should those checks be performed upon acceptance, or also continually when in place?
 
-Analysis: 
+Analysis:
 The CDS/CDNSKEY specification requires the Parent to verify that the resulting DS record set would not break DNSSEC validation if deployed, and otherwise cancel the update (RFC 7344 Section 4.1). This is a reasonable strategy to avoid DNSSEC validation breakage; bad DS record sets should not be deployed in the parent zone.
 To further reduce the impact of any misconfigured DS record set — be it from automated or from manual provisioning — the option to quickly roll back the delegation’s DNSSEC parameters is of great importance. This can be achieved by setting a comparatively low TTL on the DS record set in the parent domain, at the cost of reduced resiliency against nameserver unreachability due to the earlier expiration of cached records. To mitigate this availability risk from permanently lowered TTLs, it may be prudent to limit very short TTLs to the time period shortly after a change to the DS configuration, during which rollbacks are most likely to occur.
 One might expect low TTLs to cause increased load on the corresponding authoritative nameservers. However, recent research performed with 5-minute DS TTLs at ISC and a real-world deployment under .goog with (permanent) DS TTLs of 15 minutes have shown such TTLs to have negligible impact on the overall load of a registry’s authoritative nameserver infrastructure.
@@ -119,9 +119,9 @@ It might look reasonable to also reduce the DS TTL “symmetrically on the other
 
 Finally, when accepting or rejecting a DS update, it may be helpful to notify relevant parties (such as the Child DNS operator or registrant). This reporting mechanism may also be used for notifications in case a problem is detected with an operational DS record set, such as due to an incompatible change in the Child zone. For details, see Appendix B.4.
 
-Recommendations: 
+Recommendations:
 
-Based on the above analysis, the best practice recommendation is: 
+Based on the above analysis, the best practice recommendation is:
 
 : Entities scanning for CDS/CDNSKEY records should verify that the resulting DS record set would not break DNSSEC validation if deployed, and otherwise cancel the update (RFC 7344 Section 4.1).
 
@@ -153,7 +153,7 @@ Note that no adverse consequences are expected if both parties perform DS automa
 
 Further, as a standard aspect of key rollovers (RFC 6781), the Child DNS operator is expected to monitor propagation of Child zone updates to all authoritative nameserver instances, and only proceed to the next step once replication has succeeded everywhere and the DS record set was subsequently updated. Any breakage resulting from improper timing on the Child side is outside of the Parent’s sphere of influence, and thus out of scope of DS automation considerations.
 
-Based on the above analysis, we recommend the best practice to be: 
+Based on the above analysis, we recommend the best practice to be:
 
 : Registrars and (outside the RRR model) registries should provide a channel for manual DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). It is also needed when a DNS operator does not support DS automation or refuses to cooperate.
 
@@ -201,7 +201,7 @@ An analysis like the above of the security properties of registry and registrar 
 
 While this report is concerned with DS management using CDS/CDNSKEY records, the SSAC would like to comment on the related matter of delegation NS record management. NS record updates can be automated using a mechanism similar to DS automation, via so-called CSYNC records (RFC 7477). This technique allows transferring control of a domain’s DNS service to another entity by effecting an NS change in the delegation. Its capabilities thus overlap with update as well as transfer actions, both of which can be locked via EPP. As NS automation is out of scope for this report, the SSAC at this time makes no recommendation about CSYNC processing. In particular, the below recommendations should not be construed to endorse automatic processing of CSYNC records in the presence of relevant EPP locks.
 
-Based on the above analysis, the we recommend: 
+Based on the above analysis, the we recommend:
 
 : Automated DS maintenance should be suspended when a registry lock is set (in particular, EPP lock serverUpdateProhibited).
 
@@ -252,7 +252,7 @@ Further, the same condition should not be reported unnecessarily frequently to t
 
 The history of DS updates should be kept and, together with the currently active configuration, be made accessible to the registrant (or their designated party) through the customer portal available for domain management.
 
-Based on the above analysis, we recommend: 
+Based on the above analysis, we recommend:
 : For certain DS updates (see discussion in Appendix B.4) and for DS deactivation, both the domain’s technical contact and the registrant should be notified.
 : For error conditions, the domain’s technical contact and the DNS operator serving the affected Child zone should be first notified, and only if the problem persists for a prolonged amount of time (e.g., three days), the registrant should be notified.
 : These notifications should be done via email. The same condition should not be reported unnecessarily frequently to the same recipient.
@@ -260,7 +260,7 @@ Based on the above analysis, we recommend:
 : The currently active DS configuration as well as the history of DS updates should be made accessible to the registrant (or their designated party) through the customer portal available for domain management.
 
 ## Consistency Considerations
-In this section, we consider the following questions: 
+In this section, we consider the following questions:
 : Are DS parameters best conveyed via CDS or CDNSKEY records, or both?
 : How are conflicts resolved when both are present?
 : How are conflicts resolved when CDS or CDNSKEY records differ across nameservers?
@@ -292,7 +292,7 @@ In order to further reduce the risk of wrongful DS deployment such as from names
 
 When a key is referenced in a CDS or CDNSKEY record set returned by one nameserver, but is missing from at least one other nameserver's answer, the Child's intent is unclear, and DS provisioning can be aborted.
 
-Based on the above analysis, we suggest: 
+Based on the above analysis, we suggest:
 
 : DNS operators to publish both CDNSKEY records as well as CDS records, as also recommended in Section 5 of RFC 7344, and follow best practice for the choice of hash digest type, currently published in RFC 8624.
 
@@ -338,7 +338,7 @@ or CSYNC records in the child zone.
 
 # Acknowledgments
 
-SSAC DS Automation WP members. 
+SSAC DS Automation WP members.
 
 --- back
 
