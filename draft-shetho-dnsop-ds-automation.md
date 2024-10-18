@@ -1,42 +1,43 @@
-%%%
-Title = "Best Practice for CDS Scanning"
-abbrev = "cds-bestpractice"
-docname = "@DOCNAME@"
-category = "std"
-ipr = "trust200902"
-area = "Internet"
-workgroup = "DNSOP Working Group"
-date = @TODAY@
+---
+title: Best Practice Recommendations for DS Automation
+abbrev: DS Automation
+docname: draft-shetho-dnsop-ds-automation-latest
+date: {DATE}
+category: bcp
 
-[seriesInfo]
-name = "Internet-Draft"
-value = "@DOCNAME@"
-stream = "IETF"
-status = "standard"
+ipr: trust200902
+area: Internet
+workgroup: DNSOP Working Group
+keyword: Internet-Draft
 
-[[author]]
-initials = "P."
-surname = "Thomassen"
-fullname = "Peter Thomassen"
-organization = "SSE - Secure Systems Engineering GmbH"
-[author.address]
- email = "peter.thomassen@securesystems.de"
-[author.address.postal]
- street = "Hauptstraße 3"
- city = "Berlin"
- code = "10827"
- country = "Germany"
-%%%
+stand_alone: yes
+pi: [toc, sortrefs, symrefs]
 
+author:
+ -
+    ins: S. Sheng
+    name: Steve Sheng
+    organization: ICANN
+    email: steve.sheng@gmail.com
+ -
+    ins: P. Thomassen
+    name: Peter Thomassen
+    org: deSEC, Secure Systems Engineering
+    email: peter@desec.io
 
-.# Abstract
+normative:
+
+informative:
+
+--- abstract
+
 Enabling support for automatic acceptance of DS parameters directly from the Child DNS operator requires the registry/registrar to make a number of technical decisions. These includes: (1) Should DS parameters be conveyed via CDS or CDNSKEY records, or both? (2) What kind of validity checks should be performed when ingesting DS parameters? (3) Should those checks be performed upon acceptance, or also continually when in place? (4) How are conflicts resolved when DS parameters are accepted through multiple channels (e.g. via EPP and via CDS/CDNSKEY)? (5) If both the registry and the registrar are automating DS updates, how to resolve potential collisions? (6) What is the relationship with other registration state parameters, such as EPP locks? (7) Should a successful or rejected DS update trigger a notification to anyone? (8) What is a suitable scanning interval? How can the cost of scanning be reduced?
 
 Not all existing DS automation deployments have made the same choices with respect to these questions, leading to somewhat inconsistent behavior across TLDs. From the perspective of a registrant with domain names under various TLDs, this is unexpected and confusing.
 
 We propose a set of best practices for registries and registrars who wish to implement DS automation via CDS / CDNSKEY scanning. 
 
-{mainmatter}
+--- middle
 
 # Introduction
 
@@ -46,8 +47,7 @@ Readers are expected to be familiar with DNSSEC, including [@!RFC4033], [@!RFC40
 
 ## Requirements Notation
 
-The key words "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL NOT**", "**SHOULD**", "**SHOULD NOT**", "**RECOMMENDED**", "**NOT RECOMMENDED**", "**MAY**", and "**OPTIONAL**" in this document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all
-capitals, as shown here.
+{::boilerplate bcp14}
 
 ## Terminology
 
@@ -340,12 +340,10 @@ or CSYNC records in the child zone.
 
 SSAC DS Automation WP members. 
 
-
-{backmatter}
-
+--- back
 
 # Change History (to be removed before publication)
 
-* draft-thomassen-dnsop-cds-bestpractice-00
+* draft-shetho-dnsop-ds-automation-00
 
 > Initial public draft.
