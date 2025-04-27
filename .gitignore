@@ -5,7 +5,9 @@ draft-shetho-dnsop-ds-automation.xml
 Gemfile.lock
 /.gems/
 *.html
+/.idea/
 /lib
+/.*.mk
 /node_modules/
 package-lock.json
 *.pdf
@@ -14,7 +16,6 @@ package-lock.json
 report.xml
 *.swp
 .tags
-/.targets.mk
 *.txt
 *.upload
 /.venv/
