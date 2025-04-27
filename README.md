@@ -1,17 +1,19 @@
+<!-- regenerate: on (set to off if you edit this file) -->
+
 # Best Practice Recommendations for DS Automation
 
 This is the working area for the individual Internet-Draft, "Best Practice Recommendations for DS Automation".
 
-* [Editor's Copy](https://peterthomassen.github.io/draft-shetho-dnsop-ds-automation/#go.draft-shetho-dnsop-ds-automation.html)
+* [Editor's Copy](https://desec-io.github.io/draft-shetho-dnsop-ds-automation/#go.draft-shetho-dnsop-ds-automation.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-shetho-dnsop-ds-automation)
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-shetho-dnsop-ds-automation)
-* [Compare Editor's Copy to Individual Draft](https://peterthomassen.github.io/draft-shetho-dnsop-ds-automation/#go.draft-shetho-dnsop-ds-automation.diff)
+* [Compare Editor's Copy to Individual Draft](https://desec-io.github.io/draft-shetho-dnsop-ds-automation/#go.draft-shetho-dnsop-ds-automation.diff)
 
 
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/peterthomassen/draft-shetho-dnsop-ds-automation/blob/main/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/desec-io/draft-shetho-dnsop-ds-automation/blob/main/CONTRIBUTING.md).
 
 Contributions can be made by creating pull requests.
 The GitHub interface supports creating pull requests using the Edit (✏) button.
