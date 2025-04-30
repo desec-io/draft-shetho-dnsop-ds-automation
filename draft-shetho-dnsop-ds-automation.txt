@@ -83,7 +83,7 @@ Table of Contents
      3.4.  Multiple Submitting Parties
        3.4.1.  Necessity of Manual Updates
        3.4.2.  Impact of Manual Updates
-       3.4.3.  Concurrent Automatic Updates by Multiple Parties
+       3.4.3.  Concurrent Automatic Updates
      3.5.  CDS vs. CDNSKEY
    4.  IANA Considerations
    5.  Security Considerations
@@ -639,7 +639,7 @@ Recommendations
    including through an automated method, should be considered as the
    current intent of the domain owner.
 
-3.4.3.  Concurrent Automatic Updates by Multiple Parties
+3.4.3.  Concurrent Automatic Updates
 
    When the RRR model is used, there is a potential for collision if
    both the registry and the registrar are automating DS provisioning by

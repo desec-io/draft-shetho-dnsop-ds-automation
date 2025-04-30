@@ -1210,7 +1210,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.3.2.4.2.2.1"><a href="#section-3.4.2" class="auto internal xref">3.4.2</a>.  <a href="#name-impact-of-manual-updates" class="internal xref">Impact of Manual Updates</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4.2.3">
-                    <p id="section-toc.1-1.3.2.4.2.3.1"><a href="#section-3.4.3" class="auto internal xref">3.4.3</a>.  <a href="#name-concurrent-automatic-update" class="internal xref">Concurrent Automatic Updates by Multiple Parties</a></p>
+                    <p id="section-toc.1-1.3.2.4.2.3.1"><a href="#section-3.4.3" class="auto internal xref">3.4.3</a>.  <a href="#name-concurrent-automatic-update" class="internal xref">Concurrent Automatic Updates</a></p>
 </li>
                 </ul>
 </li>
@@ -1683,10 +1683,10 @@ Even when no update was requested, it may be worthwhile to occasionally check wh
 <p id="section-3.4.2-5">In all other cases, any properly authenticated DS updates received, including through an automated method, should be considered as the current intent of the domain owner.<a href="#section-3.4.2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="concurrent-automatic-updates-by-multiple-parties">
+<div id="concurrent-automatic-updates">
 <section id="section-3.4.3">
           <h4 id="name-concurrent-automatic-update">
-<a href="#section-3.4.3" class="section-number selfRef">3.4.3. </a><a href="#name-concurrent-automatic-update" class="section-name selfRef">Concurrent Automatic Updates by Multiple Parties</a>
+<a href="#section-3.4.3" class="section-number selfRef">3.4.3. </a><a href="#name-concurrent-automatic-update" class="section-name selfRef">Concurrent Automatic Updates</a>
           </h4>
 <p id="section-3.4.3-1">When the RRR model is used, there is a potential for collision if both the registry and the registrar are automating DS provisioning by scanning the child for CDS/CDNSKEY records. No disruptive consequences are expected if both parties perform DS automation. An exception is when during a key rollover, registry and registrar see different versions of the Child's DS update requests, such as when CDS/CDNSKEY records are retrieved from different vantage points. Although unlikely due to Recommendation 1a of <a href="#validity" class="auto internal xref">Section 2.1</a>, this may lead to flapping of DS updates; however, it is not expected to be harmful as either DS RRset will allow for the validation function to continue to work, as ensured by Recommendation 1b of <a href="#validity" class="auto internal xref">Section 2.1</a>. The effect subsides as the Child's state eventually becomes consistent (roughly, within the child's replication delay); any flapping until then will be a minor nuisance only.<a href="#section-3.4.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.4.3-2">The issue disappears entirely when scanning is replaced by notifications that trigger DS maintenance through one party's designated endpoint <span>[<a href="#I-D.ietf-dnsop-generalized-notify" class="cite xref">I-D.ietf-dnsop-generalized-notify</a>]</span>, and can otherwise be mitigated if the registry and registrar agree that only one of them will perform scanning.<a href="#section-3.4.3-2" class="pilcrow">¶</a></p>
