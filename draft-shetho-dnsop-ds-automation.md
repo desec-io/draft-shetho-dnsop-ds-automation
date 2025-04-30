@@ -78,16 +78,15 @@ Enabling support for automatic acceptance of DS parameters from the Child DNS op
 Parental Agents using these protocols have to make a number of technical decisions. These include:
 
 - What kind of validity checks should be performed on DS parameters?
-- Should those checks be performed upon acceptance, or also continually when in place?
+- Should these checks be performed upon acceptance, or also continually when in place?
 - How do TTLs and caching impact DS provisioning? How important is timing in a child key change?
-- Should a successful or rejected DS update trigger a notification to anyone?
-- How are conflicts resolved when DS parameters are accepted through multiple channels (e.g. via a conventional channel and via automation)?
+- Should a failed (or even successful) DS update trigger a notification to anyone?
+- How are conflicts resolved when DS parameters are accepted through multiple channels (e.g., via a conventional channel and via automation)?
 
 In case of the RRR model used for many top-level domains, a registrar interacts with the registry in the name of the registrant (domain owner), and can effect parent-side changes to the delegation. In such a situation where there are multiple effective parent-side actors, additional questions arise:
 
-- Should DS automation involve the registrar or the registry, or both?
-- If both are automating DS updates, how to resolve potential collisions?
-- What is the relationship with other registration state parameters, such as registry or registrar locks?
+- In case both the registry and the registrar are automating DS updates, how to resolve potential collisions?
+- How does DS automation interact with other registration state parameters, such as registry or registrar locks?
 
 Not all existing DS automation deployments have made the same choices with respect to these questions, leading to somewhat inconsistent behavior. From the perspective of a domain owner with domain names under various TLDs, this may be unexpected and confusing.
 
@@ -104,17 +103,17 @@ Readers are expected to be familiar with DNSSEC {{!RFC9364}}{{!RFC9615}}{{!I-D.i
 Unless defined in this section, the terminology in this document is as defined in {{!RFC7344}}.
 
 Child zone:
-: A DNS zone whose delegation is in the Parent zone
+: DNS zone whose delegation is in the Parent zone.
 
 Child (DNS operator):
 : DNS operator responsible for a Child zone.
 
-DNS (Zone) Operator:
-: The entity holding the primary copy of the zone before it is signed. Typically a DNS hosting provider in the domain owner's name, it controls the authoritative contents and delegations in the zone, and is thus operationally responsible for maintaining the "purposeful" records in the zone file (such as IP address, MX, or CDS/CDNSKEY records).
+DNS operator:
+: The entity holding the zone's primary copy before it is signed. Typically a DNS hosting provider in the domain owner's name, it controls the authoritative contents and delegations in the zone, and is thus operationally responsible for maintaining the "purposeful" records in the zone file (such as IP address, MX, or CDS/CDNSKEY records).
 The parties involved in other functions for the zone, like signing and serving, are not relevant for this definition.
 
 Parent zone:
-: A DNS zone that holds a delegation for a Child zone
+: DNS zone that holds a delegation for a Child zone.
 
 Parent (DNS operator):
 : The DNS operator responsible for a Parent zone, and thus involved with the maintenance of the delegation's DNSSEC parameters (in particular, the acceptance of these parameters and the publication of corresponding DS records).
@@ -135,7 +134,7 @@ RRR Model:
 
 - What kind of validity checks should be performed on DS parameters?
 
-- Should those checks be performed upon acceptance, or also continually when in place?
+- Should these checks be performed upon acceptance, or also continually when in place?
 
 - How do TTLs and caching impact DS provisioning? How important is timing in a child key change?
 
@@ -143,7 +142,7 @@ RRR Model:
 
 ### Continuity of Resolution
 
-To maintain the basic resolution function, it is important to avoid the deployment of bad DS record sets in the parent zone. It is therefore desirable for the Parent to verify that the DS record set resulting from an automated (or even manual) update does not break DNSSEC validation if deployed, and otherwise cancel the update.
+To maintain the basic resolution function, it is important to avoid the deployment of flawed DS record sets in the parent zone. It is therefore desirable for the Parent to verify that the DS record set resulting from an automated (or even manual) update does not break DNSSEC validation if deployed, and otherwise cancel the update.
 
 This is best done by
 
@@ -178,7 +177,7 @@ The reduction should be in effect at least until the previous DS record set has 
 
 # Reporting {#reporting}
 
-- Should a successful or rejected DS update trigger a notification to anyone?
+- Should a failed (or even successful) DS update trigger a notification to anyone?
 
 ## Analysis
 
@@ -191,18 +190,18 @@ Entities performing automated DS maintenance should report on conditions they en
   1. {:#reporting-1} A DS RRset has been provisioned
 
        {:type="a"}
-       1. {:#reporting-1a} manually, or
+       1. {:#reporting-1a} manually;
 
        2. {:#reporting-1b} due to commencing DS automation (either via DNSSEC bootstrapping, or for the first time after a manual change; see {{multiple}});
 
-       3. {:#reporting-1c} automatically, as an update to an existing DS RRset of automatic provenance;
+       3. {:#reporting-1c} automatically, as an update to an existing DS RRset that had itself been automatically provisioned.
 
   2. {:#reporting-2} The DS RRset has been removed
 
        {:type="a"}
-       1. manually, or
+       1. manually;
 
-       2. automatically, using a delete signal ({{!RFC8078, Section 4}});
+       2. automatically, using a delete signal ({{!RFC8078, Section 4}}).
 
 In addition, there are error conditions worthy of being reported:
 
@@ -210,11 +209,11 @@ In addition, there are error conditions worthy of being reported:
   3. {:#reporting-3} A pending DS update cannot be applied due to an error condition. There are various scenarios where an automated DS update might have been requested, but can't be fulfilled. These include:
 
        {:type="a"}
-       1. The new DS record set would break validation/resolution or is not acceptable to the Parent for some other reason (see {{validity}});
+       1. The new DS record set would break validation/resolution or is not acceptable to the Parent for some other reason (see {{validity}}).
 
-       2. A lock prevents DS automation (see {{locks}});
+       2. A lock prevents DS automation (see {{locks}}).
 
-  4. {:#reporting-4} No DS update is due, but it was determined that the Child zone is no longer compatible with the existing DS record set (e.g., DS RRset only references non-exising keys).
+  4. {:#reporting-4} No DS update is due, but it was determined that the Child zone is no longer compatible with the existing DS record set (e.g., DS RRset only references non-existing keys).
 
 For these reportworthy cases, the entity performing DS automation would be justified to attempt communicating the situation. Potential recipients are:
 
@@ -224,11 +223,11 @@ For these reportworthy cases, the entity performing DS automation would be justi
 
   - Registrant (domain owner, in non-technical language, such as "DNSSEC security for your domain has been enabled and will be maintained automatically") or technical contact, via email.
 
-For manual updates ({{reporting-1a (case 1a)}}{: format="none"}), commencing DS automation ({{reporting-1b (case 1b)}}{: format="none"}), and deactivating DNSSEC ({{reporting-2 (case 2)}}{: format="none"}), it seems worthwhile to notify both the domain's technical contact and the registrant. This will typically lead to one notification during normal operation of a domain. ({{reporting-1c (Case 1c)}}{: format="none"}, the regular operation of automation, is not an interesting event to report to a human.)
+For manual updates ({{reporting-1a (case 1a)}}{: format="none"}), commencing DS automation ({{reporting-1b (case 1b)}}{: format="none"}), and deactivating DNSSEC ({{reporting-2 (case 2)}}{: format="none"}), it seems worthwhile to notify both the domain's technical contact and the registrant. This will typically lead to one notification during normal operation of a domain. ({{reporting-1c (Case 1c)}}{: format="none"}, the regular operation of automation, is not an interesting condition to report to a human.)
 
 For error conditions (cases {{reporting-3 (3)}}{: format="none"} and {{reporting-4 (4)}}{: format="none"}), the registrant need not always be involved. It seems advisable to first notify the domain's technical contact and the DNS operator serving the affected Child zone, and only if the problem persists for a prolonged amount of time (e.g., three days), notify the registrant.
 
-When the RRR model is used and the registry performs DS automation, the registrar should always stay informed of any DS changes, e.g., via the EPP Change Poll Extension {{!RFC8590}}.
+When the RRR model is used and the registry performs DS automation, the registrar should always stay informed of any DS record changes, e.g., via the EPP Change Poll Extension {{!RFC8590}}.
 
 The same condition should not be reported unnecessarily frequently to the same recipient (e.g., no more than twice in a row). For example, when CDS and CDNSKEY records are inconsistent and prevent DS initialization, the registrant may be notified twice. Additional notifications may be sent with some back-off mechanism (in increasing intervals).
 
@@ -242,14 +241,14 @@ The history of DS updates should be kept and, together with the currently active
 
 3. Notifications to humans SHOULD be done via email. Child DNS operators SHOULD be notified by making a report query as described above. The same condition should not be reported unnecessarily frequently to the same recipient.
 
-4. In the RRR model, if the registry performs DS automation, the registry SHOULD inform the registrar of any DS changes via the EPP Change Poll Extension {{!RFC8590}} or a similar channel.
+4. In the RRR model, if the registry performs DS automation, the registry SHOULD inform the registrar of any DS record changes via the EPP Change Poll Extension {{!RFC8590}} or a similar channel.
 
 5. The currently active DS configuration as well as the history of DS updates SHOULD be made accessible to the registrant (or their designated party) through the customer portal available for domain management.
 
 
 # Registration Locks {#locks}
 
-- What is the relationship with other registration state parameters, such as EPP locks?
+- How does DS automation interact with other registration state parameters, such as EPP locks?
 
 ## Analysis
 
@@ -261,7 +260,7 @@ The only lock types that may be recognized as having an impact on DS automation 
 
 When a serverUpdateProhibited lock ("registry lock") is in place, there exists an expectation that this lock renders all otherwise updateable registration data immutable. It seems logical to extend this lock to DS updates as well.
 
-The situation presents itself differently when a clientUpdateProhibited lock ("registrar lock") is in place. While protecting against various types of accidental or malicious change (such as unintended changes through the registrar's customer portal), this lock is much weaker than the registry lock, as its security model does not prevent the registrar's (nor the registry's) actions. This is because the clientUpdateProhibited lock can be removed by the registrar without an out-of-band interaction.
+The situation is different when a clientUpdateProhibited lock ("registrar lock") is in place. While protecting against various types of accidental or malicious change (such as unintended changes through the registrar's customer portal), this lock is much weaker than the registry lock, as its security model does not prevent the registrar's (nor the registry's) actions. This is because the clientUpdateProhibited lock can be removed by the registrar without an out-of-band interaction.
 
 Under such a security model, no tangible security benefit is gained by preventing automated DS maintenance based on a clientUpdateProhibited lock alone, while preventing it would make maintenance needlessly difficult. It therefore seems reasonable not to suspend automation when such a lock is present.
 
@@ -285,7 +284,7 @@ Following this line of thought, some registries (e.g., .ch/.cz/.li) today perfor
 
 In case of a domain not yet secured with DNSSEC, automatic DS initialization is not required to maintain ongoing operation; it might, however, request DNSSEC bootstrapping. In the absence of a registry lock, it is then in the interest of security to enable DNSSEC as requested. The fact that a Child is requesting DS initialization through an authenticated, automated method {{!RFC9615}} expresses the registrant's intent to have the delegation secured. There would be little reason for the registrant to have the corresponding CDS/CDNSKEY records published if not for their request to be acted upon.
 
-Further, considering that some domains are put into clientUpdateProhibited lock by default, not honoring authenticated DS initialization requests needlessly imposes an additional burden of human intervention for unlocking and relocking the domain in order to facilitate DS provisioning after registration, in spite of the registrant already having expressed (to their Child DNS operator) the intent of securing their domain with DNSSEC. It therefore appears that DS initialization and rollovers should be treated the same way with respect to locks, and only be suspended while in serverUpdateProhibited lock status.
+Further, some domains are put into clientUpdateProhibited lock by default. In such cases, not honoring authenticated DS initialization requests imposes an additional burden on the registrant, who has to unlock and relock the domain in order to facilitate DS provisioning after registration. This is a needless cost, given that the registrant already has expressed their intent to have the domain secured to their DNS operator, who in turn has published CDS/CDNSKEY records. It therefore appears that DS initialization and rollovers should be treated the same way with respect to locks, and only be suspended while in serverUpdateProhibited lock status.
 
 
 # Multiple Submitting Parties {#multiple}
@@ -300,7 +299,7 @@ In the RRR model, there are multiple channels through which DS parameters can be
 
 - The registry can receive information about an intended DS update automatically from the Child DNS Operator and appply the update directly;
 
-- The registrar can receive this information and relay it to the registry;
+- The registrar can receive the same and relay it to the registry;
 
 - Registrars or (less commonly) registries can obtain the information from the registrant via webform submission or other means and relay it to the registry.
 
@@ -308,25 +307,25 @@ There are several considerations in this context, as follows.
 
 ### Necessity of Manual Updates
 
-Under special circumstances, it may be necessary to perform a manual DS update. One important example is when the authentication token or key used by the automated method is destroyed, in which case an automatic key rollover is impossible as the Child DNS operator can no longer authenticate the associated information. Another example is when several providers are involved, but one no longer cooperates (e.g., when removing a provider from a multi-provider setup). Disabling manual DS management interfaces is therefore strongly discouraged.
+Under special circumstances, it may be necessary to perform a manual DS update. One important example is when the key used by for authentication of DS updates is destroyed: in this case, an automatic key rollover is impossible as the Child DNS operator can no longer authenticate the associated information. Another example is when several providers are involved, but one no longer cooperates (e.g., when removing a provider from a multi-provider setup). Disabling manual DS management interfaces is therefore strongly discouraged.
 
-Similarly, when the registrar is known to not support DNSSEC, it seems adequate for registries to not perform automated DS maintenance, in order to prevent situations in which a misconfigured delegation cannot be manually recovered by the registrant (for lack of a manual update interface at the registrar).
+Similarly, when the registrar is known to not support DNSSEC (or lack a manual interface), it seems adequate for registries to not perform automated DS maintenance, in order to prevent situations in which a misconfigured delegation cannot be manually recovered by the registrant.
 
 ### Impact of Manual Updates
 
 When a manual DS update is performed in the presence of CDS/CDNSKEY records referencing the previous DS RRset's keys, the delegation's DS records may be reset to their previous state at the next run of the automation process.
 
-In the past, it has been proposed to suspend DS automation after a manual DS update until some continuation signal is obsered, e.g., until after the Child's SOA serial is found to be updated. However, as any arbitrary modification of zone contents — including the regular updating of DNSSEC signature validity timestamps  — typically causes a change in SOA serial, resumption of DS automation after a serial change comes with a high risk of surprise. Additional issues arise if nameservers have different serial offsets (e.g., in a multi-provider setup). It is therefore advised to not follow this practice.
+In the past, it has been proposed to suspend DS automation after a manual DS update until some resumption signal is observed, e.g., until after the Child's SOA serial is found to be updated. However, as any arbitrary modification of zone contents — including the regular updating of DNSSEC signature validity timestamps  — typically causes a change in SOA serial, resumption of DS automation after a serial change comes with a high risk of surprise. Additional issues arise if nameservers have different serial offsets (e.g., in a multi-provider setup). It is therefore advised to not follow this practice.
 
 Note also that "automatic rollback" due to old CDS/CDNSKEY RRsets can only occur if they are signed with a key authorized by one of new DS records. Validity checks described in {{validity}} further ensure that updates do not break validation.
 
 All in all, it appears advisable to generally not suspend DS automation when a manual DS update has occurred. An exception from this rule is when the entire DS record set was removed, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.
 
-In all other cases, any properly authenticated DS updates received through an automated method should be considered as the current intent of the domain owner.
+In all other cases, any properly authenticated DS updates received, including through an automated method, should be considered as the current intent of the domain owner.
 
 ### Concurrent Automatic Updates by Multiple Parties
 
-When the RRR model is used, there is a potential for collision if both the registry and the registrar are automating DS provisioning by scanning the child for CDS/CDNSKEY records. No irregular consequences are expected if both parties perform DS automation. An exception is when during a key rollover, registry and registrar see different versions of the Child's DS update requests, such as when CDS/CDNSKEY records are retrieved from different vantage points. Although unlikely due to Recommendation 1a of {{validity}}, this may lead to flapping of DS updates; however, it is not expected to be harmful as either DS RRset will allow for the validation function to continue to work, as ensured by Recommendation 1b of {{validity}}. The effect subsides as the Child's state eventually becomes consistent (roughly, within the child's replication delay); any flapping until then will be a minor nuisance only.
+When the RRR model is used, there is a potential for collision if both the registry and the registrar are automating DS provisioning by scanning the child for CDS/CDNSKEY records. No disruptive consequences are expected if both parties perform DS automation. An exception is when during a key rollover, registry and registrar see different versions of the Child's DS update requests, such as when CDS/CDNSKEY records are retrieved from different vantage points. Although unlikely due to Recommendation 1a of {{validity}}, this may lead to flapping of DS updates; however, it is not expected to be harmful as either DS RRset will allow for the validation function to continue to work, as ensured by Recommendation 1b of {{validity}}. The effect subsides as the Child's state eventually becomes consistent (roughly, within the child's replication delay); any flapping until then will be a minor nuisance only.
 
 The issue disappears entirely when scanning is replaced by notifications that trigger DS maintenance through one party's designated endpoint {{!I-D.ietf-dnsop-generalized-notify}}, and can otherwise be mitigated if the registry and registrar agree that only one of them will perform scanning.
 
@@ -334,7 +333,7 @@ As a standard aspect of key rollovers (RFC 6781), the Child DNS operator is expe
 
 ## Recommendations
 
-1. Registries and (outside the RRR model) registrars SHOULD provide a channel for manual DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). It is also needed when a DNS operator does not support DS automation or refuses to cooperate.
+1. Registries and (outside the RRR model) registrars SHOULD provide a channel for manual DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This manual channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
 
 2. When DS updates are received through a manual or EPP interface, they SHOULD be executed immediately.
 
@@ -353,17 +352,17 @@ As a standard aspect of key rollovers (RFC 6781), the Child DNS operator is expe
 
 ## Analysis
 
-DS records can be generated from either DS-style (CDS) or from DNSKEY-style (CDNSKEY) records. The former is identical to that of DS records (so can be taken verbatim), while for the latter, generation of a DS record involves computing a hash.
+DS records can be generated from information provided either in DS format (CDS) or in DNSKEY format (CDNSKEY). While the format of CDS records is identical to that of DS records (so the record data be taken verbatim), generation of a DS record from CDNSKEY information involves computing a hash.
 
-Whether CDS or CDNSKEY records are ingested by the Parent depends on the Parent's preference:
+Whether a Parent processes CDS or CDNSKEY records depends on their preference:
 
-- Conveying (and storing) CDNSKEY information allows the Parent to exert control over the choice of hash algorithms. The Parent may then unilaterally regenerate DS records with a different choice of hash algorithm(s) whenever deemed appropriate.
+- Conveying (and storing) CDNSKEY information allows the Parent to control the choice of hash algorithms. The Parent may then unilaterally regenerate DS records with a different choice of hash algorithm(s) whenever deemed appropriate.
 
 - Conveying CDS information allows the Child DNS operator to control the hash digest type used in DS records, enabling the Child DNS operator to deploy (for example) experimental hash digests and removing the need for registry-side changes when new digest types become available.
 
-The need to make a choice in the face of this dichotomy is not particular to DS automation: Even when DNSSEC parameters are relayed to the Parent through conventional channels, the Parent has to make some choice about which format(s) to accept.
+The need to make a choice in the face of this dichotomy is not specific to DS automation: even when DNSSEC parameters are relayed to the Parent through conventional channels, the Parent has to make some choice about which format(s) to accept.
 
-Some registries have chosen to prefer DNSKEY-style input which seemingly comes with greater influence on the delegation's security properties (in particular, the DS hash digest type). It is noted that regardless of the choice of input format, the Parent cannot prevent the Child from following insecure cryptographic practices (such as insecure key storage, or using a key with insufficient entropy). Besides, as the DS format contains a field indicating the hash digest type, objectionable ones (such as those outlawed by {{DS-IANA}}) can still be rejected even when parameters are accepted as DS-style input, by inspecting that field.
+Some registries have chosen to prefer DNSKEY-style input which seemingly comes with greater influence on the delegation's security properties (in particular, the DS hash digest type). It is noted that regardless of the choice of input format, the Parent cannot prevent the Child from following insecure cryptographic practices (such as insecure key storage, or using a key with insufficient entropy). Besides, as the DS format contains a field indicating the hash digest type, objectionable ones (such as those outlawed by {{DS-IANA}}) can still be rejected even when ingesting CDS records, by inspecting that field.
 
 The fact that more than one input type needs to be considered burdens both Child DNS operators and Parents with the need to consider how to handle this dichotomy. Until this is addressed in an industry-wide manner and one of these mechanisms is deprecated in favor of the other, both Child DNS operators and Parents implementing automated DS maintenance should act as to maximize interoperability:
 
@@ -371,9 +370,9 @@ The fact that more than one input type needs to be considered burdens both Child
 
 - Parents, independently of their input format preference, are advised to require publication of both CDS and CDNSKEY records, and to enforce consistency between them, as determined by matching CDS and CDNSKEY records using hash digest algorithms whose support is mandatory {{DS-IANA}}. (Consistency of CDS records with optional or unsupported hash digest types is not required.)
 
-Publishing the same information in two different formats is not ideal. Still, it is much less complex and costly than burdening the Child DNS operator with discovering each Parent's policy; also, it is very easily automated. Operators should ensure that published records are consistent with each other.
+Publishing the same information in two different formats is not ideal. Still, it is much less complex and costly than burdening the Child DNS operator with discovering each Parent's policy; also, it is very easily automated. Operators should ensure that published RRsets are consistent with each other.
 
-By rejecting the DS update if either RRset is found missing or inconsistent with the other, Child DNS operators are held responsible when publishing contradictory information. At the same time, Parents can retain whatever benefit their policy choice carries for them, while facilitating a later revision of that choice. This approach also simplifies possible future deprecation of one of the two formats without breakage.
+By rejecting the DS update if either RRset is found missing or inconsistent with the other, Child DNS operators are held responsible when publishing contradictory information. At the same time, Parents can retain whatever benefit their policy choice carries for them, while facilitating a later revision of that choice. This approach also simplifies possible future deprecation of one of the two formats, as no coordination or implementation changes would be needed on the child side.
 
 ## Recommendations
 
