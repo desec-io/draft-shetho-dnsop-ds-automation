@@ -109,13 +109,13 @@ For the rationale informing the below recommendations, see the analysis in {{ana
 1. Entities performing automated DS maintenance SHOULD verify
 
     {:type="a"}
-    1. the consistency of DS update requests across all authoritative nameservers in the delegation (one query per type and hostname), and
+    1. the consistency of DS update requests across all authoritative nameservers in the delegation (one query per type and hostname) {{!I-D.ietf-dnsop-cds-consistency}}, and
 
     2. that the resulting DS record set would not break DNSSEC validation if deployed,
 
    and cancel the update if the verifications do not succeed.
 
-2. Parent operators (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when it is updated, and restore the normal TTL value at a later occasion (but not before the old DS RRset's TTL has expired).
+2. Parent operators (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when the set of records is changed, and restore the normal TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).
 
 ## Reporting {#reporting}
 
@@ -168,7 +168,7 @@ For the rationale informing the below recommendations, see the analysis in {{ana
 {:unnumbered}
 ### Recommendations
 
-1. Registries and (outside the RRR model) registrars SHOULD provide a channel for manual DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This manual channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
+1. Registries and registrars SHOULD provide a channel for manual DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This manual channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
 
 2. When DS updates are received through a manual or EPP interface, they SHOULD be executed immediately.
 
@@ -315,11 +315,11 @@ Further, some domains are put into clientUpdateProhibited lock by default. In su
 
 In the RRR model, there are multiple channels through which DS parameters can be accepted:
 
-- The registry can receive information about an intended DS update automatically from the Child DNS Operator and appply the update directly;
+- The registry can retrieve information about an intended DS update automatically from the Child DNS Operator and apply the update directly;
 
-- The registrar can receive the same and relay it to the registry;
+- The registrar can retrieve the same and relay it to the registry;
 
-- Registrars or (less commonly) registries can obtain the information from the registrant via webform submission or other means and relay it to the registry.
+- Registrars or (less commonly) registries can obtain the information from the registrant performing a "manual update", such as via webform submission, and relay it to the registry.
 
 There are several considerations in this context, as follows.
 
@@ -327,19 +327,23 @@ There are several considerations in this context, as follows.
 
 Under special circumstances, it may be necessary to perform a manual DS update. One important example is when the key used by for authentication of DS updates is destroyed: in this case, an automatic key rollover is impossible as the Child DNS operator can no longer authenticate the associated information. Another example is when several providers are involved, but one no longer cooperates (e.g., when removing a provider from a multi-provider setup). Disabling manual DS management interfaces is therefore strongly discouraged.
 
-Similarly, when the registrar is known to not support DNSSEC (or lack a manual interface), it seems adequate for registries to not perform automated DS maintenance, in order to prevent situations in which a misconfigured delegation cannot be manually recovered by the registrant.
+Similarly, when the registrar is known to not support DNSSEC (or to lack a manual interface), it seems adequate for registries to not perform automated DS maintenance, in order to prevent situations in which a misconfigured delegation cannot be manually recovered by the registrant.
 
-### Impact of Manual Updates
+### Impact of Manual Updates: When to Suspend Automation
 
-When a manual DS update is performed in the presence of CDS/CDNSKEY records referencing the previous DS RRset's keys, the delegation's DS records may be reset to their previous state at the next run of the automation process.
+When a manual DS update is performed in the presence of CDS/CDNSKEY records referencing the previous DS RRset's keys, the delegation's DS records may be reset to their previous state at the next run of the automation process. This section discusses in which situations it is appropriate to suspend DS automation after a manual update.
 
-In the past, it has been proposed to suspend DS automation after a manual DS update until some resumption signal is observed, e.g., until after the Child's SOA serial is found to be updated. However, as any arbitrary modification of zone contents — including the regular updating of DNSSEC signature validity timestamps  — typically causes a change in SOA serial, resumption of DS automation after a serial change comes with a high risk of surprise. Additional issues arise if nameservers have different serial offsets (e.g., in a multi-provider setup). It is therefore advised to not follow this practice.
+One option is to suspend DS automation after a manual DS update, but only until a resumption signal is observed. In the past, it was proposed that seeing an updated SOA serial in the child zone may serve as a resumption signal. However, as any arbitrary modification of zone contents — including the regular updating of DNSSEC signature validity timestamps  — typically causes a change in SOA serial, resumption of DS automation after a serial change comes with a high risk of surprise. Additional issues arise if nameservers have different serial offsets (e.g., in a multi-provider setup). It is therefore advised to not follow this practice.
 
 Note also that "automatic rollback" due to old CDS/CDNSKEY RRsets can only occur if they are signed with a key authorized by one of new DS records. Validity checks described in {{validity}} further ensure that updates do not break validation.
 
-All in all, it appears advisable to generally not suspend DS automation when a manual DS update has occurred. An exception from this rule is when the entire DS record set was removed, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.
+All in all:
 
-In all other cases, any properly authenticated DS updates received, including through an automated method, should be considered as the current intent of the domain owner.
+- It appears advisable to generally not suspend DS automation when a manual DS update has occurred.
+
+- An exception from this rule is when the entire DS record set was removed, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.
+
+- In all other cases, any properly authenticated DS updates received, including through an automated method, should be considered as the current intent of the domain owner.
 
 ### Concurrent Automatic Updates
 
@@ -389,7 +393,7 @@ This document considers security aspects throughout, and has not separate consid
 
 The authors would like to thank the SSAC members who wrote the {{SAC126}} report on which this document is based.
 
-In order of first contribution or review: Barbara Jantzen
+In order of first contribution or review: Barbara Jantzen, Matt Pounsett
 
 --- back
 
