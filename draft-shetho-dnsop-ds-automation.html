@@ -10,22 +10,22 @@
 <meta content="
        Enabling support for automatic acceptance of DS parameters from the Child DNS operator (via RFCs 7344, 8078, 9615) requires the parent operator, often a registry or registrar, to make a number of technical decisions. This document describes recommendations for new deployments of such DS automation. 
     " name="description">
-<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="xml2rfc 3.29.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-shetho-dnsop-ds-automation-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.1
-    Python 3.12.10
+  xml2rfc 3.29.0
+    Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
-    lxml 5.3.0
-    platformdirs 4.3.7
+    lxml 5.3.1
+    platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.3
-    setuptools 70.3.0
+    requests 2.32.4
+    setuptools 80.9.0
     wcwidth 0.2.13
 -->
 <link href="draft-shetho-dnsop-ds-automation.xml" rel="alternate" type="application/rfc+xml">
@@ -1045,11 +1045,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">DS Automation</td>
-<td class="right">April 2025</td>
+<td class="right">June 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Sheng &amp; Thomassen</td>
-<td class="center">Expires 1 November 2025</td>
+<td class="center">Expires 24 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-shetho-dnsop-ds-automation-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-04-30" class="published">30 April 2025</time>
+<time datetime="2025-06-22" class="published">22 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Best Current Practice</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-11-01">1 November 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-24">24 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1115,7 +1115,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1207,7 +1207,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.3.2.4.2.1.1"><a href="#section-3.4.1" class="auto internal xref">3.4.1</a>.  <a href="#name-necessity-of-manual-updates" class="internal xref">Necessity of Manual Updates</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4.2.2">
-                    <p id="section-toc.1-1.3.2.4.2.2.1"><a href="#section-3.4.2" class="auto internal xref">3.4.2</a>.  <a href="#name-impact-of-manual-updates" class="internal xref">Impact of Manual Updates</a></p>
+                    <p id="section-toc.1-1.3.2.4.2.2.1"><a href="#section-3.4.2" class="auto internal xref">3.4.2</a>.  <a href="#name-impact-of-manual-updates-wh" class="internal xref">Impact of Manual Updates: When to Suspend Automation</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4.2.3">
                     <p id="section-toc.1-1.3.2.4.2.3.1"><a href="#section-3.4.3" class="auto internal xref">3.4.3</a>.  <a href="#name-concurrent-automatic-update" class="internal xref">Concurrent Automatic Updates</a></p>
@@ -1323,7 +1323,7 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
               <p id="section-2.1.1-1.1.1">Entities performing automated DS maintenance SHOULD verify<a href="#section-2.1.1-1.1.1" class="pilcrow">¶</a></p>
 <ol start="1" type="a" class="normal type-a" id="section-2.1.1-1.1.2">
 <li id="section-2.1.1-1.1.2.1">
-                  <p id="section-2.1.1-1.1.2.1.1">the consistency of DS update requests across all authoritative nameservers in the delegation (one query per type and hostname), and<a href="#section-2.1.1-1.1.2.1.1" class="pilcrow">¶</a></p>
+                  <p id="section-2.1.1-1.1.2.1.1">the consistency of DS update requests across all authoritative nameservers in the delegation (one query per type and hostname) <span>[<a href="#I-D.ietf-dnsop-cds-consistency" class="cite xref">I-D.ietf-dnsop-cds-consistency</a>]</span>, and<a href="#section-2.1.1-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 <li id="section-2.1.1-1.1.2.2">
                   <p id="section-2.1.1-1.1.2.2.1">that the resulting DS record set would not break DNSSEC validation if deployed,<a href="#section-2.1.1-1.1.2.2.1" class="pilcrow">¶</a></p>
@@ -1333,7 +1333,7 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 and cancel the update if the verifications do not succeed.<a href="#section-2.1.1-1.1.3" class="pilcrow">¶</a></p>
 </li>
             <li id="section-2.1.1-1.2">
-              <p id="section-2.1.1-1.2.1">Parent operators (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when it is updated, and restore the normal TTL value at a later occasion (but not before the old DS RRset's TTL has expired).<a href="#section-2.1.1-1.2.1" class="pilcrow">¶</a></p>
+              <p id="section-2.1.1-1.2.1">Parent operators (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when the set of records is changed, and restore the normal TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).<a href="#section-2.1.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
 </section>
@@ -1429,7 +1429,7 @@ and cancel the update if the verifications do not succeed.<a href="#section-2.1.
           </h4>
 <ol start="1" type="1" class="normal type-1" id="section-2.4.1-1">
 <li id="section-2.4.1-1.1">
-              <p id="section-2.4.1-1.1.1">Registries and (outside the RRR model) registrars SHOULD provide a channel for manual DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This manual channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.<a href="#section-2.4.1-1.1.1" class="pilcrow">¶</a></p>
+              <p id="section-2.4.1-1.1.1">Registries and registrars SHOULD provide a channel for manual DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This manual channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.<a href="#section-2.4.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
             <li id="section-2.4.1-1.2">
               <p id="section-2.4.1-1.2.1">When DS updates are received through a manual or EPP interface, they SHOULD be executed immediately.<a href="#section-2.4.1-1.2.1" class="pilcrow">¶</a></p>
@@ -1652,13 +1652,13 @@ Even when no update was requested, it may be worthwhile to occasionally check wh
 <p id="section-3.4-1">In the RRR model, there are multiple channels through which DS parameters can be accepted:<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4-2.1">
-            <p id="section-3.4-2.1.1">The registry can receive information about an intended DS update automatically from the Child DNS Operator and appply the update directly;<a href="#section-3.4-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-2.1.1">The registry can retrieve information about an intended DS update automatically from the Child DNS Operator and apply the update directly;<a href="#section-3.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-2.2">
-            <p id="section-3.4-2.2.1">The registrar can receive the same and relay it to the registry;<a href="#section-3.4-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-2.2.1">The registrar can retrieve the same and relay it to the registry;<a href="#section-3.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-2.3">
-            <p id="section-3.4-2.3.1">Registrars or (less commonly) registries can obtain the information from the registrant via webform submission or other means and relay it to the registry.<a href="#section-3.4-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-2.3.1">Registrars or (less commonly) registries can obtain the information from the registrant performing a "manual update", such as via webform submission, and relay it to the registry.<a href="#section-3.4-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-3.4-3">There are several considerations in this context, as follows.<a href="#section-3.4-3" class="pilcrow">¶</a></p>
@@ -1668,19 +1668,29 @@ Even when no update was requested, it may be worthwhile to occasionally check wh
 <a href="#section-3.4.1" class="section-number selfRef">3.4.1. </a><a href="#name-necessity-of-manual-updates" class="section-name selfRef">Necessity of Manual Updates</a>
           </h4>
 <p id="section-3.4.1-1">Under special circumstances, it may be necessary to perform a manual DS update. One important example is when the key used by for authentication of DS updates is destroyed: in this case, an automatic key rollover is impossible as the Child DNS operator can no longer authenticate the associated information. Another example is when several providers are involved, but one no longer cooperates (e.g., when removing a provider from a multi-provider setup). Disabling manual DS management interfaces is therefore strongly discouraged.<a href="#section-3.4.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.4.1-2">Similarly, when the registrar is known to not support DNSSEC (or lack a manual interface), it seems adequate for registries to not perform automated DS maintenance, in order to prevent situations in which a misconfigured delegation cannot be manually recovered by the registrant.<a href="#section-3.4.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.4.1-2">Similarly, when the registrar is known to not support DNSSEC (or to lack a manual interface), it seems adequate for registries to not perform automated DS maintenance, in order to prevent situations in which a misconfigured delegation cannot be manually recovered by the registrant.<a href="#section-3.4.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="impact-of-manual-updates">
+<div id="impact-of-manual-updates-when-to-suspend-automation">
 <section id="section-3.4.2">
-          <h4 id="name-impact-of-manual-updates">
-<a href="#section-3.4.2" class="section-number selfRef">3.4.2. </a><a href="#name-impact-of-manual-updates" class="section-name selfRef">Impact of Manual Updates</a>
+          <h4 id="name-impact-of-manual-updates-wh">
+<a href="#section-3.4.2" class="section-number selfRef">3.4.2. </a><a href="#name-impact-of-manual-updates-wh" class="section-name selfRef">Impact of Manual Updates: When to Suspend Automation</a>
           </h4>
-<p id="section-3.4.2-1">When a manual DS update is performed in the presence of CDS/CDNSKEY records referencing the previous DS RRset's keys, the delegation's DS records may be reset to their previous state at the next run of the automation process.<a href="#section-3.4.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.4.2-2">In the past, it has been proposed to suspend DS automation after a manual DS update until some resumption signal is observed, e.g., until after the Child's SOA serial is found to be updated. However, as any arbitrary modification of zone contents — including the regular updating of DNSSEC signature validity timestamps  — typically causes a change in SOA serial, resumption of DS automation after a serial change comes with a high risk of surprise. Additional issues arise if nameservers have different serial offsets (e.g., in a multi-provider setup). It is therefore advised to not follow this practice.<a href="#section-3.4.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.4.2-1">When a manual DS update is performed in the presence of CDS/CDNSKEY records referencing the previous DS RRset's keys, the delegation's DS records may be reset to their previous state at the next run of the automation process. This section discusses in which situations it is appropriate to suspend DS automation after a manual update.<a href="#section-3.4.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.4.2-2">One option is to suspend DS automation after a manual DS update, but only until a resumption signal is observed. In the past, it was proposed that seeing an updated SOA serial in the child zone may serve as a resumption signal. However, as any arbitrary modification of zone contents — including the regular updating of DNSSEC signature validity timestamps  — typically causes a change in SOA serial, resumption of DS automation after a serial change comes with a high risk of surprise. Additional issues arise if nameservers have different serial offsets (e.g., in a multi-provider setup). It is therefore advised to not follow this practice.<a href="#section-3.4.2-2" class="pilcrow">¶</a></p>
 <p id="section-3.4.2-3">Note also that "automatic rollback" due to old CDS/CDNSKEY RRsets can only occur if they are signed with a key authorized by one of new DS records. Validity checks described in <a href="#validity" class="auto internal xref">Section 2.1</a> further ensure that updates do not break validation.<a href="#section-3.4.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.4.2-4">All in all, it appears advisable to generally not suspend DS automation when a manual DS update has occurred. An exception from this rule is when the entire DS record set was removed, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.<a href="#section-3.4.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.4.2-5">In all other cases, any properly authenticated DS updates received, including through an automated method, should be considered as the current intent of the domain owner.<a href="#section-3.4.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.4.2-4">All in all:<a href="#section-3.4.2-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4.2-5.1">
+              <p id="section-3.4.2-5.1.1">It appears advisable to generally not suspend DS automation when a manual DS update has occurred.<a href="#section-3.4.2-5.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.4.2-5.2">
+              <p id="section-3.4.2-5.2.1">An exception from this rule is when the entire DS record set was removed, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.<a href="#section-3.4.2-5.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.4.2-5.3">
+              <p id="section-3.4.2-5.3.1">In all other cases, any properly authenticated DS updates received, including through an automated method, should be considered as the current intent of the domain owner.<a href="#section-3.4.2-5.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </section>
 </div>
 <div id="concurrent-automatic-updates">
@@ -1749,7 +1759,7 @@ Even when no update was requested, it may be worthwhile to occasionally check wh
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
 <p id="section-6-1">The authors would like to thank the SSAC members who wrote the <span>[<a href="#SAC126" class="cite xref">SAC126</a>]</span> report on which this document is based.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">In order of first contribution or review: Barbara Jantzen<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-2">In order of first contribution or review: Barbara Jantzen, Matt Pounsett<a href="#section-6-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
