@@ -77,7 +77,7 @@ Enabling support for automatic acceptance of DS parameters from the Child DNS op
 
 Parental Agents using these protocols have to make a number of technical decisions relating to issues of validity checks, timing, error reporting, locks, etc. Additionally, when using the RRR model (as is common amongst top-level domains), both the registrar and the registry can effect parent-side changes to the delegation. In such a situation, additional questions arise.
 
-Not all existing DS automation deployments have made the same choices with respect to these questions, leading to somewhat inconsistent behavior. From the perspective of a domain owner with domain names under various TLDs, this may be unexpected and confusing.
+Not all existing DS automation deployments have made the same choices with respect to these questions, leading to somewhat inconsistent behavior. From the perspective of a domain holder with domain names under various TLDs, this may be unexpected and confusing.
 
 New deployments of DS automation therefore SHOULD follow the recommendations set out in this document, to achieve a more uniform treatment across suffixes and to minimize user surprise.
 
@@ -267,7 +267,7 @@ For these reportworthy cases, the entity performing DS automation would be justi
 
   - Registrar (if DS automation is performed by the registry), via EPP (or similar channel);
 
-  - Registrant (domain owner, in non-technical language, such as "DNSSEC security for your domain has been enabled and will be maintained automatically") or technical contact, via email.
+  - Registrant (domain holder, in non-technical language, such as "DNSSEC security for your domain has been enabled and will be maintained automatically") or technical contact, via email.
 
 For manual updates ({{reporting-1a (case 1a)}}{: format="none"}), commencing DS automation ({{reporting-1b (case 1b)}}{: format="none"}), and deactivating DNSSEC ({{reporting-2 (case 2)}}{: format="none"}), it seems worthwhile to notify both the domain's technical contact and the registrant. This will typically lead to one notification during normal operation of a domain. ({{reporting-1c (Case 1c)}}{: format="none"}, the regular operation of automation, is not an interesting condition to report to a human.)
 
@@ -343,7 +343,7 @@ All in all:
 
 - An exception from this rule is when the entire DS record set was removed, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.
 
-- In all other cases, any properly authenticated DS updates received, including through an automated method, should be considered as the current intent of the domain owner.
+- In all other cases, any properly authenticated DS updates received, including through an automated method, should be considered as the current intent of the domain holder.
 
 ### Concurrent Automatic Updates
 
@@ -408,7 +408,7 @@ Child (DNS operator):
 : DNS operator responsible for a Child zone.
 
 DNS operator:
-: The entity holding the zone's primary copy before it is signed. Typically a DNS hosting provider in the domain owner's name, it controls the authoritative contents and delegations in the zone, and is thus operationally responsible for maintaining the "purposeful" records in the zone file (such as IP address, MX, or CDS/CDNSKEY records).
+: The entity holding the zone's primary copy before it is signed. Typically a DNS hosting provider in the domain holder's name, it controls the authoritative contents and delegations in the zone, and is thus operationally responsible for maintaining the "purposeful" records in the zone file (such as IP address, MX, or CDS/CDNSKEY records).
 The parties involved in other functions for the zone, like signing and serving, are not relevant for this definition.
 
 Parent zone:
