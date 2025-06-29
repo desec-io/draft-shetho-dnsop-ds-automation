@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-26T01:51:45.109534+00:00",
+  "timestamp": "2025-06-29T02:02:48.601698+00:00",
   "repo": "desec-io/draft-shetho-dnsop-ds-automation",
   "labels": [
     {
@@ -50,5 +50,42 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDONCQOHM6caKqG",
+      "title": "Replace \"owner\" with \"holder\"",
+      "url": "https://github.com/desec-io/draft-shetho-dnsop-ds-automation/pull/1",
+      "state": "MERGED",
+      "author": "oskar456",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "It is tricky to talk about ownership of a domain name. The term holder is better suited here.",
+      "createdAt": "2025-06-27T11:34:27Z",
+      "updatedAt": "2025-06-27T12:17:19Z",
+      "baseRepository": "desec-io/draft-shetho-dnsop-ds-automation",
+      "baseRefName": "main",
+      "baseRefOid": "7f5a83b4b0c4b649300b18a1cf55d919bcc27290",
+      "headRepository": "oskar456/draft-shetho-dnsop-ds-automation",
+      "headRefName": "patch-1",
+      "headRefOid": "408573a247dff3f86de25bc7377a8bf8ebccbcbc",
+      "closedAt": "2025-06-27T12:17:13Z",
+      "mergedAt": "2025-06-27T12:17:13Z",
+      "mergedBy": "peterthomassen",
+      "mergeCommit": {
+        "oid": "9ed445d3b682d1db865e41858b1d6bda893b9803"
+      },
+      "comments": [
+        {
+          "author": "peterthomassen",
+          "authorAssociation": "MEMBER",
+          "body": "Thanks!",
+          "createdAt": "2025-06-27T12:17:19Z",
+          "updatedAt": "2025-06-27T12:17:19Z"
+        }
+      ],
+      "reviews": []
+    }
+  ]
 }
