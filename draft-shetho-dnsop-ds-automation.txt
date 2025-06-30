@@ -68,7 +68,7 @@ Table of Contents
      1.1.  Requirements Notation
    2.  Overview of Recommendations
      2.1.  Validity Checks and Safety Measures
-     2.2.  Reporting
+     2.2.  Reporting and Transparency
      2.3.  Registration Locks
      2.4.  Multiple Submitting Parties
      2.5.  CDS vs. CDNSKEY
@@ -76,7 +76,7 @@ Table of Contents
      3.1.  Validity Checks and Safety Measures
        3.1.1.  Continuity of Resolution
        3.1.2.  TTLs and Caching
-     3.2.  Reporting
+     3.2.  Reporting and Transparency
      3.3.  Registration Locks
        3.3.1.  Registry vs. Registrar Lock
        3.3.2.  Detailed Rationale
@@ -114,7 +114,7 @@ Table of Contents
 
    Not all existing DS automation deployments have made the same choices
    with respect to these questions, leading to somewhat inconsistent
-   behavior.  From the perspective of a domain owner with domain names
+   behavior.  From the perspective of a domain holder with domain names
    under various TLDs, this may be unexpected and confusing.
 
    New deployments of DS automation therefore SHOULD follow the
@@ -173,7 +173,7 @@ Recommendations
        is changed, and restore the normal TTL value at a later occasion
        (but not before the previous DS RRset's TTL has expired).
 
-2.2.  Reporting
+2.2.  Reporting and Transparency
 
    This section provides recommendations to address the following
    question:
@@ -200,7 +200,7 @@ Recommendations
        operators SHOULD be notified using a report query [RFC9567] to
        the agent domain as described in
        ([I-D.ietf-dnsop-generalized-notify], Section 4).  The same
-       condition should not be reported unnecessarily frequently to the
+       condition SHOULD NOT be reported unnecessarily frequently to the
        same recipient.
 
    4.  In the RRR model, if the registry performs DS automation, the
@@ -364,7 +364,16 @@ Recommendations
    EPP, the server MAY advertise its TTL policy via the domain <info>
    command described in [I-D.ietf-regext-epp-ttl], Section 2.1.1.2.
 
-3.2.  Reporting
+   While this approach enables quick rollbacks, timing of the desired DS
+   update process itself is largely governed by the previous DS RRset's
+   TTL, and therefore does not generally benefit from an overall speed-
+   up.  Note also that nothing is gained from first lowering the TTL of
+   the old DS RRset: such an additional step would, in fact, require
+   another wait period while resolver caches adjust.  For the sake of
+   completeless, there likewise is no point to increasing any DS TTL
+   values beyond their normal value.
+
+3.2.  Reporting and Transparency
 
    When accepting or rejecting a DS update, it cannot be assumed that
    relevant parties are aware of what's happening.  For example, a
@@ -380,7 +389,9 @@ Recommendations
    early, without verifying that the delegation's DS RRset is in the
    expected state.  For example, when an algorithm rollover is performed
    and the old signing algorithm is removed from the Child zone before
-   the new DS record is added, validation errors may result.
+   the new DS record is added, validation errors may result.  TODO
+   Reduce fearmongering: find numbers, better example, or loosen up
+   wording.
 
    Entities performing automated DS maintenance should report on
    conditions they encounter.  The following success situations may be
@@ -433,7 +444,7 @@ Recommendations
    *  Registrar (if DS automation is performed by the registry), via EPP
       (or similar channel);
 
-   *  Registrant (domain owner, in non-technical language, such as
+   *  Registrant (domain holder, in non-technical language, such as
       "DNSSEC security for your domain has been enabled and will be
       maintained automatically") or technical contact, via email.
 
@@ -454,14 +465,14 @@ Recommendations
    the registrar should always stay informed of any DS record changes,
    e.g., via the EPP Change Poll Extension [RFC8590].
 
-   The same condition should not be reported unnecessarily frequently to
+   The same condition SHOULD NOT be reported unnecessarily frequently to
    the same recipient (e.g., no more than twice in a row).  For example,
    when CDS and CDNSKEY records are inconsistent and prevent DS
    initialization, the registrant may be notified twice.  Additional
    notifications may be sent with some back-off mechanism (in increasing
    intervals).
 
-   The history of DS updates should be kept and, together with the
+   The history of DS updates SHOULD be kept and, together with the
    currently active configuration, be made accessible to the registrant
    (or their designated party) through the customer portal available for
    domain management.
@@ -640,8 +651,10 @@ Recommendations
       that automatic re-initialization (bootstrapping) does not occur.
 
    *  In all other cases, any properly authenticated DS updates
-      received, including through an automated method, should be
-      considered as the current intent of the domain owner.
+      received, including through an automated method, are to be
+      considered as the current intent of the domain holder.
+
+   These conclusions are re-stated in normative language in Section 2.4.
 
 3.4.3.  Concurrent Automatic Updates
 
@@ -763,7 +776,7 @@ Recommendations
    [SAC126] report on which this document is based.
 
    In order of first contribution or review: Barbara Jantzen, Matt
-   Pounsett
+   Pounsett, Matthijs Mekking, Ondřej Caletka
 
 7.  References
 
@@ -888,13 +901,13 @@ Appendix A.  Terminology
    Child (DNS operator):  DNS operator responsible for a Child zone.
 
    DNS operator:  The entity holding the zone's primary copy before it
-      is signed.  Typically a DNS hosting provider in the domain owner's
-      name, it controls the authoritative contents and delegations in
-      the zone, and is thus operationally responsible for maintaining
-      the "purposeful" records in the zone file (such as IP address, MX,
-      or CDS/CDNSKEY records).  The parties involved in other functions
-      for the zone, like signing and serving, are not relevant for this
-      definition.
+      is signed.  Typically a DNS hosting provider in the domain
+      holder's name, it controls the authoritative contents and
+      delegations in the zone, and is thus operationally responsible for
+      maintaining the "purposeful" records in the zone file (such as IP
+      address, MX, or CDS/CDNSKEY records).  The parties involved in
+      other functions for the zone, like signing and serving, are not
+      relevant for this definition.
 
    Parent zone:  DNS zone that holds a delegation for a Child zone.
 
@@ -953,13 +966,9 @@ B.1.1.  TTLs and Caching
 
 Appendix C.  Change History (to be removed before publication)
 
-   *  draft-shetho-dnsop-ds-automation-01
-
-      Editorial changes
-
    *  draft-shetho-dnsop-ds-automation-00
 
-      Initial public draft
+      Initial public draft.
 
 Authors' Addresses
 
