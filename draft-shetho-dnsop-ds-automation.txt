@@ -4,12 +4,12 @@
 
 DNSOP Working Group                                             S. Sheng
 Internet-Draft                                                          
-Intended status: Best Current Practice                      P. Thomassen
+Intended status: Informational                              P. Thomassen
 Expires: 1 January 2026                                            deSEC
                                                             30 June 2025
 
 
-            Best Practice Recommendations for DS Automation
+             Operational Recommendations for DS Automation
                 draft-shetho-dnsop-ds-automation-latest
 
 Abstract
@@ -109,8 +109,8 @@ Table of Contents
    technical decisions relating to issues of validity checks, timing,
    error reporting, locks, etc.  Additionally, when using the RRR model
    (as is common amongst top-level domains), both the registrar and the
-   registry can effect parent-side changes to the delegation.  In such a
-   situation, additional questions arise.
+   registry can effect parent-side changes to the delare reviewers not
+   egation.  In such a situation, additional questions arise.
 
    Not all existing DS automation deployments have made the same choices
    with respect to these questions, leading to somewhat inconsistent
@@ -185,6 +185,10 @@ Recommendations
    analysis in Section 3.2.
 
 Recommendations
+
+   TODO consider practicality of email notifications, or what else to
+   do, see https://mailarchive.ietf.org/arch/msg/dnsop/
+   aXGm1FuEPF5TV1PsVD2zK2fMBvY/
 
    1.  For certain DS updates (see analysis (Section 3.2)) and for DS
        deactivation, both the domain's technical contact and the
@@ -776,7 +780,7 @@ Recommendations
    [SAC126] report on which this document is based.
 
    In order of first contribution or review: Barbara Jantzen, Matt
-   Pounsett, Matthijs Mekking, Ondřej Caletka
+   Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher
 
 7.  References
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>Best Practice Recommendations for DS Automation</title>
+<title>Operational Recommendations for DS Automation</title>
 <meta content="Steve Sheng" name="author">
 <meta content="Peter Thomassen" name="author">
 <meta content="
@@ -1065,7 +1065,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <time datetime="2025-06-30" class="published">30 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
-<dd class="intended-status">Best Current Practice</dd>
+<dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
 <dd class="expires"><time datetime="2026-01-01">1 January 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
@@ -1080,7 +1080,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">Best Practice Recommendations for DS Automation</h1>
+<h1 id="title">Operational Recommendations for DS Automation</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">Enabling support for automatic acceptance of DS parameters from the Child DNS operator (via RFCs 7344, 8078, 9615) requires the parent operator, often a registry or registrar, to make a number of technical decisions. This document describes recommendations for new deployments of such DS automation.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
@@ -1271,7 +1271,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1"><span>[<a href="#RFC7344" class="cite xref">RFC7344</a>]</span>, <span>[<a href="#RFC8078" class="cite xref">RFC8078</a>]</span>, <span>[<a href="#RFC9615" class="cite xref">RFC9615</a>]</span> automate DNSSEC delegation trust maintenance by having the child publish CDS and/or CDNSKEY records which indicate the delegation's desired DNSSEC parameters ("DS automation").<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">Parental Agents using these protocols have to make a number of technical decisions relating to issues of validity checks, timing, error reporting, locks, etc. Additionally, when using the RRR model (as is common amongst top-level domains), both the registrar and the registry can effect parent-side changes to the delegation. In such a situation, additional questions arise.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-2">Parental Agents using these protocols have to make a number of technical decisions relating to issues of validity checks, timing, error reporting, locks, etc. Additionally, when using the RRR model (as is common amongst top-level domains), both the registrar and the registry can effect parent-side changes to the delare reviewers not egation. In such a situation, additional questions arise.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">Not all existing DS automation deployments have made the same choices with respect to these questions, leading to somewhat inconsistent behavior. From the perspective of a domain holder with domain names under various TLDs, this may be unexpected and confusing.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">New deployments of DS automation therefore SHOULD follow the recommendations set out in this document, to achieve a more uniform treatment across suffixes and to minimize user surprise.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">In <a href="#overview" class="auto internal xref">Section 2</a>, operational questions are first raised and directly answered with the corresponding recommendations. After this overview, <a href="#analysis" class="auto internal xref">Section 3</a> follows with analysis and related considerations.<a href="#section-1-5" class="pilcrow">¶</a></p>
@@ -1357,21 +1357,22 @@ and cancel the update if the verifications do not succeed.<a href="#section-2.1.
           <h4 id="name-recommendations-2">
 <a href="#name-recommendations-2" class="section-name selfRef">Recommendations</a>
           </h4>
-<ol start="1" type="1" class="normal type-1" id="section-2.2.1-1">
-<li id="section-2.2.1-1.1">
-              <p id="section-2.2.1-1.1.1">For certain DS updates (see <span><a href="#analysis_reporting" class="internal xref">analysis</a> (<a href="#analysis_reporting" class="auto internal xref">Section 3.2</a>)</span>) and for DS deactivation, both the domain's technical contact and the registrant SHOULD be notified.<a href="#section-2.2.1-1.1.1" class="pilcrow">¶</a></p>
+<p id="section-2.2.1-1">TODO consider practicality of email notifications, or what else to do, see https://mailarchive.ietf.org/arch/msg/dnsop/aXGm1FuEPF5TV1PsVD2zK2fMBvY/<a href="#section-2.2.1-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2.2.1-2">
+<li id="section-2.2.1-2.1">
+              <p id="section-2.2.1-2.1.1">For certain DS updates (see <span><a href="#analysis_reporting" class="internal xref">analysis</a> (<a href="#analysis_reporting" class="auto internal xref">Section 3.2</a>)</span>) and for DS deactivation, both the domain's technical contact and the registrant SHOULD be notified.<a href="#section-2.2.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-2.2.1-1.2">
-              <p id="section-2.2.1-1.2.1">For error conditions, the domain's technical contact and the DNS operator serving the affected Child zone SHOULD be first notified. The registrant SHOULD NOT be notified unless the problem persists for a prolonged amount of time (e.g., three days).<a href="#section-2.2.1-1.2.1" class="pilcrow">¶</a></p>
+            <li id="section-2.2.1-2.2">
+              <p id="section-2.2.1-2.2.1">For error conditions, the domain's technical contact and the DNS operator serving the affected Child zone SHOULD be first notified. The registrant SHOULD NOT be notified unless the problem persists for a prolonged amount of time (e.g., three days).<a href="#section-2.2.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-2.2.1-1.3">
-              <p id="section-2.2.1-1.3.1">Notifications to humans SHOULD be done via email. Child DNS operators SHOULD be notified using a report query <span>[<a href="#RFC9567" class="cite xref">RFC9567</a>]</span> to the agent domain as described in (<span>[<a href="#I-D.ietf-dnsop-generalized-notify" class="cite xref">I-D.ietf-dnsop-generalized-notify</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-generalized-notify-09#section-4" class="relref">Section 4</a></span>). The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient.<a href="#section-2.2.1-1.3.1" class="pilcrow">¶</a></p>
+            <li id="section-2.2.1-2.3">
+              <p id="section-2.2.1-2.3.1">Notifications to humans SHOULD be done via email. Child DNS operators SHOULD be notified using a report query <span>[<a href="#RFC9567" class="cite xref">RFC9567</a>]</span> to the agent domain as described in (<span>[<a href="#I-D.ietf-dnsop-generalized-notify" class="cite xref">I-D.ietf-dnsop-generalized-notify</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-generalized-notify-09#section-4" class="relref">Section 4</a></span>). The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient.<a href="#section-2.2.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-2.2.1-1.4">
-              <p id="section-2.2.1-1.4.1">In the RRR model, if the registry performs DS automation, the registry SHOULD inform the registrar of any DS record changes via the EPP Change Poll Extension <span>[<a href="#RFC8590" class="cite xref">RFC8590</a>]</span> or a similar channel.<a href="#section-2.2.1-1.4.1" class="pilcrow">¶</a></p>
+            <li id="section-2.2.1-2.4">
+              <p id="section-2.2.1-2.4.1">In the RRR model, if the registry performs DS automation, the registry SHOULD inform the registrar of any DS record changes via the EPP Change Poll Extension <span>[<a href="#RFC8590" class="cite xref">RFC8590</a>]</span> or a similar channel.<a href="#section-2.2.1-2.4.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-2.2.1-1.5">
-              <p id="section-2.2.1-1.5.1">The currently active DS configuration as well as the history of DS updates SHOULD be made accessible to the registrant (or their designated party) through the customer portal available for domain management.<a href="#section-2.2.1-1.5.1" class="pilcrow">¶</a></p>
+            <li id="section-2.2.1-2.5">
+              <p id="section-2.2.1-2.5.1">The currently active DS configuration as well as the history of DS updates SHOULD be made accessible to the registrant (or their designated party) through the customer portal available for domain management.<a href="#section-2.2.1-2.5.1" class="pilcrow">¶</a></p>
 </li>
           </ol>
 </section>
@@ -1762,7 +1763,7 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
 <p id="section-6-1">The authors would like to thank the SSAC members who wrote the <span>[<a href="#SAC126" class="cite xref">SAC126</a>]</span> report on which this document is based.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-2">In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher<a href="#section-6-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
