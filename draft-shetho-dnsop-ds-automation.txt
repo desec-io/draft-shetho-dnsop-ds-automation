@@ -5,8 +5,8 @@
 DNSOP Working Group                                             S. Sheng
 Internet-Draft                                                          
 Intended status: Best Current Practice                      P. Thomassen
-Expires: 29 December 2025                                          deSEC
-                                                            27 June 2025
+Expires: 1 January 2026                                            deSEC
+                                                            30 June 2025
 
 
             Best Practice Recommendations for DS Automation
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 December 2025.
+   This Internet-Draft will expire on 1 January 2026.
 
 Copyright Notice
 
@@ -114,7 +114,7 @@ Table of Contents
 
    Not all existing DS automation deployments have made the same choices
    with respect to these questions, leading to somewhat inconsistent
-   behavior.  From the perspective of a domain holder with domain names
+   behavior.  From the perspective of a domain owner with domain names
    under various TLDs, this may be unexpected and confusing.
 
    New deployments of DS automation therefore SHOULD follow the
@@ -332,7 +332,7 @@ Recommendations
    TODO Should checks be done continually?  (Why is that the parent's
    task?)  Or on demand, e.g., on a no-op NOTIFY?  Even when no update
    was requested, it may be worthwhile to occasionally check whether the
-   current DS contents would be accepted today (see Appendix B.1), and
+   current DS contents would be accepted today (see Section 2.1), and
    communicate any failures without changing the published DS record
    set.
 
@@ -433,7 +433,7 @@ Recommendations
    *  Registrar (if DS automation is performed by the registry), via EPP
       (or similar channel);
 
-   *  Registrant (domain holder, in non-technical language, such as
+   *  Registrant (domain owner, in non-technical language, such as
       "DNSSEC security for your domain has been enabled and will be
       maintained automatically") or technical contact, via email.
 
@@ -641,7 +641,7 @@ Recommendations
 
    *  In all other cases, any properly authenticated DS updates
       received, including through an automated method, should be
-      considered as the current intent of the domain holder.
+      considered as the current intent of the domain owner.
 
 3.4.3.  Concurrent Automatic Updates
 
@@ -888,13 +888,13 @@ Appendix A.  Terminology
    Child (DNS operator):  DNS operator responsible for a Child zone.
 
    DNS operator:  The entity holding the zone's primary copy before it
-      is signed.  Typically a DNS hosting provider in the domain
-      holder's name, it controls the authoritative contents and
-      delegations in the zone, and is thus operationally responsible for
-      maintaining the "purposeful" records in the zone file (such as IP
-      address, MX, or CDS/CDNSKEY records).  The parties involved in
-      other functions for the zone, like signing and serving, are not
-      relevant for this definition.
+      is signed.  Typically a DNS hosting provider in the domain owner's
+      name, it controls the authoritative contents and delegations in
+      the zone, and is thus operationally responsible for maintaining
+      the "purposeful" records in the zone file (such as IP address, MX,
+      or CDS/CDNSKEY records).  The parties involved in other functions
+      for the zone, like signing and serving, are not relevant for this
+      definition.
 
    Parent zone:  DNS zone that holds a delegation for a Child zone.
 
@@ -953,9 +953,13 @@ B.1.1.  TTLs and Caching
 
 Appendix C.  Change History (to be removed before publication)
 
+   *  draft-shetho-dnsop-ds-automation-01
+
+      Editorial changes
+
    *  draft-shetho-dnsop-ds-automation-00
 
-      Initial public draft.
+      Initial public draft
 
 Authors' Addresses
 
