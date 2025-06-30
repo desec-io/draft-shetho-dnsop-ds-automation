@@ -1,10 +1,10 @@
 ---
-title: Best Practice Recommendations for DS Automation
+title: Operational Recommendations for DS Automation
 abbrev: DS Automation
 docname: draft-shetho-dnsop-ds-automation-latest
 date: {DATE}
 stream: IETF
-category: bcp
+category: info
 
 ipr: trust200902
 area: Internet
@@ -75,7 +75,7 @@ Enabling support for automatic acceptance of DS parameters from the Child DNS op
 
 {{!RFC7344}}, {{!RFC8078}}, {{!RFC9615}} automate DNSSEC delegation trust maintenance by having the child publish CDS and/or CDNSKEY records which indicate the delegation's desired DNSSEC parameters ("DS automation").
 
-Parental Agents using these protocols have to make a number of technical decisions relating to issues of validity checks, timing, error reporting, locks, etc. Additionally, when using the RRR model (as is common amongst top-level domains), both the registrar and the registry can effect parent-side changes to the delegation. In such a situation, additional questions arise.
+Parental Agents using these protocols have to make a number of technical decisions relating to issues of validity checks, timing, error reporting, locks, etc. Additionally, when using the RRR model (as is common amongst top-level domains), both the registrar and the registry can effect parent-side changes to the delare reviewers not egation. In such a situation, additional questions arise.
 
 Not all existing DS automation deployments have made the same choices with respect to these questions, leading to somewhat inconsistent behavior. From the perspective of a domain holder with domain names under various TLDs, this may be unexpected and confusing.
 
@@ -128,6 +128,8 @@ For the rationale informing the below recommendations, see the analysis in {{ana
 {:notoc}
 {:unnumbered}
 ### Recommendations
+
+TODO consider practicality of email notifications, or what else to do, see https://mailarchive.ietf.org/arch/msg/dnsop/aXGm1FuEPF5TV1PsVD2zK2fMBvY/
 
 1. For certain DS updates (see {{analysis_reporting (analysis)}}) and for DS deactivation, both the domain's technical contact and the registrant SHOULD be notified.
 
@@ -398,7 +400,7 @@ This document considers security aspects throughout, and has not separate consid
 
 The authors would like to thank the SSAC members who wrote the {{SAC126}} report on which this document is based.
 
-In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka
+In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher
 
 --- back
 
