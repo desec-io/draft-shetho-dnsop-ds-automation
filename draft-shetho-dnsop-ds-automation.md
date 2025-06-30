@@ -117,7 +117,7 @@ For the rationale informing the below recommendations, see the analysis in {{ana
 
 2. Parent operators (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when the set of records is changed, and restore the normal TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).
 
-## Reporting {#reporting}
+## Reporting and Transparency {#reporting}
 
 This section provides recommendations to address the following question:
 
@@ -133,7 +133,7 @@ For the rationale informing the below recommendations, see the analysis in {{ana
 
 2. For error conditions, the domain's technical contact and the DNS operator serving the affected Child zone SHOULD be first notified. The registrant SHOULD NOT be notified unless the problem persists for a prolonged amount of time (e.g., three days).
 
-3. Notifications to humans SHOULD be done via email. Child DNS operators SHOULD be notified using a report query {{!RFC9567}} to the agent domain as described in ({{!I-D.ietf-dnsop-generalized-notify, Section 4}}). The same condition should not be reported unnecessarily frequently to the same recipient.
+3. Notifications to humans SHOULD be done via email. Child DNS operators SHOULD be notified using a report query {{!RFC9567}} to the agent domain as described in ({{!I-D.ietf-dnsop-generalized-notify, Section 4}}). The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient.
 
 4. In the RRR model, if the registry performs DS automation, the registry SHOULD inform the registrar of any DS record changes via the EPP Change Poll Extension {{!RFC8590}} or a similar channel.
 
@@ -214,7 +214,7 @@ This is best done by
 2. verifying that the resulting DS RRset does not break the delegation if applied ({{?RFC7344, Section 4.1}}), i.e., that it provides at least one valid path for validators to use ({{?RFC6840, Section 5.11}}). This is the case if there is at least one DS record referencing a key that actually signs the child's DNSKEY RRset, where the digest type and signing algorithm are listed as mandatory ("MUST") in the "Implement for DNSSEC Validation" columns of the relevant IANA registries {{DS-IANA}} and {{DNSKEY-IANA}}.
 
 TODO Should checks be done continually? (Why is that the parent's task?) Or on demand, e.g., on a no-op NOTIFY?
-Even when no update was requested, it may be worthwhile to occasionally check whether the current DS contents would be accepted today (see Appendix B.1), and communicate any failures without changing the published DS record set.
+Even when no update was requested, it may be worthwhile to occasionally check whether the current DS contents would be accepted today (see {{validity}}), and communicate any failures without changing the published DS record set.
 
 ### TTLs and Caching
 
@@ -224,12 +224,15 @@ Registries therefore should significantly lower the DS RRset's TTL for some time
 
 The reduction should be in effect at least until the previous DS record set has expired from caches, that is, the period during which the low-TTL is applied should exceed the normal TTL value. The routine re-signing of the DS RRset (usually after a few days) provides a convenient opportunity for resetting the TTL. When using EPP, the server MAY advertise its TTL policy via the domain `<info>` command described in {{?I-D.ietf-regext-epp-ttl, Section 2.1.1.2}}.
 
+While this approach enables quick rollbacks, timing of the desired DS update process itself is largely governed by the previous DS RRset's TTL, and therefore does not generally benefit from an overall speed-up. Note also that nothing is gained from first lowering the TTL of the old DS RRset: such an additional step would, in fact, require another wait period while resolver caches adjust. For the sake of completeless, there likewise is no point to increasing any DS TTL values beyond their normal value.
 
-## Reporting {#analysis_reporting}
+
+## Reporting and Transparency {#analysis_reporting}
 
 When accepting or rejecting a DS update, it cannot be assumed that relevant parties are aware of what's happening. For example, a registrar may not know when an automatic DS update is performed by the registry. Similarly, a Child DNS operator may not be aware when their CDS/CDNSKEY RRsets are out of sync across nameservers, thus being ignored. Early reporting of such conditions helps involved parties to act appropriately and in a timely manner.
 
 A delegation can break even without an update request to the DS record set. This may occur during key rollovers ({{?RFC6781, Section 4.1}}) when the Child DNS operator proceeds to the next step early, without verifying that the delegation's DS RRset is in the expected state. For example, when an algorithm rollover is performed and the old signing algorithm is removed from the Child zone before the new DS record is added, validation errors may result.
+TODO Reduce fearmongering: find numbers, better example, or loosen up wording.
 
 Entities performing automated DS maintenance should report on conditions they encounter. The following success situations may be of particular interest:
 
@@ -275,9 +278,9 @@ For error conditions (cases {{reporting-3 (3)}}{: format="none"} and {{reporting
 
 When the RRR model is used and the registry performs DS automation, the registrar should always stay informed of any DS record changes, e.g., via the EPP Change Poll Extension {{!RFC8590}}.
 
-The same condition should not be reported unnecessarily frequently to the same recipient (e.g., no more than twice in a row). For example, when CDS and CDNSKEY records are inconsistent and prevent DS initialization, the registrant may be notified twice. Additional notifications may be sent with some back-off mechanism (in increasing intervals).
+The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient (e.g., no more than twice in a row). For example, when CDS and CDNSKEY records are inconsistent and prevent DS initialization, the registrant may be notified twice. Additional notifications may be sent with some back-off mechanism (in increasing intervals).
 
-The history of DS updates should be kept and, together with the currently active configuration, be made accessible to the registrant (or their designated party) through the customer portal available for domain management.
+The history of DS updates SHOULD be kept and, together with the currently active configuration, be made accessible to the registrant (or their designated party) through the customer portal available for domain management.
 
 
 ## Registration Locks {#analysis_locks}
@@ -343,7 +346,9 @@ All in all:
 
 - An exception from this rule is when the entire DS record set was removed, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.
 
-- In all other cases, any properly authenticated DS updates received, including through an automated method, should be considered as the current intent of the domain holder.
+- In all other cases, any properly authenticated DS updates received, including through an automated method, are to be considered as the current intent of the domain holder.
+
+These conclusions are re-stated in normative language in {{multiple}}.
 
 ### Concurrent Automatic Updates
 
@@ -393,7 +398,7 @@ This document considers security aspects throughout, and has not separate consid
 
 The authors would like to thank the SSAC members who wrote the {{SAC126}} report on which this document is based.
 
-In order of first contribution or review: Barbara Jantzen, Matt Pounsett
+In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka
 
 --- back
 
