@@ -48,14 +48,6 @@ informative:
     date: 2023-09-06
     seriesinfo:
       at: DNS OARC 41
-  EPPstatuscodes:
-    target: https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en
-    title: "EPP Status Codes | What Do They Mean, and Why Should I Know?"
-    author:
-      -
-        name: Petr Špaček
-        org: ISC
-    date: 2023-09-06
   SAC126:
     target: https://itp.cdn.icann.org/en/files/security-and-stability-advisory-committee-ssac-reports/sac-126-16-08-2024-en.pdf
     title: "SAC126: DNSSEC Delegation Signer (DS) Record Automation"
@@ -83,7 +75,7 @@ New deployments of DS automation therefore SHOULD follow the recommendations set
 
 In the following sections, operational questions are first raised and answered with the corresponding recommendations. Each section is concluded with an analysis of its recommendations, and related considerations.
 
-Readers are expected to be familiar with DNSSEC {{!RFC9364}}{{!RFC9615}}{{!I-D.ietf-dnsop-generalized-notify}}. For terminology, see {{terminology}}.
+Readers are expected to be familiar with DNSSEC {{!RFC9364}}{{!RFC9615}}{{!I-D.draft-ietf-dnsop-generalized-notify-09}}. For terminology, see {{terminology}}.
 
 ## Requirements Notation
 
@@ -134,7 +126,7 @@ To further reduce the impact of any misconfigured DS record set — be it from a
 
 Registries therefore should significantly lower the DS RRset's TTL for some time following an update. Pragmatic values for the reduced TTL value range between 5–15 minutes.  Such low TTLs might be expected to cause increased load on the corresponding authoritative nameservers; however, recent research has demonstrated them to have negligible impact on the overall load of a registry's authoritative nameserver infrastructure {{LowTTL}}.
 
-The reduction should be in effect at least until the previous DS record set has expired from caches, that is, the period during which the low-TTL is applied should exceed the normal TTL value. The routine re-signing of the DS RRset (usually after a few days) provides a convenient opportunity for resetting the TTL. When using EPP, the server MAY advertise its TTL policy via the domain `<info>` command described in {{?I-D.ietf-regext-epp-ttl, Section 2.1.1.2}}.
+The reduction should be in effect at least until the previous DS record set has expired from caches, that is, the period during which the low-TTL is applied should exceed the normal TTL value. The routine re-signing of the DS RRset (usually after a few days) provides a convenient opportunity for resetting the TTL. When using EPP, the server MAY advertise its TTL policy via the domain `<info>` command described in {{?RFC9803, Section 2.1.1.2}}.
 
 While this approach enables quick rollbacks, timing of the desired DS update process itself is largely governed by the previous DS RRset's TTL, and therefore does not generally benefit from an overall speed-up. Note also that nothing is gained from first lowering the TTL of the old DS RRset: such an additional step would, in fact, require another wait period while resolver caches adjust. For the sake of completeless, there likewise is no point to increasing any DS TTL values beyond their normal value.
 
@@ -155,9 +147,9 @@ TODO "in accordance with the communication preferences established by the child 
 
 2. For error conditions, the domain's technical contact and the DNS operator serving the affected Child zone SHOULD be first notified. The registrant SHOULD NOT be notified unless the problem persists for a prolonged amount of time (e.g., three days).
 
-3. Notifications to humans SHOULD be done via email. Child DNS operators SHOULD be notified using a report query {{!RFC9567}} to the agent domain as described in ({{!I-D.ietf-dnsop-generalized-notify, Section 4}}). The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient.
+3. Notifications to humans SHOULD be done via email. Child DNS operators SHOULD be notified using a report query {{!RFC9567}} to the agent domain as described in ({{!I-D.draft-ietf-dnsop-generalized-notify-09, Section 4}}). The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient.
 
-4. In the RRR model, if the registry performs DS automation, the registry SHOULD inform the registrar of any DS record changes via the EPP Change Poll Extension {{!RFC8590}} or a similar channel.
+4. In the RRR model, registries performing DS automation SHOULD inform the registrar of any DS record changes via the EPP Change Poll Extension {{!RFC8590}} or a similar channel.
 
 5. The currently active DS configuration as well as the history of DS updates SHOULD be made accessible to the registrant (or their designated party) through the customer portal available for domain management.
 
@@ -200,11 +192,11 @@ In addition, there are error conditions worthy of being reported:
 
 For these reportworthy cases, the entity performing DS automation would be justified to attempt communicating the situation. Potential recipients are:
 
-  - Child DNS operator, preferably by making a report query {{!RFC9567}} to the agent domain listed in the EDNS0 Report-Channel option of the DS update notification that triggered the DS update ({{!I-D.ietf-dnsop-generalized-notify, Section 4}}), or alternatively via email to the address contained in the child zone's SOA RNAME field (see {{!RFC1035, Sections 3.3.13 and 8}});
+  - Child DNS operator, preferably by making a report query {{!RFC9567}} to the agent domain listed in the EDNS0 Report-Channel option of the DS update notification that triggered the DS update ({{!I-D.draft-ietf-dnsop-generalized-notify-09, Section 4}}), or alternatively via email to the address contained in the child zone's SOA RNAME field (see {{!RFC1035, Sections 3.3.13 and 8}});
 
-  - Registrar (if DS automation is performed by the registry), via EPP (or similar channel);
+  - Registrar (if DS automation is performed by the registry);
 
-  - Registrant (domain holder, in non-technical language, such as "DNSSEC security for your domain has been enabled and will be maintained automatically") or technical contact, via email.
+  - Registrant (domain holder; in non-technical language, such as "DNSSEC security for your domain has been enabled and will be maintained automatically") or technical contact, via email.
 
 For manual updates ({{reporting-1a (case 1a)}}{: format="none"}), commencing DS automation ({{reporting-1b (case 1b)}}{: format="none"}), and deactivating DNSSEC ({{reporting-2 (case 2)}}{: format="none"}), it seems worthwhile to notify both the domain's technical contact and the registrant. This will typically lead to one notification during normal operation of a domain. ({{reporting-1c (Case 1c)}}{: format="none"}, the regular operation of automation, is not an interesting condition to report to a human.)
 
@@ -271,11 +263,11 @@ This section provides recommendations to address the following questions:
 
 1. Registries and registrars SHOULD provide a another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
 
-2. When DS update requests SHOULD be executed immediately, whether they are received through EPP or another interface interface.
+2. DS update requests SHOULD be executed immediately after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
 
 3. Only when the entire DS record set has been removed, SHOULD DS automation be suspended, in order to prevent accidental re-initialization of the DS record set when the registrant intended to disable DNSSEC.
 
-4. In all other cases where a non-empty DS record set is provisioned out-of-band (e.g., manually) or via EPP (including after an earlier removal), DS automation SHOULD NOT (or no longer) be suspended.
+4. In all other cases where a non-empty DS record set is provisioned through whichever channel, DS automation SHOULD NOT (or no longer) be suspended (including after an earlier removal).
 
 5. In the RRR model, if the registry performs DS automation, the registry SHOULD notify the registrar of all DS updates (see also Recommendation 4 under {{reporting}}).
 
@@ -319,7 +311,7 @@ All in all:
 
 When the RRR model is used, there is a potential for collision if both the registry and the registrar are automating DS provisioning by scanning the child for CDS/CDNSKEY records. No disruptive consequences are expected if both parties perform DS automation. An exception is when during a key rollover, registry and registrar see different versions of the Child's DS update requests, such as when CDS/CDNSKEY records are retrieved from different vantage points. Although unlikely due to Recommendation 1a of {{validity}}, this may lead to flapping of DS updates; however, it is not expected to be harmful as either DS RRset will allow for the validation function to continue to work, as ensured by Recommendation 1b of {{validity}}. The effect subsides as the Child's state eventually becomes consistent (roughly, within the child's replication delay); any flapping until then will be a minor nuisance only.
 
-The issue disappears entirely when scanning is replaced by notifications that trigger DS maintenance through one party's designated endpoint {{!I-D.ietf-dnsop-generalized-notify}}, and can otherwise be mitigated if the registry and registrar agree that only one of them will perform scanning.
+The issue disappears entirely when scanning is replaced by notifications that trigger DS maintenance through one party's designated endpoint {{!I-D.draft-ietf-dnsop-generalized-notify-09}}, and can otherwise be mitigated if the registry and registrar agree that only one of them will perform scanning.
 
 As a standard aspect of key rollovers (RFC 6781), the Child DNS operator is expected to monitor propagation of Child zone updates to all authoritative nameserver instances, and only proceed to the next step once replication has succeeded everywhere and the DS record set was subsequently updated (and in no case before the DS RRset's TTL has passed). Any breakage resulting from improper timing on the Child side is outside of the Parent's sphere of influence, and thus out of scope of DS automation considerations.
 
@@ -430,6 +422,10 @@ It is not necessary to equally reduce the old DS RRset's TTL before applying a c
 
 
 # Change History (to be removed before publication)
+
+* draft-shetho-dnsop-ds-automation-02
+
+> Editorial changes
 
 * draft-shetho-dnsop-ds-automation-01
 
