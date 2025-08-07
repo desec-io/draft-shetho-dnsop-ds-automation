@@ -213,43 +213,44 @@ The history of DS updates SHOULD be kept and, together with the currently active
 
 This section provides recommendations to address the following question:
 
-- How does DS automation interact with other registration state parameters, such as EPP locks?
+- How does DS automation interact with other registration state parameters, such as registration locks?
 
 ## Recommendations
 
-1. Automated DS maintenance SHOULD be suspended when a registry lock is set (in particular, EPP lock serverUpdateProhibited).
+1. To secure ongoing operations, automated DS maintenance SHOULD NOT be suspended based on a registrar update lock alone (such as EPP status clientUpdateProhibited).
 
-2. To secure ongoing operations, automated DS maintenance SHOULD NOT be suspended based on a registrar lock alone (in particular, EPP lock clientUpdateProhibited).
+2. When performed by the registry, automated DS maintenance SHOULD NOT be suspended based on a registry update lock alone (such as EPP status serverUpdateProhibited).
 
 ## Analysis {#analysis_locks}
 
 Registries and registrars can set various types of locks for domain registrations, usually upon the registrant's request. An overview of standardized locks using EPP, for example, is given in {{Section 2.3 of ?RFC5731}}. Some registries may offer additional (or other) types of locks whose meaning and set/unset mechanisms are defined according to a proprietary policy.
 
-While some locks clearly should have no impact on DS automation (such as EPP locks clientDeleteProhibited / serverDeleteProhibited), other types of locks, in particular "update locks", may be recognized as having an impact on DS automation.
+While some locks clearly should have no impact on DS automation (such as transfer or deletion locks), other types of locks, in particular "update locks", deserve a closer analysis.
 
-### Registry vs. Registrar Lock
+### Registrar vs. Registry Lock
 
-In EPP, when a serverUpdateProhibited lock ("registry lock") is in place, there exists an expectation that this lock renders all otherwise updateable registration data immutable. It seems logical to extend this lock to DS updates as well.
+A registrar-side update lock (such as clientUpdateProhibited in EPP) protects against various types of accidental or malicious change (like unintended changes through the registrar's customer portal). Its security model does not prevent the registrar's (nor the registry's) actions. This is because a registrar-side lock can be removed by the registrar without an out-of-band interaction.
 
-The situation is different when a clientUpdateProhibited lock ("registrar lock") is in place. While protecting against various types of accidental or malicious change (such as unintended changes through the registrar's customer portal), this lock is much weaker than the registry lock, as its security model does not prevent the registrar's (nor the registry's) actions. This is because the clientUpdateProhibited EPP lock can be removed by the registrar without an out-of-band interaction.
+Under such a security model, no tangible security benefit is gained by preventing automated DS maintenance based on a registrar lock alone, while preventing it would make maintenance needlessly difficult. It therefore seems reasonable not to suspend automation when such a lock is present.
 
-Under such a security model, no tangible security benefit is gained by preventing automated DS maintenance based on a clientUpdateProhibited lock alone, while preventing it would make maintenance needlessly difficult. It therefore seems reasonable not to suspend automation when such a lock is present.
+When a registry-side update lock is in place, the registrar cannot apply any changes (for security or delinquency or other reasons). However, it does not protect against changes made by the registry itself. This is exemplified by the serverUpdateProhibited EPP status, which demands only that the registrar's "\[r\]equests to update the object \[...\] MUST be rejected" ({{?RFC5731, Section 2.3}}). This type of lock therefore precludes DS automation by the registrar, while registry-side automation may continue.
+
 
 ### Detailed Rationale
 
-Pre-DNSSEC, it was possible for a registration to be set up once, then locked and left alone (no maintenance required). With DNSSEC comes a change to this operational model: the DNSSEC configuration may have to be maintained in order to remain secure and operational. For example, the Child DNS operator may switch to another signing algorithm if the previous one is no longer deemed appropriate, or roll its SEP key for other reasons. Such changes entail updating the delegation's DS records. If authenticated, these operations do not qualify as accidental or malicious change, but as normal and appropriate activity for securing ongoing operation.
+Pre-DNSSEC, it was possible for a registration to be set up once, then locked and left alone (no maintenance required). With DNSSEC comes a change to this operational model: the configuration may have to be maintained in order to remain secure and operational. For example, the Child DNS operator may switch to another signing algorithm if the previous one is no longer deemed appropriate, or roll its SEP key for other reasons. Such changes entail updating the delegation's DS records.
 
-To accommodate key or algorithm rollovers performed by the Child DNS operator, a means for maintaining DS records is needed. It is worth recalling that any properly authenticated DS update request constitutes a legitimate request in the name of the registrant. Further, the resulting DS update is subject to the parent's acceptance checks, and not applied when incompatible with the DNSSEC keys published in the child zone (see {{validity}}).
+If authenticated, these operations do not qualify as accidental or malicious change, but as legitimate and normal activity for securing ongoing operation. The CDS/CDNSKEY method provides an automatic, authenticated means to convey DS update requests. The resulting DS update is subject to the parent's acceptance checks; in particular, it is not applied when it would break the delegation (see {{validity}}).
 
-Given that a clientUpdateProhibited lock protects against unintended changes (such as through the customer portal) while not preventing actions done by the registrar (or the registry) themself, the lock is not suitable for defending against actions performed illegitimately by the registrar or registry (e.g., due to compromise). Any attack on the registration data that is feasible in the presence of a registrar lock is also feasible regardless of whether DS maintenance is done automatically; in other words, DS automation is orthogonal to the attack vector that a registrar lock protects against. Considering that automated DS updates are required to be authenticated and validated for correctness, it thus appears that honoring such requests, while in the registrant's interest, comes with no additional associated risk. (Automated DS maintenance may be disabled by requesting a registry lock, if so desired.)
+Given that registrar locks protect against unintended changes (such as through the customer portal) while not preventing actions done by the registrar (or the registry) themself, such a lock is not suitable for defending against actions performed illegitimately by the registrar or registry (e.g., due to compromise). Any attack on the registration data that is feasible in the presence of a registrar lock is also feasible regardless of whether DS maintenance is done automatically; in other words, DS automation is orthogonal to the attack vector that a registrar lock protects against.
 
-Suspending automated DS maintenance therefore does not seem justified unless the registration data is locked at the registry level (e.g. when the registrant has explicitly requested a serverUpdateProhibited lock to be set). A registrar lock alone provides insufficient grounds for suspending DS maintenance.
+Considering that automated DS updates are required to be authenticated and validated for correctness, it thus appears that honoring such requests, while in the registrant's interest, comes with no additional associated risk. Suspending automated DS maintenance therefore does not seem justified.
 
 Following this line of thought, some registries (e.g., .ch/.cz/.li) today perform automated DS maintenance even when an "update lock" is in place. Registries offering proprietary locks should carefully consider for each lock whether its scope warrants suspension.
 
-In case of a domain not yet secured with DNSSEC, automatic DS initialization is not required to maintain ongoing operation; it might, however, request DNSSEC bootstrapping. In the absence of a registry lock, it is then in the interest of security to enable DNSSEC as requested. The fact that a Child is requesting DS initialization through an authenticated, automated method {{!RFC9615}} expresses the registrant's intent to have the delegation secured. There would be little reason for the registrant to have the corresponding CDS/CDNSKEY records published if not for their request to be acted upon.
+In case of a domain not yet secured with DNSSEC, automatic DS initialization is not required to maintain ongoing operation; however, authenticated DNSSEC bootstrapping {{!RFC9615}} might be requested. Besides being in the interest of security, the fact that a Child is requesting DS initialization through an authenticated method expresses the registrant's intent to have the delegation secured.
 
-Further, some domains are put into clientUpdateProhibited lock by default. In such cases, not honoring authenticated DS initialization requests imposes an additional burden on the registrant, who has to unlock and relock the domain in order to facilitate DS provisioning after registration. This is a needless cost especially for large domain portfolios. It is also unexpected, given that the registrant already has expressed their intent to have the domain secured to their DNS operator who in turn has published CDS/CDNSKEY records. It therefore appears that DS initialization and rollovers should be treated the same way with respect to locks, and only be suspended while in serverUpdateProhibited lock status.
+Further, some domains are equipped with an update lock by default. Not honoring DNSSEC bootstrapping requests then imposes an additional burden on the registrant, who has to unlock and relock the domain in order to facilitate DS provisioning after registration. This is a needless cost especially for large domain portfolios. It is also unexpected, as the registrant already has arranged for the necessary CDS/CDNSKEY records to be published. It therefore appears that DS initialization and rollovers should be treated the same way with respect to locks.
 
 
 # Multiple Submitting Parties {#multiple}
@@ -424,6 +425,8 @@ It is not necessary to equally reduce the old DS RRset's TTL before applying a c
 # Change History (to be removed before publication)
 
 * draft-shetho-dnsop-ds-automation-02
+
+> Allow DS automation during registry update lock
 
 > Editorial changes
 
