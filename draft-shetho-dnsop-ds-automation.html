@@ -10,11 +10,11 @@
 <meta content="
        Enabling support for automatic acceptance of DS parameters from the Child DNS operator (via RFCs 7344, 8078, 9615) requires the parent operator, often a registry or registrar, to make a number of technical decisions. This document describes recommendations for new deployments of such DS automation. 
     " name="description">
-<meta content="xml2rfc 3.29.0" name="generator">
+<meta content="xml2rfc 3.30.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-shetho-dnsop-ds-automation-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.29.0
+  xml2rfc 3.30.0
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1045,11 +1045,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">DS Automation</td>
-<td class="right">July 2025</td>
+<td class="right">August 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Sheng &amp; Thomassen</td>
-<td class="center">Expires 8 January 2026</td>
+<td class="center">Expires 8 February 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-shetho-dnsop-ds-automation-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-07" class="published">7 July 2025</time>
+<time datetime="2025-08-07" class="published">7 August 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-08">8 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-02-08">8 February 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1115,7 +1115,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 8 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 February 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1192,7 +1192,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-analysis-3" class="internal xref">Analysis</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.1">
-                    <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="auto internal xref">4.2.1</a>.  <a href="#name-registry-vs-registrar-lock" class="internal xref">Registry vs. Registrar Lock</a></p>
+                    <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="auto internal xref">4.2.1</a>.  <a href="#name-registrar-vs-registry-lock" class="internal xref">Registrar vs. Registry Lock</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.2">
                     <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="auto internal xref">4.2.2</a>.  <a href="#name-detailed-rationale" class="internal xref">Detailed Rationale</a></p>
@@ -1293,7 +1293,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-3">Not all existing DS automation deployments have made the same choices with respect to these questions, leading to somewhat inconsistent behavior. From the perspective of a domain holder with domain names under various TLDs, this may be unexpected and confusing.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">New deployments of DS automation therefore SHOULD follow the recommendations set out in this document, to achieve a more uniform treatment across suffixes and to minimize user surprise. The recommendations are intended to provide baseline safety and uniformity of behavior across parents. Registries with additional requirements on DS update checks MAY implement any additional checks in line with local policy.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">In the following sections, operational questions are first raised and answered with the corresponding recommendations. Each section is concluded with an analysis of its recommendations, and related considerations.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">Readers are expected to be familiar with DNSSEC <span>[<a href="#RFC9364" class="cite xref">RFC9364</a>]</span><span>[<a href="#RFC9615" class="cite xref">RFC9615</a>]</span><span>[<a href="#I-D.ietf-dnsop-generalized-notify" class="cite xref">I-D.ietf-dnsop-generalized-notify</a>]</span>. For terminology, see <a href="#terminology" class="auto internal xref">Appendix A</a>.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-6">Readers are expected to be familiar with DNSSEC <span>[<a href="#RFC9364" class="cite xref">RFC9364</a>]</span><span>[<a href="#RFC9615" class="cite xref">RFC9615</a>]</span><span>[<a href="#I-D.draft-ietf-dnsop-generalized-notify-09" class="cite xref">I-D.draft-ietf-dnsop-generalized-notify-09</a>]</span>. For terminology, see <a href="#terminology" class="auto internal xref">Appendix A</a>.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <div id="requirements-notation">
 <section id="section-1.1">
         <h3 id="name-requirements-notation">
@@ -1382,7 +1382,7 @@ Even when no update was requested, it may be worthwhile to occasionally check wh
           </h4>
 <p id="section-2.2.2-1">To further reduce the impact of any misconfigured DS record set — be it from automated or from manual provisioning — the option to quickly roll back the delegation's DNSSEC parameters is of great importance. This is achieved by setting a comparatively low TTL on the DS record set in the parent domain, at the cost of reduced resiliency against nameserver unreachability due to the earlier expiration of cached records. The availability risk can be mitigated by limiting such TTLs to a brief time period after a change to the DS configuration, during which rollbacks are most likely to occur.<a href="#section-2.2.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.2.2-2">Registries therefore should significantly lower the DS RRset's TTL for some time following an update. Pragmatic values for the reduced TTL value range between 5–15 minutes.  Such low TTLs might be expected to cause increased load on the corresponding authoritative nameservers; however, recent research has demonstrated them to have negligible impact on the overall load of a registry's authoritative nameserver infrastructure <span>[<a href="#LowTTL" class="cite xref">LowTTL</a>]</span>.<a href="#section-2.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-2.2.2-3">The reduction should be in effect at least until the previous DS record set has expired from caches, that is, the period during which the low-TTL is applied should exceed the normal TTL value. The routine re-signing of the DS RRset (usually after a few days) provides a convenient opportunity for resetting the TTL. When using EPP, the server MAY advertise its TTL policy via the domain <code>&lt;info&gt;</code> command described in <span>[<a href="#I-D.ietf-regext-epp-ttl" class="cite xref">I-D.ietf-regext-epp-ttl</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-regext-epp-ttl-18#section-2.1.1.2" class="relref">Section 2.1.1.2</a></span>.<a href="#section-2.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-2.2.2-3">The reduction should be in effect at least until the previous DS record set has expired from caches, that is, the period during which the low-TTL is applied should exceed the normal TTL value. The routine re-signing of the DS RRset (usually after a few days) provides a convenient opportunity for resetting the TTL. When using EPP, the server MAY advertise its TTL policy via the domain <code>&lt;info&gt;</code> command described in <span>[<a href="#RFC9803" class="cite xref">RFC9803</a>], <a href="https://rfc-editor.org/rfc/rfc9803#section-2.1.1.2" class="relref">Section 2.1.1.2</a></span>.<a href="#section-2.2.2-3" class="pilcrow">¶</a></p>
 <p id="section-2.2.2-4">While this approach enables quick rollbacks, timing of the desired DS update process itself is largely governed by the previous DS RRset's TTL, and therefore does not generally benefit from an overall speed-up. Note also that nothing is gained from first lowering the TTL of the old DS RRset: such an additional step would, in fact, require another wait period while resolver caches adjust. For the sake of completeless, there likewise is no point to increasing any DS TTL values beyond their normal value.<a href="#section-2.2.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1416,10 +1416,10 @@ Even when no update was requested, it may be worthwhile to occasionally check wh
             <p id="section-3.1-3.2.1">For error conditions, the domain's technical contact and the DNS operator serving the affected Child zone SHOULD be first notified. The registrant SHOULD NOT be notified unless the problem persists for a prolonged amount of time (e.g., three days).<a href="#section-3.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-3.1-3.3">
-            <p id="section-3.1-3.3.1">Notifications to humans SHOULD be done via email. Child DNS operators SHOULD be notified using a report query <span>[<a href="#RFC9567" class="cite xref">RFC9567</a>]</span> to the agent domain as described in (<span>[<a href="#I-D.ietf-dnsop-generalized-notify" class="cite xref">I-D.ietf-dnsop-generalized-notify</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-generalized-notify-09#section-4" class="relref">Section 4</a></span>). The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient.<a href="#section-3.1-3.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-3.3.1">Notifications to humans SHOULD be done via email. Child DNS operators SHOULD be notified using a report query <span>[<a href="#RFC9567" class="cite xref">RFC9567</a>]</span> to the agent domain as described in (<span>[<a href="#I-D.draft-ietf-dnsop-generalized-notify-09" class="cite xref">I-D.draft-ietf-dnsop-generalized-notify-09</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-generalized-notify-09#section-4" class="relref">Section 4</a></span>). The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient.<a href="#section-3.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-3.1-3.4">
-            <p id="section-3.1-3.4.1">In the RRR model, if the registry performs DS automation, the registry SHOULD inform the registrar of any DS record changes via the EPP Change Poll Extension <span>[<a href="#RFC8590" class="cite xref">RFC8590</a>]</span> or a similar channel.<a href="#section-3.1-3.4.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-3.4.1">In the RRR model, registries performing DS automation SHOULD inform the registrar of any DS record changes via the EPP Change Poll Extension <span>[<a href="#RFC8590" class="cite xref">RFC8590</a>]</span> or a similar channel.<a href="#section-3.1-3.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-3.1-3.5">
             <p id="section-3.1-3.5.1">The currently active DS configuration as well as the history of DS updates SHOULD be made accessible to the registrant (or their designated party) through the customer portal available for domain management.<a href="#section-3.1-3.5.1" class="pilcrow">¶</a></p>
@@ -1497,13 +1497,13 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
 <p id="section-3.2-7">For these reportworthy cases, the entity performing DS automation would be justified to attempt communicating the situation. Potential recipients are:<a href="#section-3.2-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.2-8.1">
-            <p id="section-3.2-8.1.1">Child DNS operator, preferably by making a report query <span>[<a href="#RFC9567" class="cite xref">RFC9567</a>]</span> to the agent domain listed in the EDNS0 Report-Channel option of the DS update notification that triggered the DS update (<span>[<a href="#I-D.ietf-dnsop-generalized-notify" class="cite xref">I-D.ietf-dnsop-generalized-notify</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-generalized-notify-09#section-4" class="relref">Section 4</a></span>), or alternatively via email to the address contained in the child zone's SOA RNAME field (see Sections <a href="https://rfc-editor.org/rfc/rfc1035#section-3.3.13" class="relref">3.3.13</a> and <a href="https://rfc-editor.org/rfc/rfc1035#section-8" class="relref">8</a> of <span>[<a href="#RFC1035" class="cite xref">RFC1035</a>]</span>);<a href="#section-3.2-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.2-8.1.1">Child DNS operator, preferably by making a report query <span>[<a href="#RFC9567" class="cite xref">RFC9567</a>]</span> to the agent domain listed in the EDNS0 Report-Channel option of the DS update notification that triggered the DS update (<span>[<a href="#I-D.draft-ietf-dnsop-generalized-notify-09" class="cite xref">I-D.draft-ietf-dnsop-generalized-notify-09</a>], <a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-generalized-notify-09#section-4" class="relref">Section 4</a></span>), or alternatively via email to the address contained in the child zone's SOA RNAME field (see Sections <a href="https://rfc-editor.org/rfc/rfc1035#section-3.3.13" class="relref">3.3.13</a> and <a href="https://rfc-editor.org/rfc/rfc1035#section-8" class="relref">8</a> of <span>[<a href="#RFC1035" class="cite xref">RFC1035</a>]</span>);<a href="#section-3.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.2-8.2">
-            <p id="section-3.2-8.2.1">Registrar (if DS automation is performed by the registry), via EPP (or similar channel);<a href="#section-3.2-8.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.2-8.2.1">Registrar (if DS automation is performed by the registry);<a href="#section-3.2-8.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.2-8.3">
-            <p id="section-3.2-8.3.1">Registrant (domain holder, in non-technical language, such as "DNSSEC security for your domain has been enabled and will be maintained automatically") or technical contact, via email.<a href="#section-3.2-8.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.2-8.3.1">Registrant (domain holder; in non-technical language, such as "DNSSEC security for your domain has been enabled and will be maintained automatically") or technical contact, via email.<a href="#section-3.2-8.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-3.2-9">For manual updates (<a href="#reporting-1a" class="internal xref">case 1a</a>), commencing DS automation (<a href="#reporting-1b" class="internal xref">case 1b</a>), and deactivating DNSSEC (<a href="#reporting-2" class="internal xref">case 2</a>), it seems worthwhile to notify both the domain's technical contact and the registrant. This will typically lead to one notification during normal operation of a domain. (<a href="#reporting-1c" class="internal xref">Case 1c</a>, the regular operation of automation, is not an interesting condition to report to a human.)<a href="#section-3.2-9" class="pilcrow">¶</a></p>
@@ -1523,7 +1523,7 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
 <p id="section-4-1">This section provides recommendations to address the following question:<a href="#section-4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4-2.1">
-          <p id="section-4-2.1.1">How does DS automation interact with other registration state parameters, such as EPP locks?<a href="#section-4-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-4-2.1.1">How does DS automation interact with other registration state parameters, such as registration locks?<a href="#section-4-2.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <div id="recommendations-2">
@@ -1533,10 +1533,10 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
         </h3>
 <ol start="1" type="1" class="normal type-1" id="section-4.1-1">
 <li id="section-4.1-1.1">
-            <p id="section-4.1-1.1.1">Automated DS maintenance SHOULD be suspended when a registry lock is set (in particular, EPP lock serverUpdateProhibited).<a href="#section-4.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-1.1.1">To secure ongoing operations, automated DS maintenance SHOULD NOT be suspended based on a registrar update lock alone (such as EPP status clientUpdateProhibited).<a href="#section-4.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-4.1-1.2">
-            <p id="section-4.1-1.2.1">To secure ongoing operations, automated DS maintenance SHOULD NOT be suspended based on a registrar lock alone (in particular, EPP lock clientUpdateProhibited).<a href="#section-4.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-1.2.1">When performed by the registry, automated DS maintenance SHOULD NOT be suspended based on a registry update lock alone (such as EPP status serverUpdateProhibited).<a href="#section-4.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 </section>
@@ -1547,15 +1547,15 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-analysis-3" class="section-name selfRef">Analysis</a>
         </h3>
 <p id="section-4.2-1">Registries and registrars can set various types of locks for domain registrations, usually upon the registrant's request. An overview of standardized locks using EPP, for example, is given in <span><a href="https://rfc-editor.org/rfc/rfc5731#section-2.3" class="relref">Section 2.3</a> of [<a href="#RFC5731" class="cite xref">RFC5731</a>]</span>. Some registries may offer additional (or other) types of locks whose meaning and set/unset mechanisms are defined according to a proprietary policy.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">While some locks clearly should have no impact on DS automation (such as EPP locks clientDeleteProhibited / serverDeleteProhibited), other types of locks, in particular "update locks", may be recognized as having an impact on DS automation.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<div id="registry-vs-registrar-lock">
+<p id="section-4.2-2">While some locks clearly should have no impact on DS automation (such as transfer or deletion locks), other types of locks, in particular "update locks", deserve a closer analysis.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<div id="registrar-vs-registry-lock">
 <section id="section-4.2.1">
-          <h4 id="name-registry-vs-registrar-lock">
-<a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-registry-vs-registrar-lock" class="section-name selfRef">Registry vs. Registrar Lock</a>
+          <h4 id="name-registrar-vs-registry-lock">
+<a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-registrar-vs-registry-lock" class="section-name selfRef">Registrar vs. Registry Lock</a>
           </h4>
-<p id="section-4.2.1-1">In EPP, when a serverUpdateProhibited lock ("registry lock") is in place, there exists an expectation that this lock renders all otherwise updateable registration data immutable. It seems logical to extend this lock to DS updates as well.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-2">The situation is different when a clientUpdateProhibited lock ("registrar lock") is in place. While protecting against various types of accidental or malicious change (such as unintended changes through the registrar's customer portal), this lock is much weaker than the registry lock, as its security model does not prevent the registrar's (nor the registry's) actions. This is because the clientUpdateProhibited EPP lock can be removed by the registrar without an out-of-band interaction.<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-3">Under such a security model, no tangible security benefit is gained by preventing automated DS maintenance based on a clientUpdateProhibited lock alone, while preventing it would make maintenance needlessly difficult. It therefore seems reasonable not to suspend automation when such a lock is present.<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-1">A registrar-side update lock (such as clientUpdateProhibited in EPP) protects against various types of accidental or malicious change (like unintended changes through the registrar's customer portal). Its security model does not prevent the registrar's (nor the registry's) actions. This is because a registrar-side lock can be removed by the registrar without an out-of-band interaction.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-2">Under such a security model, no tangible security benefit is gained by preventing automated DS maintenance based on a registrar lock alone, while preventing it would make maintenance needlessly difficult. It therefore seems reasonable not to suspend automation when such a lock is present.<a href="#section-4.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-3">When a registry-side update lock is in place, the registrar cannot apply any changes (for security or delinquency or other reasons). However, it does not protect against changes made by the registry itself. This is exemplified by the serverUpdateProhibited EPP status, which demands only that the registrar's "[r]equests to update the object [...] MUST be rejected" (<span>[<a href="#RFC5731" class="cite xref">RFC5731</a>], <a href="https://rfc-editor.org/rfc/rfc5731#section-2.3" class="relref">Section 2.3</a></span>). This type of lock therefore precludes DS automation by the registrar, while registry-side automation may continue.<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="detailed-rationale">
@@ -1563,13 +1563,13 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
           <h4 id="name-detailed-rationale">
 <a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-detailed-rationale" class="section-name selfRef">Detailed Rationale</a>
           </h4>
-<p id="section-4.2.2-1">Pre-DNSSEC, it was possible for a registration to be set up once, then locked and left alone (no maintenance required). With DNSSEC comes a change to this operational model: the DNSSEC configuration may have to be maintained in order to remain secure and operational. For example, the Child DNS operator may switch to another signing algorithm if the previous one is no longer deemed appropriate, or roll its SEP key for other reasons. Such changes entail updating the delegation's DS records. If authenticated, these operations do not qualify as accidental or malicious change, but as normal and appropriate activity for securing ongoing operation.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.2-2">To accommodate key or algorithm rollovers performed by the Child DNS operator, a means for maintaining DS records is needed. It is worth recalling that any properly authenticated DS update request constitutes a legitimate request in the name of the registrant. Further, the resulting DS update is subject to the parent's acceptance checks, and not applied when incompatible with the DNSSEC keys published in the child zone (see <a href="#validity" class="auto internal xref">Section 2</a>).<a href="#section-4.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2.2-3">Given that a clientUpdateProhibited lock protects against unintended changes (such as through the customer portal) while not preventing actions done by the registrar (or the registry) themself, the lock is not suitable for defending against actions performed illegitimately by the registrar or registry (e.g., due to compromise). Any attack on the registration data that is feasible in the presence of a registrar lock is also feasible regardless of whether DS maintenance is done automatically; in other words, DS automation is orthogonal to the attack vector that a registrar lock protects against. Considering that automated DS updates are required to be authenticated and validated for correctness, it thus appears that honoring such requests, while in the registrant's interest, comes with no additional associated risk. (Automated DS maintenance may be disabled by requesting a registry lock, if so desired.)<a href="#section-4.2.2-3" class="pilcrow">¶</a></p>
-<p id="section-4.2.2-4">Suspending automated DS maintenance therefore does not seem justified unless the registration data is locked at the registry level (e.g. when the registrant has explicitly requested a serverUpdateProhibited lock to be set). A registrar lock alone provides insufficient grounds for suspending DS maintenance.<a href="#section-4.2.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-1">Pre-DNSSEC, it was possible for a registration to be set up once, then locked and left alone (no maintenance required). With DNSSEC comes a change to this operational model: the configuration may have to be maintained in order to remain secure and operational. For example, the Child DNS operator may switch to another signing algorithm if the previous one is no longer deemed appropriate, or roll its SEP key for other reasons. Such changes entail updating the delegation's DS records.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-2">If authenticated, these operations do not qualify as accidental or malicious change, but as legitimate and normal activity for securing ongoing operation. The CDS/CDNSKEY method provides an automatic, authenticated means to convey DS update requests. The resulting DS update is subject to the parent's acceptance checks; in particular, it is not applied when it would break the delegation (see <a href="#validity" class="auto internal xref">Section 2</a>).<a href="#section-4.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-3">Given that registrar locks protect against unintended changes (such as through the customer portal) while not preventing actions done by the registrar (or the registry) themself, such a lock is not suitable for defending against actions performed illegitimately by the registrar or registry (e.g., due to compromise). Any attack on the registration data that is feasible in the presence of a registrar lock is also feasible regardless of whether DS maintenance is done automatically; in other words, DS automation is orthogonal to the attack vector that a registrar lock protects against.<a href="#section-4.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-4">Considering that automated DS updates are required to be authenticated and validated for correctness, it thus appears that honoring such requests, while in the registrant's interest, comes with no additional associated risk. Suspending automated DS maintenance therefore does not seem justified.<a href="#section-4.2.2-4" class="pilcrow">¶</a></p>
 <p id="section-4.2.2-5">Following this line of thought, some registries (e.g., .ch/.cz/.li) today perform automated DS maintenance even when an "update lock" is in place. Registries offering proprietary locks should carefully consider for each lock whether its scope warrants suspension.<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
-<p id="section-4.2.2-6">In case of a domain not yet secured with DNSSEC, automatic DS initialization is not required to maintain ongoing operation; it might, however, request DNSSEC bootstrapping. In the absence of a registry lock, it is then in the interest of security to enable DNSSEC as requested. The fact that a Child is requesting DS initialization through an authenticated, automated method <span>[<a href="#RFC9615" class="cite xref">RFC9615</a>]</span> expresses the registrant's intent to have the delegation secured. There would be little reason for the registrant to have the corresponding CDS/CDNSKEY records published if not for their request to be acted upon.<a href="#section-4.2.2-6" class="pilcrow">¶</a></p>
-<p id="section-4.2.2-7">Further, some domains are put into clientUpdateProhibited lock by default. In such cases, not honoring authenticated DS initialization requests imposes an additional burden on the registrant, who has to unlock and relock the domain in order to facilitate DS provisioning after registration. This is a needless cost especially for large domain portfolios. It is also unexpected, given that the registrant already has expressed their intent to have the domain secured to their DNS operator who in turn has published CDS/CDNSKEY records. It therefore appears that DS initialization and rollovers should be treated the same way with respect to locks, and only be suspended while in serverUpdateProhibited lock status.<a href="#section-4.2.2-7" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-6">In case of a domain not yet secured with DNSSEC, automatic DS initialization is not required to maintain ongoing operation; however, authenticated DNSSEC bootstrapping <span>[<a href="#RFC9615" class="cite xref">RFC9615</a>]</span> might be requested. Besides being in the interest of security, the fact that a Child is requesting DS initialization through an authenticated method expresses the registrant's intent to have the delegation secured.<a href="#section-4.2.2-6" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-7">Further, some domains are equipped with an update lock by default. Not honoring DNSSEC bootstrapping requests then imposes an additional burden on the registrant, who has to unlock and relock the domain in order to facilitate DS provisioning after registration. This is a needless cost especially for large domain portfolios. It is also unexpected, as the registrant already has arranged for the necessary CDS/CDNSKEY records to be published. It therefore appears that DS initialization and rollovers should be treated the same way with respect to locks.<a href="#section-4.2.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1600,13 +1600,13 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
             <p id="section-5.1-1.1.1">Registries and registrars SHOULD provide a another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.<a href="#section-5.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-1.2">
-            <p id="section-5.1-1.2.1">When DS update requests SHOULD be executed immediately, whether they are received through EPP or another interface interface.<a href="#section-5.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-1.2.1">DS update requests SHOULD be executed immediately after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.<a href="#section-5.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-1.3">
             <p id="section-5.1-1.3.1">Only when the entire DS record set has been removed, SHOULD DS automation be suspended, in order to prevent accidental re-initialization of the DS record set when the registrant intended to disable DNSSEC.<a href="#section-5.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-1.4">
-            <p id="section-5.1-1.4.1">In all other cases where a non-empty DS record set is provisioned out-of-band (e.g., manually) or via EPP (including after an earlier removal), DS automation SHOULD NOT (or no longer) be suspended.<a href="#section-5.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-1.4.1">In all other cases where a non-empty DS record set is provisioned through whichever channel, DS automation SHOULD NOT (or no longer) be suspended (including after an earlier removal).<a href="#section-5.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-1.5">
             <p id="section-5.1-1.5.1">In the RRR model, if the registry performs DS automation, the registry SHOULD notify the registrar of all DS updates (see also Recommendation 4 under <a href="#reporting" class="auto internal xref">Section 3</a>).<a href="#section-5.1-1.5.1" class="pilcrow">¶</a></p>
@@ -1672,7 +1672,7 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
 <a href="#section-5.2.3" class="section-number selfRef">5.2.3. </a><a href="#name-concurrent-automatic-update" class="section-name selfRef">Concurrent Automatic Updates</a>
           </h4>
 <p id="section-5.2.3-1">When the RRR model is used, there is a potential for collision if both the registry and the registrar are automating DS provisioning by scanning the child for CDS/CDNSKEY records. No disruptive consequences are expected if both parties perform DS automation. An exception is when during a key rollover, registry and registrar see different versions of the Child's DS update requests, such as when CDS/CDNSKEY records are retrieved from different vantage points. Although unlikely due to Recommendation 1a of <a href="#validity" class="auto internal xref">Section 2</a>, this may lead to flapping of DS updates; however, it is not expected to be harmful as either DS RRset will allow for the validation function to continue to work, as ensured by Recommendation 1b of <a href="#validity" class="auto internal xref">Section 2</a>. The effect subsides as the Child's state eventually becomes consistent (roughly, within the child's replication delay); any flapping until then will be a minor nuisance only.<a href="#section-5.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.2.3-2">The issue disappears entirely when scanning is replaced by notifications that trigger DS maintenance through one party's designated endpoint <span>[<a href="#I-D.ietf-dnsop-generalized-notify" class="cite xref">I-D.ietf-dnsop-generalized-notify</a>]</span>, and can otherwise be mitigated if the registry and registrar agree that only one of them will perform scanning.<a href="#section-5.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.3-2">The issue disappears entirely when scanning is replaced by notifications that trigger DS maintenance through one party's designated endpoint <span>[<a href="#I-D.draft-ietf-dnsop-generalized-notify-09" class="cite xref">I-D.draft-ietf-dnsop-generalized-notify-09</a>]</span>, and can otherwise be mitigated if the registry and registrar agree that only one of them will perform scanning.<a href="#section-5.2.3-2" class="pilcrow">¶</a></p>
 <p id="section-5.2.3-3">As a standard aspect of key rollovers (RFC 6781), the Child DNS operator is expected to monitor propagation of Child zone updates to all authoritative nameserver instances, and only proceed to the next step once replication has succeeded everywhere and the DS record set was subsequently updated (and in no case before the DS RRset's TTL has passed). Any breakage resulting from improper timing on the Child side is outside of the Parent's sphere of influence, and thus out of scope of DS automation considerations.<a href="#section-5.2.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1786,13 +1786,13 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
         <dd>
 <span class="refAuthor">IANA</span>, <span class="refTitle">"Delegation Signer (DS) Resource Record (RR) Type Digest Algorithms"</span>, <span>n.d.</span>, <span>&lt;<a href="http://www.iana.org/assignments/ds-rr-types">http://www.iana.org/assignments/ds-rr-types</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-dnsop-cds-consistency">[I-D.ietf-dnsop-cds-consistency]</dt>
-        <dd>
-<span class="refAuthor">Thomassen, P.</span>, <span class="refTitle">"Clarifications on CDS/CDNSKEY and CSYNC Consistency"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnsop-cds-consistency-06</span>, <time datetime="2025-04-09" class="refDate">9 April 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-cds-consistency-06">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-cds-consistency-06</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-dnsop-generalized-notify">[I-D.ietf-dnsop-generalized-notify]</dt>
+<dt id="I-D.draft-ietf-dnsop-generalized-notify-09">[I-D.draft-ietf-dnsop-generalized-notify-09]</dt>
         <dd>
 <span class="refAuthor">Stenstam, J.</span>, <span class="refAuthor">Thomassen, P.</span>, and <span class="refAuthor">J. R. Levine</span>, <span class="refTitle">"Generalized DNS Notifications"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnsop-generalized-notify-09</span>, <time datetime="2025-03-19" class="refDate">19 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-generalized-notify-09">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-generalized-notify-09</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-dnsop-cds-consistency">[I-D.ietf-dnsop-cds-consistency]</dt>
+        <dd>
+<span class="refAuthor">Thomassen, P.</span>, <span class="refTitle">"Clarifications on CDS/CDNSKEY and CSYNC Consistency"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnsop-cds-consistency-08</span>, <time datetime="2025-08-01" class="refDate">1 August 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-cds-consistency-08">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-cds-consistency-08</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC1035">[RFC1035]</dt>
         <dd>
@@ -1839,14 +1839,6 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
 <a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
-<dt id="EPPstatuscodes">[EPPstatuscodes]</dt>
-        <dd>
-<span class="refAuthor">Špaček, P.</span>, <span class="refTitle">"EPP Status Codes | What Do They Mean, and Why Should I Know?"</span>, <time datetime="2023-09-06" class="refDate">6 September 2023</time>, <span>&lt;<a href="https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en">https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-regext-epp-ttl">[I-D.ietf-regext-epp-ttl]</dt>
-        <dd>
-<span class="refAuthor">Brown, G.</span>, <span class="refTitle">"Extensible Provisioning Protocol (EPP) mapping for DNS Time-To-Live (TTL) values"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-regext-epp-ttl-18</span>, <time datetime="2025-01-07" class="refDate">7 January 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-regext-epp-ttl-18">https://datatracker.ietf.org/doc/html/draft-ietf-regext-epp-ttl-18</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="LowTTL">[LowTTL]</dt>
         <dd>
 <span class="refAuthor">Špaček, P.</span>, <span class="refTitle">"DS and DNSKEY low TTL experiments"</span>, <span class="seriesInfo">at DNS OARC 41</span>, <time datetime="2023-09-06" class="refDate">6 September 2023</time>, <span>&lt;<a href="https://indico.dns-oarc.net/event/47/contributions/1010/attachments/958/1811/DS%20and%20DNSKEY%20TTL%20experiment.pdf">https://indico.dns-oarc.net/event/47/contributions/1010/attachments/958/1811/DS%20and%20DNSKEY%20TTL%20experiment.pdf</a>&gt;</span>. </dd>
@@ -1866,6 +1858,10 @@ TODO Reduce fearmongering: find numbers, better example, or loosen up wording.<a
 <dt id="RFC6840">[RFC6840]</dt>
         <dd>
 <span class="refAuthor">Weiler, S., Ed.</span> and <span class="refAuthor">D. Blacka, Ed.</span>, <span class="refTitle">"Clarifications and Implementation Notes for DNS Security (DNSSEC)"</span>, <span class="seriesInfo">RFC 6840</span>, <span class="seriesInfo">DOI 10.17487/RFC6840</span>, <time datetime="2013-02" class="refDate">February 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6840">https://www.rfc-editor.org/rfc/rfc6840</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9803">[RFC9803]</dt>
+        <dd>
+<span class="refAuthor">Brown, G.</span>, <span class="refTitle">"Extensible Provisioning Protocol (EPP) Mapping for DNS Time-to-Live (TTL) Values"</span>, <span class="seriesInfo">RFC 9803</span>, <span class="seriesInfo">DOI 10.17487/RFC9803</span>, <time datetime="2025-06" class="refDate">June 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9803">https://www.rfc-editor.org/rfc/rfc9803</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SAC126">[SAC126]</dt>
       <dd>
@@ -1969,22 +1965,37 @@ The parties involved in other functions for the zone, like signing and serving, 
       </h2>
 <ul class="normal">
 <li class="normal" id="appendix-D-1.1">
-          <p id="appendix-D-1.1.1">draft-shetho-dnsop-ds-automation-01<a href="#appendix-D-1.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-D-1.1.1">draft-shetho-dnsop-ds-automation-02<a href="#appendix-D-1.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-D-2.1">
-          <p id="appendix-D-2.1.1">Incorporated various review feedback (editorial + adding TODOs)<a href="#appendix-D-2.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<ul class="normal">
-<li class="normal" id="appendix-D-3.1">
-          <p id="appendix-D-3.1.1">draft-shetho-dnsop-ds-automation-00<a href="#appendix-D-3.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-D-2.1.1">Allow DS automation during registry update lock<a href="#appendix-D-2.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="appendix-D-4.1">
-          <p id="appendix-D-4.1.1">Initial public draft.<a href="#appendix-D-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="appendix-D-3.1">
+          <p id="appendix-D-3.1.1">Editorial changes<a href="#appendix-D-3.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<ul class="normal">
+<li class="normal" id="appendix-D-4.1">
+          <p id="appendix-D-4.1.1">draft-shetho-dnsop-ds-automation-01<a href="#appendix-D-4.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="appendix-D-5.1">
+          <p id="appendix-D-5.1.1">Incorporated various review feedback (editorial + adding TODOs)<a href="#appendix-D-5.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<ul class="normal">
+<li class="normal" id="appendix-D-6.1">
+          <p id="appendix-D-6.1.1">draft-shetho-dnsop-ds-automation-00<a href="#appendix-D-6.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="appendix-D-7.1">
+          <p id="appendix-D-7.1.1">Initial public draft.<a href="#appendix-D-7.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
