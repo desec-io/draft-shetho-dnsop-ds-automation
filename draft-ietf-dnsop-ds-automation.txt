@@ -10,7 +10,7 @@ Expires: 9 March 2026                                              deSEC
 
 
              Operational Recommendations for DS Automation
-                draft-shetho-dnsop-ds-automation-latest
+                 draft-ietf-dnsop-ds-automation-latest
 
 Abstract
 
@@ -959,6 +959,10 @@ C.1.1.  TTLs and Caching
    clients, minimizing impact overall.
 
 Appendix D.  Change History (to be removed before publication)
+
+   *  draft-ietf-dnsop-ds-automation-00
+
+      Rename after adoption
 
    *  draft-shetho-dnsop-ds-automation-02
 
