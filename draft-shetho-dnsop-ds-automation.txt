@@ -5,8 +5,8 @@
 DNSOP Working Group                                             S. Sheng
 Internet-Draft                                                          
 Intended status: Informational                              P. Thomassen
-Expires: 9 March 2026                                              deSEC
-                                                        5 September 2025
+Expires: 16 April 2026                                             deSEC
+                                                         13 October 2025
 
 
              Operational Recommendations for DS Automation
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 March 2026.
+   This Internet-Draft will expire on 16 April 2026.
 
 Copyright Notice
 
