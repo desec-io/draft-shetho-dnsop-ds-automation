@@ -75,7 +75,7 @@ New deployments of DS automation therefore SHOULD follow the recommendations set
 
 In the following sections, operational questions are first raised and answered with the corresponding recommendations. Each section is concluded with an analysis of its recommendations, and related considerations.
 
-Readers are expected to be familiar with DNSSEC {{!RFC9364}}{{!RFC9615}}{{!I-D.draft-ietf-dnsop-generalized-notify-09}}. For terminology, see {{terminology}}.
+Readers are expected to be familiar with DNSSEC {{!RFC9364}}{{!RFC9615}}{{!RFC9859}}. For terminology, see {{terminology}}.
 
 ## Requirements Notation
 
@@ -139,19 +139,15 @@ This section provides recommendations to address the following question:
 
 ## Recommendations
 
-TODO consider practicality of email notifications, or what else to do, see https://mailarchive.ietf.org/arch/msg/dnsop/aXGm1FuEPF5TV1PsVD2zK2fMBvY/
-
-TODO "in accordance with the communication preferences established by the child zone operator"? Should there be an ability for the zone operator to establish their communication (who and how) preferences? How would that be signaled?
-
 1. For certain DS updates (see {{analysis_reporting (analysis)}}) and for DS deactivation, relevant points of contact known to the zone operator SHOULD be notified.
 
-2. For error conditions, the domain's technical contact and the DNS operator serving the affected Child zone SHOULD be first notified. The registrant SHOULD NOT be notified unless the problem persists for a prolonged amount of time (e.g., three days).
+2. For error conditions, the child DNS operator and the domain's technical contact (if applicable) SHOULD be first notified. The registrant SHOULD NOT be notified unless the problem persists for a prolonged amount of time (e.g., three days).
 
-3. Notifications to humans SHOULD be done via email. Child DNS operators SHOULD be notified using a report query {{!RFC9567}} to the agent domain as described in ({{!I-D.draft-ietf-dnsop-generalized-notify-09, Section 4}}). The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient.
+3. Child DNS operators SHOULD be notified using a report query {{!RFC9567}} to the agent domain as described in ({{!RFC9859, Section 4}}). Notifications to humans (domain holder) will be performed in accordance with the communication preferences established with the parent-side entity (registry or registrar). The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient.
 
 4. In the RRR model, registries performing DS automation SHOULD inform the registrar of any DS record changes via the EPP Change Poll Extension {{!RFC8590}} or a similar channel.
 
-5. The currently active DS configuration as well as the history of DS updates SHOULD be made accessible to the registrant (or their designated party) through the customer portal available for domain management.
+5. The currently active DS configuration SHOULD be made accessible to the registrant (or their designated party) through the customer portal available for domain management. The DS update history MAY be made available in the same way.
 
 ## Analysis {#analysis_reporting}
 
@@ -192,13 +188,13 @@ In addition, there are error conditions worthy of being reported:
 
 For these reportworthy cases, the entity performing DS automation would be justified to attempt communicating the situation. Potential recipients are:
 
-  - Child DNS operator, preferably by making a report query {{!RFC9567}} to the agent domain listed in the EDNS0 Report-Channel option of the DS update notification that triggered the DS update ({{!I-D.draft-ietf-dnsop-generalized-notify-09, Section 4}}), or alternatively via email to the address contained in the child zone's SOA RNAME field (see {{!RFC1035, Sections 3.3.13 and 8}});
+  - Child DNS operator, preferably by making a report query {{!RFC9567}} to the agent domain listed in the EDNS0 Report-Channel option of the DS update notification that triggered the DS update ({{!RFC9859, Section 4}}), or else via email to the address contained in the child zone's SOA RNAME field (see {{!RFC1035, Sections 3.3.13 and 8}});
 
   - Registrar (if DS automation is performed by the registry);
 
-  - Registrant (domain holder; in non-technical language, such as "DNSSEC security for your domain has been enabled and will be maintained automatically") or technical contact, via email.
+  - Registrant (domain holder; in non-technical language, such as "DNSSEC security for your domain has been enabled and will be maintained automatically") or technical contact, in accordance with the communication preferences established with the parent-side entity.
 
-For manual updates ({{reporting-1a (case 1a)}}{: format="none"}), commencing DS automation ({{reporting-1b (case 1b)}}{: format="none"}), and deactivating DNSSEC ({{reporting-2 (case 2)}}{: format="none"}), it seems worthwhile to notify both the domain's technical contact and the registrant. This will typically lead to one notification during normal operation of a domain. ({{reporting-1c (Case 1c)}}{: format="none"}, the regular operation of automation, is not an interesting condition to report to a human.)
+For manual updates ({{reporting-1a (case 1a)}}{: format="none"}), commencing DS automation ({{reporting-1b (case 1b)}}{: format="none"}), and deactivating DNSSEC ({{reporting-2 (case 2)}}{: format="none"}), it seems worthwhile to notify both the domain's technical contact (if applicable) and the registrant. This will typically lead to one notification during normal operation of a domain. ({{reporting-1c (Case 1c)}}{: format="none"}, the regular operation of automation, is not an interesting condition to report to a human.)
 
 For error conditions (cases {{reporting-3 (3)}}{: format="none"} and {{reporting-4 (4)}}{: format="none"}), the registrant need not always be involved. It seems advisable to first notify the domain's technical contact and the DNS operator serving the affected Child zone, and only if the problem persists for a prolonged amount of time (e.g., three days), notify the registrant.
 
@@ -206,7 +202,7 @@ When the RRR model is used and the registry performs DS automation, the registra
 
 The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient (e.g., no more than twice in a row). For example, when CDS and CDNSKEY records are inconsistent and prevent DS initialization, the registrant may be notified twice. Additional notifications may be sent with some back-off mechanism (in increasing intervals).
 
-The history of DS updates SHOULD be kept and, together with the currently active configuration, be made accessible to the registrant (or their designated party) through the customer portal available for domain management.
+The current DS configuration SHOULD be made accessible to the registrant (or their designated party) through the customer portal available for domain management. Ideally, the history of DS updates would also be available. However, due to the associated state requirements and the lack of direct operational impact, implementation of this is OPTIONAL.
 
 
 # Registration Locks {#locks}
@@ -266,13 +262,11 @@ This section provides recommendations to address the following questions:
 
 2. DS update requests SHOULD be executed immediately after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
 
-3. Only when the entire DS record set has been removed, SHOULD DS automation be suspended, in order to prevent accidental re-initialization of the DS record set when the registrant intended to disable DNSSEC.
+3. When processing a CDS/CDNSKEY "delete" signal to remove the entire DS record set ({{!RFC8078, Section 4}}), DS automation SHOULD NOT be suspended. For all other removal requests (such as when received via EPP or a web form), DS automation SHOULD be suspended, in order to prevent accidental re-initialization when the registrant intended to disable DNSSEC.
 
-4. In all other cases where a non-empty DS record set is provisioned through whichever channel, DS automation SHOULD NOT (or no longer) be suspended (including after an earlier removal).
+4. Whenever a non-empty DS record set is provisioned, through whichever channel, DS automation SHOULD NOT (or no longer) be suspended (including after an earlier removal).
 
-5. In the RRR model, if the registry performs DS automation, the registry SHOULD notify the registrar of all DS updates (see also Recommendation 4 under {{reporting}}).
-
-6. In the RRR model, registries SHOULD NOT perform automated DS maintenance if it is known that the registrar does not support DNSSEC.
+5. In the RRR model, registries SHOULD NOT perform automated DS maintenance if it is known that the registrar performs this function, or does not support DNSSEC at all.
 
 ## Analysis {#analysis_multiple}
 
@@ -300,11 +294,28 @@ One option is to suspend DS automation after a manual DS update, but only until 
 
 Note also that "automatic rollback" due to old CDS/CDNSKEY RRsets can only occur if they are signed with a key authorized by one of new DS records. Validity checks described in {{validity}} further ensure that updates do not break validation.
 
+Removal of a DS record set is triggered either through a CDS/CDNSKEY "delete" signal observed by the party performing the automation ({{!RFC8078, Section 4}}), or by receiving a removal request out-of-band (e.g., via EPP or a web form). In the first case, it is useful to keep automation active for the delegation in question, to facilitate later DS bootstrapping. In the second case, it is likely that the registrant intends to disable DNSSEC for the domain, and DS automation is best suspended (until a new DS record is provisioned somehow).
+
+One may ask how a registry can know whether a removal request received via EPP was the result of the registrar observing a CDS/CDNSKEY "delete" signal. It turns out that the registry does not need to know that; in fact, the advice works out nicely regardless of who does the automation:
+
+{:type="a"}
+1. Only registry: If the registry performs automation, then the registry will consider any request received from the registrar as out-of-band (in the context of this automation). When such requests demand removal of the entire DS record set, the registry therefore should suspend automation.
+
+2. Only registrar: The registrar can always distinguish between removal requests obtained from a CDS/CDNSKEY "delete" signal and other registrant requests, and suspend automation as appropriate.
+
+3. In the (undesirable) case that both parties automate, there are two cases:
+
+    - If the registrant submits a manual removal request to the registrar, it is out-of-band from the registrar perspective (e.g., web form), and also for the registry (e.g., EPP). As a consequence, both will suspend automation (which is the correct result).
+
+    - If a CDS/CDNSKEY "delete" signal causes the registrar to request DS removal from the registry, then the registry will suspend automation (because the removal request is received out-of-band, such as via EPP). This is independent of whether the registry's automation has already seen the signal. The registrar, however, will be aware of the in-band nature of the request and not suspend automation (which is also the correct result).
+
+   As a side effect, this works towards avoiding redundant automation at the registry.
+
 All in all:
 
 - It appears advisable to generally not suspend in-band DS automation when an out-of-band DS update has occurred.
 
-- An exception from this rule is when the entire DS record set was removed, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.
+- An exception from this rule is when the entire DS record set was removed through an out-of-band request, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.
 
 - In all other cases, any properly authenticated DS updates received, including through an automated method, are to be considered as the current intent of the domain holder.
 
@@ -312,7 +323,7 @@ All in all:
 
 When the RRR model is used, there is a potential for collision if both the registry and the registrar are automating DS provisioning by scanning the child for CDS/CDNSKEY records. No disruptive consequences are expected if both parties perform DS automation. An exception is when during a key rollover, registry and registrar see different versions of the Child's DS update requests, such as when CDS/CDNSKEY records are retrieved from different vantage points. Although unlikely due to Recommendation 1a of {{validity}}, this may lead to flapping of DS updates; however, it is not expected to be harmful as either DS RRset will allow for the validation function to continue to work, as ensured by Recommendation 1b of {{validity}}. The effect subsides as the Child's state eventually becomes consistent (roughly, within the child's replication delay); any flapping until then will be a minor nuisance only.
 
-The issue disappears entirely when scanning is replaced by notifications that trigger DS maintenance through one party's designated endpoint {{!I-D.draft-ietf-dnsop-generalized-notify-09}}, and can otherwise be mitigated if the registry and registrar agree that only one of them will perform scanning.
+The issue disappears entirely when scanning is replaced by notifications that trigger DS maintenance through one party's designated endpoint {{!RFC9859}}, and can otherwise be mitigated if the registry and registrar agree that only one of them will perform scanning.
 
 As a standard aspect of key rollovers (RFC 6781), the Child DNS operator is expected to monitor propagation of Child zone updates to all authoritative nameserver instances, and only proceed to the next step once replication has succeeded everywhere and the DS record set was subsequently updated (and in no case before the DS RRset's TTL has passed). Any breakage resulting from improper timing on the Child side is outside of the Parent's sphere of influence, and thus out of scope of DS automation considerations.
 
@@ -327,7 +338,7 @@ This section provides recommendations to address the following question:
 
 1. DNS operators SHOULD publish both CDNSKEY records as well as CDS records, and follow best practice for the choice of hash digest type {{DS-IANA}}.
 
-2. Parents, independently of their preference for CDS or CDNSKEY, SHOULD require publication of both RRsets, and SHOULD NOT proceed with updating the DS RRset if one is found missing or inconsistent with the other.
+2. Parents, independently of their preference for CDS or CDNSKEY, SHOULD require publication of both RRsets, and SHOULD NOT proceed with updating the DS RRset if one is found missing. (TODO: this updates RFC 7344 Section 6)
 
 3. Registries (or registrars) scanning for CDS/CDNSKEY records SHOULD verify that any published CDS and CDNSKEY records are consistent with each other, and otherwise cancel the update {{!I-D.ietf-dnsop-cds-consistency}}.
 
@@ -372,7 +383,7 @@ This document considers security aspects throughout, and has not separate consid
 
 The authors would like to thank the SSAC members who wrote the {{SAC126}} report on which this document is based.
 
-In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies
+In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque, Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink
 
 --- back
 
@@ -423,6 +434,18 @@ It is not necessary to equally reduce the old DS RRset's TTL before applying a c
 
 
 # Change History (to be removed before publication)
+
+* draft-ietf-dnsop-ds-automation-01
+
+> Clarify Recommendation 5.1.3 (on suspension of automation after DS RRset removal) and provide extra analysis
+
+> Providing access to DS update history is now optional
+
+> Humans (domains holders) should be notified according to preferences established with registry/registrar (not necessarily via email)
+
+> Remove redundant Recommendation 5.1.5 (same as 3.1.4)
+
+> Editorial changes
 
 * draft-ietf-dnsop-ds-automation-00
 
