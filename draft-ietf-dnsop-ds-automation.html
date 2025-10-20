@@ -10,22 +10,21 @@
 <meta content="
        Enabling support for automatic acceptance of DS parameters from the Child DNS operator (via RFCs 7344, 8078, 9615) requires the parent operator, often a registry or registrar, to make a number of technical decisions. This document describes recommendations for new deployments of such DS automation. 
     " name="description">
-<meta content="xml2rfc 3.30.2" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-dnsop-ds-automation-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.2
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.4.0
+    platformdirs 4.5.0
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.5
-    setuptools 80.9.0
     wcwidth 0.2.14
 -->
 <link href="draft-ietf-dnsop-ds-automation.xml" rel="alternate" type="application/rfc+xml">
@@ -1049,7 +1048,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Sheng &amp; Thomassen</td>
-<td class="center">Expires 16 April 2026</td>
+<td class="center">Expires 23 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1061,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-dnsop-ds-automation-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-13" class="published">13 October 2025</time>
+<time datetime="2025-10-20" class="published">20 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-16">16 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-23">23 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1115,7 +1114,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 16 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1268,6 +1267,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1.2.1">
                     <p id="section-toc.1-1.13.2.1.2.1.1"><a href="#appendix-C.1.1" class="auto internal xref">C.1.1</a>.  <a href="#name-ttls-and-caching-2" class="internal xref">TTLs and Caching</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
+                <p id="section-toc.1-1.13.2.2.1"><a href="#appendix-C.2" class="auto internal xref">C.2</a>.  <a href="#name-cds-vs-cdnskey-2" class="internal xref">CDS vs. CDNSKEY</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2.2.1">
+                    <p id="section-toc.1-1.13.2.2.2.1.1"><a href="#appendix-C.2.1" class="auto internal xref">C.2.1</a>.  <a href="#name-analysis-6" class="internal xref">Analysis</a></p>
 </li>
                 </ul>
 </li>
@@ -1719,13 +1726,9 @@ As a side effect, this works towards avoiding redundant automation at the regist
             <p id="section-6.1-1.1.1">DNS operators SHOULD publish both CDNSKEY records as well as CDS records, and follow best practice for the choice of hash digest type <span>[<a href="#DS-IANA" class="cite xref">DS-IANA</a>]</span>.<a href="#section-6.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-6.1-1.2">
-            <p id="section-6.1-1.2.1">Parents, independently of their preference for CDS or CDNSKEY, SHOULD require publication of both RRsets, and SHOULD NOT proceed with updating the DS RRset if one is found missing. (TODO: this updates RFC 7344 Section 6)<a href="#section-6.1-1.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li id="section-6.1-1.3">
-            <p id="section-6.1-1.3.1">Registries (or registrars) scanning for CDS/CDNSKEY records SHOULD verify that any published CDS and CDNSKEY records are consistent with each other, and otherwise cancel the update <span>[<a href="#I-D.ietf-dnsop-cds-consistency" class="cite xref">I-D.ietf-dnsop-cds-consistency</a>]</span>.<a href="#section-6.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="section-6.1-1.2.1">Registries (or registrars) scanning for CDS/CDNSKEY records SHOULD verify that any published CDS and CDNSKEY records are consistent with each other, and otherwise cancel the update <span>[<a href="#I-D.ietf-dnsop-cds-consistency" class="cite xref">I-D.ietf-dnsop-cds-consistency</a>]</span>.<a href="#section-6.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-6.1-2">TODO clarify that this does not prevent parent from chosing a digest type that's not in CDS (separate recommendation?)<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="analysis_dichotomy">
@@ -1744,18 +1747,10 @@ As a side effect, this works towards avoiding redundant automation at the regist
 </li>
         </ul>
 <p id="section-6.2-4">The need to make a choice in the face of this dichotomy is not specific to DS automation: even when DNSSEC parameters are relayed to the Parent through conventional channels, the Parent has to make some choice about which format(s) to accept.<a href="#section-6.2-4" class="pilcrow">¶</a></p>
-<p id="section-6.2-5">Some registries have chosen to prefer DNSKEY-style input which seemingly comes with greater influence on the delegation's security properties (in particular, the DS hash digest type). It is noted that regardless of the choice of input format, the Parent cannot prevent the Child from following insecure cryptographic practices (such as insecure key storage, or using a key with insufficient entropy). Besides, as the DS format contains a field indicating the hash digest type, objectionable ones (such as those outlawed by <span>[<a href="#DS-IANA" class="cite xref">DS-IANA</a>]</span>) can still be rejected even when ingesting CDS records, by inspecting that field.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
-<p id="section-6.2-6">The fact that more than one input type needs to be considered burdens both Child DNS operators and Parents with the need to consider how to handle this dichotomy. Until this is addressed in an industry-wide manner and one of these mechanisms is deprecated in favor of the other, both Child DNS operators and Parents implementing automated DS maintenance should act as to maximize interoperability:<a href="#section-6.2-6" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6.2-7.1">
-            <p id="section-6.2-7.1.1">As there exists no protocol for Child DNS Operators to discover a Parent's input format preference, it seems best to publish both CDNSKEY as well as CDS records, in line with <span>[<a href="#RFC7344" class="cite xref">RFC7344</a>], <a href="https://rfc-editor.org/rfc/rfc7344#section-5" class="relref">Section 5</a></span>. The choice of hash digest type should follow current best practice <span>[<a href="#DS-IANA" class="cite xref">DS-IANA</a>]</span>.<a href="#section-6.2-7.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-6.2-7.2">
-            <p id="section-6.2-7.2.1">Parents, independently of their input format preference, are advised to require publication of both CDS and CDNSKEY records, and to enforce consistency between them, as determined by matching CDS and CDNSKEY records using hash digest algorithms whose support is mandatory <span>[<a href="#DS-IANA" class="cite xref">DS-IANA</a>]</span>. (Consistency of CDS records with optional or unsupported hash digest types is not required.)<a href="#section-6.2-7.2.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-6.2-8">Publishing the same information in two different formats is not ideal. Still, it is much less complex and costly than burdening the Child DNS operator with discovering each Parent's policy; also, it is very easily automated. Operators should ensure that published RRsets are consistent with each other.<a href="#section-6.2-8" class="pilcrow">¶</a></p>
-<p id="section-6.2-9">By rejecting the DS update if either RRset is found missing or inconsistent with the other, Child DNS operators are held responsible when publishing contradictory information. At the same time, Parents can retain whatever benefit their policy choice carries for them, while facilitating a later revision of that choice. This approach also simplifies possible future deprecation of one of the two formats, as no coordination or implementation changes would be needed on the child side.<a href="#section-6.2-9" class="pilcrow">¶</a></p>
+<p id="section-6.2-5">As there exists no protocol for Child DNS Operators to discover a Parent's input format preference, it seems best for interoperability to publish both CDNSKEY as well as CDS records, in line with <span>[<a href="#RFC7344" class="cite xref">RFC7344</a>], <a href="https://rfc-editor.org/rfc/rfc7344#section-5" class="relref">Section 5</a></span>. The choice of hash digest type should follow current best practice <span>[<a href="#DS-IANA" class="cite xref">DS-IANA</a>]</span>.<a href="#section-6.2-5" class="pilcrow">¶</a></p>
+<p id="section-6.2-6">Publishing the same information in two different formats is not ideal. Still, it is much less complex and costly than burdening the Child DNS operator with discovering each Parent's policy; also, it is very easily automated. Operators should ensure that published RRsets are consistent with each other.<a href="#section-6.2-6" class="pilcrow">¶</a></p>
+<p id="section-6.2-7">If both RRsets are published, Parents are expected to verify consistency between them <span>[<a href="#I-D.ietf-dnsop-cds-consistency" class="cite xref">I-D.ietf-dnsop-cds-consistency</a>]</span>, as determined by matching CDS and CDNSKEY records using hash digest algorithms whose support is mandatory <span>[<a href="#DS-IANA" class="cite xref">DS-IANA</a>]</span>. (Consistency of CDS records with optional or unsupported hash digest types is not required.)<a href="#section-6.2-7" class="pilcrow">¶</a></p>
+<p id="section-6.2-8">By rejecting the DS update if RRsets are found to be inconsistent, Child DNS operators are held responsible when publishing contradictory information. Note that this does not imply a restriction to the hash digest types found in the CDS RRset: If no inconsistencies are found, the parent can publish DS records with whatever digest type(s) it prefers.<a href="#section-6.2-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1782,7 +1777,7 @@ As a side effect, this works towards avoiding redundant automation at the regist
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
 <p id="section-9-1">The authors would like to thank the SSAC members who wrote the <span>[<a href="#SAC126" class="cite xref">SAC126</a>]</span> report on which this document is based.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<p id="section-9-2">In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque, Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink<a href="#section-9-2" class="pilcrow">¶</a></p>
+<p id="section-9-2">In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque, Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink, Viktor Dukhovni, Hugo Salgado<a href="#section-9-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
@@ -1806,7 +1801,7 @@ As a side effect, this works towards avoiding redundant automation at the regist
 <dd class="break"></dd>
 <dt id="I-D.ietf-dnsop-cds-consistency">[I-D.ietf-dnsop-cds-consistency]</dt>
         <dd>
-<span class="refAuthor">Thomassen, P.</span>, <span class="refTitle">"Clarifications on CDS/CDNSKEY and CSYNC Consistency"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnsop-cds-consistency-08</span>, <time datetime="2025-08-01" class="refDate">1 August 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-cds-consistency-08">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-cds-consistency-08</a>&gt;</span>. </dd>
+<span class="refAuthor">Thomassen, P.</span>, <span class="refTitle">"Clarifications on CDS/CDNSKEY and CSYNC Consistency"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dnsop-cds-consistency-09</span>, <time datetime="2025-10-15" class="refDate">15 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-cds-consistency-09">https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-cds-consistency-09</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC1035">[RFC1035]</dt>
         <dd>
@@ -1974,6 +1969,24 @@ The parties involved in other functions for the zone, like signing and serving, 
 </div>
 </section>
 </div>
+<div id="cds-vs-cdnskey-1">
+<section id="appendix-C.2">
+        <h3 id="name-cds-vs-cdnskey-2">
+<a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-cds-vs-cdnskey-2" class="section-name selfRef">CDS vs. CDNSKEY</a>
+        </h3>
+<p id="appendix-C.2-1">Recommendation not pursued: Parents, independently of their preference for CDS or CDNSKEY, SHOULD require publication of both RRsets, and SHOULD NOT proceed with updating the DS RRset if one is found missing. (this would update RFC 7344 Section 6)<a href="#appendix-C.2-1" class="pilcrow">¶</a></p>
+<div id="analysis">
+<section id="appendix-C.2.1">
+          <h4 id="name-analysis-6">
+<a href="#appendix-C.2.1" class="section-number selfRef">C.2.1. </a><a href="#name-analysis-6" class="section-name selfRef">Analysis</a>
+          </h4>
+<p id="appendix-C.2.1-1">Some registries have chosen to prefer DNSKEY-style input which seemingly comes with greater influence on the delegation's security properties (in particular, the DS hash digest type). It is noted that regardless of the choice of input format, the Parent cannot prevent the Child from following insecure cryptographic practices (such as insecure key storage, or using a key with insufficient entropy). Besides, as the DS format contains a field indicating the hash digest type, objectionable ones (such as those outlawed by <span>[<a href="#DS-IANA" class="cite xref">DS-IANA</a>]</span>) can still be rejected even when ingesting CDS records, by inspecting that field.<a href="#appendix-C.2.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.2.1-2">The fact that more than one input type needs to be considered burdens both Child DNS operators and Parents with the need to consider how to handle this dichotomy. Until this is addressed in an industry-wide manner and one of these mechanisms is deprecated in favor of the other, Parents implementing automated DS maintenance should act as to maximize interoperability: Parents, independently of their input format preference, are therefore advised to require publication of both CDS and CDNSKEY records.<a href="#appendix-C.2.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-C.2.1-3">Parents can retain whatever benefit their policy choice carries for them, while facilitating a later revision of that choice. This approach also simplifies possible future deprecation of one of the two formats, as no coordination or implementation changes would be needed on the child side.<a href="#appendix-C.2.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
 </section>
 </div>
 <div id="change-history-to-be-removed-before-publication">
@@ -1988,72 +2001,77 @@ The parties involved in other functions for the zone, like signing and serving, 
       </ul>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-D-2.1">
-          <p id="appendix-D-2.1.1">Clarify Recommendation 5.1.3 (on suspension of automation after DS RRset removal) and provide extra analysis<a href="#appendix-D-2.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-D-2.1.1">Remove Recommendation 6.1.2 which had told parents to require publication of both CDS and CDNSKEY<a href="#appendix-D-2.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-D-3.1">
-          <p id="appendix-D-3.1.1">Providing access to DS update history is now optional<a href="#appendix-D-3.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-D-3.1.1">Clarify Recommendation 5.1.3 (on suspension of automation after DS RRset removal) and provide extra analysis<a href="#appendix-D-3.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-D-4.1">
-          <p id="appendix-D-4.1.1">Humans (domains holders) should be notified according to preferences established with registry/registrar (not necessarily via email)<a href="#appendix-D-4.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-D-4.1.1">Providing access to DS update history is now optional<a href="#appendix-D-4.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-D-5.1">
-          <p id="appendix-D-5.1.1">Remove redundant Recommendation 5.1.5 (same as 3.1.4)<a href="#appendix-D-5.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-D-5.1.1">Humans (domains holders) should be notified according to preferences established with registry/registrar (not necessarily via email)<a href="#appendix-D-5.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-D-6.1">
-          <p id="appendix-D-6.1.1">Editorial changes<a href="#appendix-D-6.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<ul class="normal">
-<li class="normal" id="appendix-D-7.1">
-          <p id="appendix-D-7.1.1">draft-ietf-dnsop-ds-automation-00<a href="#appendix-D-7.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-D-6.1.1">Remove redundant Recommendation 5.1.5 (same as 3.1.4)<a href="#appendix-D-6.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="appendix-D-8.1">
-          <p id="appendix-D-8.1.1">Rename after adoption<a href="#appendix-D-8.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="appendix-D-7.1">
+          <p id="appendix-D-7.1.1">Editorial changes<a href="#appendix-D-7.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal">
-<li class="normal" id="appendix-D-9.1">
-          <p id="appendix-D-9.1.1">draft-shetho-dnsop-ds-automation-02<a href="#appendix-D-9.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-D-8.1">
+          <p id="appendix-D-8.1.1">draft-ietf-dnsop-ds-automation-00<a href="#appendix-D-8.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="appendix-D-10.1">
-          <p id="appendix-D-10.1.1">Allow DS automation during registry update lock<a href="#appendix-D-10.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="appendix-D-9.1">
+          <p id="appendix-D-9.1.1">Rename after adoption<a href="#appendix-D-9.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<ul class="normal">
+<li class="normal" id="appendix-D-10.1">
+          <p id="appendix-D-10.1.1">draft-shetho-dnsop-ds-automation-02<a href="#appendix-D-10.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-D-11.1">
-          <p id="appendix-D-11.1.1">Editorial changes<a href="#appendix-D-11.1.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<ul class="normal">
-<li class="normal" id="appendix-D-12.1">
-          <p id="appendix-D-12.1.1">draft-shetho-dnsop-ds-automation-01<a href="#appendix-D-12.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-D-11.1.1">Allow DS automation during registry update lock<a href="#appendix-D-11.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="appendix-D-13.1">
-          <p id="appendix-D-13.1.1">Incorporated various review feedback (editorial + adding TODOs)<a href="#appendix-D-13.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="appendix-D-12.1">
+          <p id="appendix-D-12.1.1">Editorial changes<a href="#appendix-D-12.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal">
-<li class="normal" id="appendix-D-14.1">
-          <p id="appendix-D-14.1.1">draft-shetho-dnsop-ds-automation-00<a href="#appendix-D-14.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-D-13.1">
+          <p id="appendix-D-13.1.1">draft-shetho-dnsop-ds-automation-01<a href="#appendix-D-13.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="appendix-D-15.1">
-          <p id="appendix-D-15.1.1">Initial public draft.<a href="#appendix-D-15.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="appendix-D-14.1">
+          <p id="appendix-D-14.1.1">Incorporated various review feedback (editorial + adding TODOs)<a href="#appendix-D-14.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<ul class="normal">
+<li class="normal" id="appendix-D-15.1">
+          <p id="appendix-D-15.1.1">draft-shetho-dnsop-ds-automation-00<a href="#appendix-D-15.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="appendix-D-16.1">
+          <p id="appendix-D-16.1.1">Initial public draft.<a href="#appendix-D-16.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>

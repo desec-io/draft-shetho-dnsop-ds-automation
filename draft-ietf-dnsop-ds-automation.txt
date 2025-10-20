@@ -5,8 +5,8 @@
 DNSOP Working Group                                             S. Sheng
 Internet-Draft                                                          
 Intended status: Informational                              P. Thomassen
-Expires: 16 April 2026                                             deSEC
-                                                         13 October 2025
+Expires: 23 April 2026                                             deSEC
+                                                         20 October 2025
 
 
              Operational Recommendations for DS Automation
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 April 2026.
+   This Internet-Draft will expire on 23 April 2026.
 
 Copyright Notice
 
@@ -100,6 +100,8 @@ Table of Contents
    Appendix C.  Approaches not pursued
      C.1.  Validity Checks and Safety Measures
        C.1.1.  TTLs and Caching
+     C.2.  CDS vs. CDNSKEY
+       C.2.1.  Analysis
    Appendix D.  Change History (to be removed before publication)
    Authors' Addresses
 
@@ -713,18 +715,10 @@ Table of Contents
        records, and follow best practice for the choice of hash digest
        type [DS-IANA].
 
-   2.  Parents, independently of their preference for CDS or CDNSKEY,
-       SHOULD require publication of both RRsets, and SHOULD NOT proceed
-       with updating the DS RRset if one is found missing.  (TODO: this
-       updates RFC 7344 Section 6)
-
-   3.  Registries (or registrars) scanning for CDS/CDNSKEY records
+   2.  Registries (or registrars) scanning for CDS/CDNSKEY records
        SHOULD verify that any published CDS and CDNSKEY records are
        consistent with each other, and otherwise cancel the update
        [I-D.ietf-dnsop-cds-consistency].
-
-   TODO clarify that this does not prevent parent from chosing a digest
-   type that's not in CDS (separate recommendation?)
 
 6.2.  Analysis
 
@@ -753,36 +747,11 @@ Table of Contents
    the Parent through conventional channels, the Parent has to make some
    choice about which format(s) to accept.
 
-   Some registries have chosen to prefer DNSKEY-style input which
-   seemingly comes with greater influence on the delegation's security
-   properties (in particular, the DS hash digest type).  It is noted
-   that regardless of the choice of input format, the Parent cannot
-   prevent the Child from following insecure cryptographic practices
-   (such as insecure key storage, or using a key with insufficient
-   entropy).  Besides, as the DS format contains a field indicating the
-   hash digest type, objectionable ones (such as those outlawed by
-   [DS-IANA]) can still be rejected even when ingesting CDS records, by
-   inspecting that field.
-
-   The fact that more than one input type needs to be considered burdens
-   both Child DNS operators and Parents with the need to consider how to
-   handle this dichotomy.  Until this is addressed in an industry-wide
-   manner and one of these mechanisms is deprecated in favor of the
-   other, both Child DNS operators and Parents implementing automated DS
-   maintenance should act as to maximize interoperability:
-
-   *  As there exists no protocol for Child DNS Operators to discover a
-      Parent's input format preference, it seems best to publish both
-      CDNSKEY as well as CDS records, in line with [RFC7344], Section 5.
-      The choice of hash digest type should follow current best practice
-      [DS-IANA].
-
-   *  Parents, independently of their input format preference, are
-      advised to require publication of both CDS and CDNSKEY records,
-      and to enforce consistency between them, as determined by matching
-      CDS and CDNSKEY records using hash digest algorithms whose support
-      is mandatory [DS-IANA].  (Consistency of CDS records with optional
-      or unsupported hash digest types is not required.)
+   As there exists no protocol for Child DNS Operators to discover a
+   Parent's input format preference, it seems best for interoperability
+   to publish both CDNSKEY as well as CDS records, in line with
+   [RFC7344], Section 5.  The choice of hash digest type should follow
+   current best practice [DS-IANA].
 
    Publishing the same information in two different formats is not
    ideal.  Still, it is much less complex and costly than burdening the
@@ -790,14 +759,19 @@ Table of Contents
    very easily automated.  Operators should ensure that published RRsets
    are consistent with each other.
 
-   By rejecting the DS update if either RRset is found missing or
-   inconsistent with the other, Child DNS operators are held responsible
-   when publishing contradictory information.  At the same time, Parents
-   can retain whatever benefit their policy choice carries for them,
-   while facilitating a later revision of that choice.  This approach
-   also simplifies possible future deprecation of one of the two
-   formats, as no coordination or implementation changes would be needed
-   on the child side.
+   If both RRsets are published, Parents are expected to verify
+   consistency between them [I-D.ietf-dnsop-cds-consistency], as
+   determined by matching CDS and CDNSKEY records using hash digest
+   algorithms whose support is mandatory [DS-IANA].  (Consistency of CDS
+   records with optional or unsupported hash digest types is not
+   required.)
+
+   By rejecting the DS update if RRsets are found to be inconsistent,
+   Child DNS operators are held responsible when publishing
+   contradictory information.  Note that this does not imply a
+   restriction to the hash digest types found in the CDS RRset: If no
+   inconsistencies are found, the parent can publish DS records with
+   whatever digest type(s) it prefers.
 
 7.  IANA Considerations
 
@@ -817,7 +791,7 @@ Table of Contents
    Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies,
    Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg,
    Shumon Huque, Libor Peltan, Josh Simpson, Johan Stenstam, Stefan
-   Ubbink
+   Ubbink, Viktor Dukhovni, Hugo Salgado
 
 10.  References
 
@@ -835,9 +809,9 @@ Table of Contents
    [I-D.ietf-dnsop-cds-consistency]
               Thomassen, P., "Clarifications on CDS/CDNSKEY and CSYNC
               Consistency", Work in Progress, Internet-Draft, draft-
-              ietf-dnsop-cds-consistency-08, 1 August 2025,
+              ietf-dnsop-cds-consistency-09, 15 October 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-
-              cds-consistency-08>.
+              cds-consistency-09>.
 
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
@@ -998,9 +972,47 @@ C.1.1.  TTLs and Caching
    ever seeing it.  Wrong DS RRsets will then only gradually impact
    clients, minimizing impact overall.
 
+C.2.  CDS vs. CDNSKEY
+
+   Recommendation not pursued: Parents, independently of their
+   preference for CDS or CDNSKEY, SHOULD require publication of both
+   RRsets, and SHOULD NOT proceed with updating the DS RRset if one is
+   found missing. (this would update RFC 7344 Section 6)
+
+C.2.1.  Analysis
+
+   Some registries have chosen to prefer DNSKEY-style input which
+   seemingly comes with greater influence on the delegation's security
+   properties (in particular, the DS hash digest type).  It is noted
+   that regardless of the choice of input format, the Parent cannot
+   prevent the Child from following insecure cryptographic practices
+   (such as insecure key storage, or using a key with insufficient
+   entropy).  Besides, as the DS format contains a field indicating the
+   hash digest type, objectionable ones (such as those outlawed by
+   [DS-IANA]) can still be rejected even when ingesting CDS records, by
+   inspecting that field.
+
+   The fact that more than one input type needs to be considered burdens
+   both Child DNS operators and Parents with the need to consider how to
+   handle this dichotomy.  Until this is addressed in an industry-wide
+   manner and one of these mechanisms is deprecated in favor of the
+   other, Parents implementing automated DS maintenance should act as to
+   maximize interoperability: Parents, independently of their input
+   format preference, are therefore advised to require publication of
+   both CDS and CDNSKEY records.
+
+   Parents can retain whatever benefit their policy choice carries for
+   them, while facilitating a later revision of that choice.  This
+   approach also simplifies possible future deprecation of one of the
+   two formats, as no coordination or implementation changes would be
+   needed on the child side.
+
 Appendix D.  Change History (to be removed before publication)
 
    *  draft-ietf-dnsop-ds-automation-01
+
+      Remove Recommendation 6.1.2 which had told parents to require
+      publication of both CDS and CDNSKEY
 
       Clarify Recommendation 5.1.3 (on suspension of automation after DS
       RRset removal) and provide extra analysis

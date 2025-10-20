@@ -5,8 +5,8 @@
 DNSOP Working Group                                             S. Sheng
 Internet-Draft                                                          
 Intended status: Informational                              P. Thomassen
-Expires: 16 April 2026                                             deSEC
-                                                         13 October 2025
+Expires: 23 April 2026                                             deSEC
+                                                         20 October 2025
 
 
              Operational Recommendations for DS Automation
@@ -46,7 +46,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 April 2026.
+   This Internet-Draft will expire on 23 April 2026.
 
 Copyright Notice
 
@@ -799,9 +799,9 @@ Table of Contents
    [I-D.ietf-dnsop-cds-consistency]
               Thomassen, P., "Clarifications on CDS/CDNSKEY and CSYNC
               Consistency", Work in Progress, Internet-Draft, draft-
-              ietf-dnsop-cds-consistency-08, 1 August 2025,
+              ietf-dnsop-cds-consistency-09, 15 October 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-dnsop-
-              cds-consistency-08>.
+              cds-consistency-09>.
 
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
