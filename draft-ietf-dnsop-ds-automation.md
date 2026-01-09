@@ -124,7 +124,8 @@ This is best done by
 
 2. verifying that the resulting DS RRset does not break the delegation if applied ({{?RFC7344, Section 4.1}}), i.e., that it provides at least one valid path for validators to use ({{?RFC6840, Section 5.11}}). This is the case if the child's DNSKEY RRset has a valid RRSIG signature from a key that is referenced by at least one DS record, with the digest type and signing algorithm values designated as "RECOMMENDED" or "MUST" in the "Use for DNSSEC Validation" columns of the relevant IANA registries ({{DS-IANA}} and {{DNSKEY-IANA}}).
 
-Even without an update being requested, Parents MAY occasionally check whether the current DS contents would still be acceptable if they were newly submitted in CDS/CDNSKEY form (see {{acceptance}}), and communicate any failures (such as missing DNSKEY or change in algorithm requirements).
+Even without an update being requested, Parents MAY occasionally check whether the current DS contents would still be acceptable if they were newly submitted in CDS/CDNSKEY form (see {{acceptance}}).
+Any failures — such as a missing DNSKEY due to improper rollover timing ({{?RFC6781, Section 4.1}}, or changed algorithm requirements — MAY be communicated in line with {{reporting}}.
 The existing DS record set MUST NOT be altered or removed as a result of such checks.
 
 ### TTLs and Caching
@@ -178,12 +179,9 @@ This section provides recommendations to address the following question:
 
 ## Analysis {#analysis_reporting}
 
-When accepting or rejecting a DS update, it cannot be assumed that relevant parties are aware of what's happening. For example, a registrar may not know when an automatic DS update is performed by the registry. Similarly, a Child DNS operator may not be aware when their CDS/CDNSKEY RRsets are out of sync across nameservers, thus being ignored. Early reporting of such conditions helps involved parties to act appropriately and in a timely manner.
+When accepting or rejecting a DS update, it cannot be assumed that relevant parties are aware of what's happening. For example, a registrar may not know when an automatic DS update is performed by the registry. Similarly, a Child DNS operator may not be aware when their CDS/CDNSKEY RRsets are out of sync across nameservers, thus being ignored.
 
-A delegation can break even without an update request to the DS record set. This may occur during key rollovers ({{?RFC6781, Section 4.1}}) when the Child DNS operator proceeds to the next step early, without verifying that the delegation's DS RRset is in the expected state. For example, when an algorithm rollover is performed and the old signing algorithm is removed from the Child zone before the new DS record is added, validation errors may result.
-TODO Reduce fearmongering: find numbers, better example, or loosen up wording.
-
-Entities performing automated DS maintenance should report on conditions they encounter. The following success situations may be of particular interest:
+To help involved parties act appropriately and in a timely manner, entities performing automated DS maintenance should report on conditions they encounter. The following success situations may be of particular interest:
 
   1. {:#reporting-1} A DS RRset has been provisioned
 
@@ -362,7 +360,7 @@ This document has no IANA actions.
 
 # Security Considerations
 
-This document considers security aspects throughout, and has not separate considerations.
+This document considers security aspects throughout, and has no separate considerations.
 
 
 # Acknowledgments
@@ -413,6 +411,8 @@ TODO Paste all recommendations here
 # Change History (to be removed before publication)
 
 * draft-ietf-dnsop-ds-automation-02
+
+> Editorial changes
 
 > Change type to BCP
 
