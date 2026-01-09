@@ -97,7 +97,7 @@ This section provides recommendations to address the following questions:
     {:type="a"}
     1. the consistency of DS update requests across all authoritative nameservers in the delegation {{!I-D.ietf-dnsop-cds-consistency}}, and
 
-    2. that the resulting DS record set would not break DNSSEC validation if deployed,
+    2. that the resulting DS record set would allow continued DNSSEC validation if deployed,
 
    and cancel the update if the verifications do not succeed.
 
@@ -113,12 +113,10 @@ This is best done by
 
 1. verifying that consistent CDS/CDNSKEY responses are served by all of the delegation's nameservers {{!I-D.ietf-dnsop-cds-consistency}};
 
-2. verifying that the resulting DS RRset does not break the delegation if applied ({{?RFC7344, Section 4.1}}), i.e., that it provides at least one valid path for validators to use ({{?RFC6840, Section 5.11}}). This is the case if there is at least one DS record referencing a key that actually signs the child's DNSKEY RRset, where the digest type and signing algorithm are listed as mandatory ("MUST") in the "Implement for DNSSEC Validation" columns of the relevant IANA registries {{DS-IANA}} and {{DNSKEY-IANA}}.
+2. verifying that the resulting DS RRset does not break the delegation if applied ({{?RFC7344, Section 4.1}}), i.e., that it provides at least one valid path for validators to use ({{?RFC6840, Section 5.11}}). This is the case if the child's DNSKEY RRset has a valid RRSIG signature from a key that is referenced by at least one DS record, with the digest type and signing algorithm values designated as "RECOMMENDED" or "MUST" in the "Use for DNSSEC Validation" columns of the relevant IANA registries ({{DS-IANA}} and {{DNSKEY-IANA}}).
 
-TODO Should checks be done continually? (Why is that the parent's task?) Or on demand, e.g., on a no-op NOTIFY?
-Even when no update was requested, it may be worthwhile to occasionally check whether the current DS contents would be accepted today (see {{validity}}), and communicate any failures without changing the published DS record set.
-
-TODO Maybe RECOMMEND periodical rechecks and allow requesting recheck in case of operational difficulties (large parent). Allow the parent to communicate interval? See draft-berra-dnsop-announce-scanner.
+Even without an update being requested, Parents MAY occasionally check whether the current DS contents would still be acceptable if they were newly submitted in CDS/CDNSKEY form (see {{validity}}), and communicate any failures (such as missing DNSKEY or change in algorithm requirements).
+The existing DS record set MUST NOT be altered or removed as a result of such checks.
 
 ### TTLs and Caching
 
@@ -419,6 +417,8 @@ TODO Paste all recommendations here
 # Change History (to be removed before publication)
 
 * draft-ietf-dnsop-ds-automation-02
+
+> Clarify continuity of validation
 
 > In RRR, clarify that registries should not bootstrap if registrar has no deactivation interface (or if registrar does the automation)
 
