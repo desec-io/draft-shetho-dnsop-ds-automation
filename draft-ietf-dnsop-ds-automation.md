@@ -258,7 +258,7 @@ This section provides recommendations to address the following questions:
 
 ## Recommendations
 
-1. Registries and registrars SHOULD provide a another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
+1. Registries and registrars SHOULD provide another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
 
 2. DS update requests SHOULD be executed immediately after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
 
@@ -266,7 +266,7 @@ This section provides recommendations to address the following questions:
 
 4. Whenever a non-empty DS record set is provisioned, through whichever channel, DS automation SHOULD NOT (or no longer) be suspended (including after an earlier removal).
 
-5. In the RRR model, registries SHOULD NOT perform automated DS maintenance if it is known that the registrar performs this function, or does not support DNSSEC at all.
+5. In the RRR model, a registry SHOULD NOT automatically initialize DS records when it is known that the registrar does not provide a way for the domain holder to later disable DNSSEC. If the registrar has declared to be performing automated DS maintenance, the registry SHOULD publish the registrar's {{!RFC9859}} notification endpoint (if applicable) and refrain from registry-side DS automation.
 
 ## Analysis {#analysis_multiple}
 
@@ -375,7 +375,7 @@ This document considers security aspects throughout, and has not separate consid
 
 The authors would like to thank the SSAC members who wrote the {{SAC126}} report on which this document is based.
 
-In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque, Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink, Viktor Dukhovni, Hugo Salgado
+In order of first contribution or review: Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque, Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink, Viktor Dukhovni, Hugo Salgado, Wes Hardaker
 
 --- back
 
@@ -419,6 +419,8 @@ TODO Paste all recommendations here
 # Change History (to be removed before publication)
 
 * draft-ietf-dnsop-ds-automation-02
+
+> In RRR, clarify that registries should not bootstrap if registrar has no deactivation interface (or if registrar does the automation)
 
 > Remove Appendix C ("Approaches not pursued")
 
