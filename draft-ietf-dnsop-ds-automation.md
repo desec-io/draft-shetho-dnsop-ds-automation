@@ -4,7 +4,7 @@ abbrev: DS Automation
 docname: draft-ietf-dnsop-ds-automation-latest
 date: {DATE}
 stream: IETF
-category: info
+category: bcp
 
 ipr: trust200902
 area: Internet
@@ -413,6 +413,8 @@ TODO Paste all recommendations here
 # Change History (to be removed before publication)
 
 * draft-ietf-dnsop-ds-automation-02
+
+> Change type to BCP
 
 > Fold CDS/CDNSKEY consistency requirements (Section 6) into Section 2 (on acceptance checks)
 
