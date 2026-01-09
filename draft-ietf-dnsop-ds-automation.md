@@ -67,7 +67,7 @@ Enabling support for automatic acceptance of DS parameters from the Child DNS op
 
 {{!RFC7344}}, {{!RFC8078}}, {{!RFC9615}} automate DNSSEC delegation trust maintenance by having the child publish CDS and/or CDNSKEY records which indicate the delegation's desired DNSSEC parameters ("DS automation").
 
-Parental Agents using these protocols have to make a number of technical decisions relating to issues of validity checks, timing, error reporting, locks, etc. Additionally, when using the RRR model (as is common amongst top-level domains), both the registrar and the registry can effect parent-side changes to the delare reviewers not egation. In such a situation, additional questions arise.
+Parental Agents using these protocols have to make a number of technical decisions relating to issues of acceptance checks, timing, error reporting, locks, etc. Additionally, when using the RRR model (as is common amongst top-level domains), both the registrar and the registry can effect parent-side changes to the delare reviewers not egation. In such a situation, additional questions arise.
 
 Not all existing DS automation deployments have made the same choices with respect to these questions, leading to somewhat inconsistent behavior. From the perspective of a domain holder with domain names under various TLDs, this may be unexpected and confusing.
 
@@ -82,20 +82,26 @@ Readers are expected to be familiar with DNSSEC {{!RFC9364}}{{!RFC9615}}{{!RFC98
 {::boilerplate bcp14}
 
 
-# Validity Checks and Safety Measures {#validity}
+# Acceptance Checks and Safety Measures {#acceptance}
 
 This section provides recommendations to address the following questions:
 
-- What kind of validity checks should be performed on DS parameters?
+- What kind of acceptance checks should be performed on DS parameters?
 - Should these checks be performed upon acceptance, or also continually when in place?
 - How do TTLs and caching impact DS provisioning? How important is timing in a child key change?
+- Are parameters for DS automation best conveyed as CDNSKEY or CDS records, or both?
 
 ## Recommendations
 
 1. Entities performing automated DS maintenance SHOULD verify
 
     {:type="a"}
-    1. the consistency of DS update requests across all authoritative nameservers in the delegation {{!I-D.ietf-dnsop-cds-consistency}}, and
+    1. the unambigious intent of each DS update request as per {{!I-D.ietf-dnsop-cds-consistency}}, by checking its consistency both
+
+        - between any published CDS and CDNSKEY records, and
+        - across all authoritative nameservers in the delegation,
+
+       and
 
     2. that the resulting DS record set would allow continued DNSSEC validation if deployed,
 
@@ -103,7 +109,10 @@ This section provides recommendations to address the following questions:
 
 2. Parent operators (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when the set of records is changed, and restore the normal TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).
 
-## Analysis {#analysis_validity}
+3. DNS operators SHOULD publish both CDNSKEY records as well as CDS records, and follow best practice for the choice of hash digest type {{DS-IANA}}.
+
+
+## Analysis {#analysis_acceptance}
 
 ### Continuity of Resolution
 
@@ -115,7 +124,7 @@ This is best done by
 
 2. verifying that the resulting DS RRset does not break the delegation if applied ({{?RFC7344, Section 4.1}}), i.e., that it provides at least one valid path for validators to use ({{?RFC6840, Section 5.11}}). This is the case if the child's DNSKEY RRset has a valid RRSIG signature from a key that is referenced by at least one DS record, with the digest type and signing algorithm values designated as "RECOMMENDED" or "MUST" in the "Use for DNSSEC Validation" columns of the relevant IANA registries ({{DS-IANA}} and {{DNSKEY-IANA}}).
 
-Even without an update being requested, Parents MAY occasionally check whether the current DS contents would still be acceptable if they were newly submitted in CDS/CDNSKEY form (see {{validity}}), and communicate any failures (such as missing DNSKEY or change in algorithm requirements).
+Even without an update being requested, Parents MAY occasionally check whether the current DS contents would still be acceptable if they were newly submitted in CDS/CDNSKEY form (see {{acceptance}}), and communicate any failures (such as missing DNSKEY or change in algorithm requirements).
 The existing DS record set MUST NOT be altered or removed as a result of such checks.
 
 ### TTLs and Caching
@@ -127,6 +136,26 @@ Registries therefore should significantly lower the DS RRset's TTL for some time
 The reduction should be in effect at least until the previous DS record set has expired from caches, that is, the period during which the low-TTL is applied should exceed the normal TTL value. The routine re-signing of the DS RRset (usually after a few days) provides a convenient opportunity for resetting the TTL. When using EPP, the server MAY advertise its TTL policy via the domain `<info>` command described in {{?RFC9803, Section 2.1.1.2}}.
 
 While this approach enables quick rollbacks, timing of the desired DS update process itself is largely governed by the previous DS RRset's TTL, and therefore does not generally benefit from an overall speed-up. Note also that nothing is gained from first lowering the TTL of the old DS RRset: such an additional step would, in fact, require another wait period while resolver caches adjust. For the sake of completeless, there likewise is no point to increasing any DS TTL values beyond their normal value.
+
+### CDS vs. CDNSKEY
+
+DS records can be generated from information provided either in DS format (CDS) or in DNSKEY format (CDNSKEY). While the format of CDS records is identical to that of DS records (so the record data be taken verbatim), generation of a DS record from CDNSKEY information involves computing a hash.
+
+Whether a Parent processes CDS or CDNSKEY records depends on their preference:
+
+- Processing (and storing) CDNSKEY information allows the Parent to control the choice of hash algorithms. The Parent may then unilaterally regenerate DS records with a different choice of hash algorithm(s) whenever deemed appropriate.
+
+- Processing CDS information allows the Child DNS operator to control the hash digest type used in DS records, enabling the Child DNS operator to deploy (for example) experimental hash digests and removing the need for registry-side changes when additional digest types become available.
+
+The need to make a choice in the face of this dichotomy is not specific to DS automation: even when DNSSEC parameters are relayed to the Parent through conventional channels, the Parent has to make some choice about which format(s) to accept.
+
+As there exists no protocol for Child DNS Operators to discover a Parent's input format preference, it seems best for interoperability to publish both CDNSKEY as well as CDS records, in line with {{!RFC7344, Section 5}}. The choice of hash digest type should follow current best practice {{DS-IANA}}.
+
+Publishing the same information in two different formats is not ideal. Still, it is much less complex and costly than burdening the Child DNS operator with discovering each Parent's current policy; also, it is very easily automated. Operators should ensure that published RRsets are consistent with each other.
+
+If both RRsets are published, Parents are expected to verify consistency between them {{!I-D.ietf-dnsop-cds-consistency}}, as determined by matching CDS and CDNSKEY records using hash digest algorithms whose support is mandatory {{DS-IANA}}. (Consistency of CDS records with optional or unsupported hash digest types need not be enforced.)
+
+By rejecting the DS update if RRsets are found to be inconsistent, Child DNS operators are held responsible when publishing contradictory information. Note that this does not imply a restriction to the hash digest types found in the CDS RRset: if no inconsistencies are found, the parent can publish DS records with whatever digest type(s) it prefers.
 
 
 # Reporting and Transparency {#reporting}
@@ -178,7 +207,7 @@ In addition, there are error conditions worthy of being reported:
   3. {:#reporting-3} A pending DS update cannot be applied due to an error condition. There are various scenarios where an automated DS update might have been requested, but can't be fulfilled. These include:
 
        {:type="a"}
-       1. The new DS record set would break validation/resolution or is not acceptable to the Parent for some other reason (see {{validity}}).
+       1. The new DS record set would break validation/resolution or is not acceptable to the Parent for some other reason (see {{acceptance}}).
 
        2. A lock prevents DS automation (see {{locks}}).
 
@@ -234,7 +263,7 @@ When a registry-side update lock is in place, the registrar cannot apply any cha
 
 Pre-DNSSEC, it was possible for a registration to be set up once, then locked and left alone (no maintenance required). With DNSSEC comes a change to this operational model: the configuration may have to be maintained in order to remain secure and operational. For example, the Child DNS operator may switch to another signing algorithm if the previous one is no longer deemed appropriate, or roll its SEP key for other reasons. Such changes entail updating the delegation's DS records.
 
-If authenticated, these operations do not qualify as accidental or malicious change, but as legitimate and normal activity for securing ongoing operation. The CDS/CDNSKEY method provides an automatic, authenticated means to convey DS update requests. The resulting DS update is subject to the parent's acceptance checks; in particular, it is not applied when it would break the delegation (see {{validity}}).
+If authenticated, these operations do not qualify as accidental or malicious change, but as legitimate and normal activity for securing ongoing operation. The CDS/CDNSKEY method provides an automatic, authenticated means to convey DS update requests. The resulting DS update is subject to the parent's acceptance checks; in particular, it is not applied when it would break the delegation (see {{acceptance}}).
 
 Given that registrar locks protect against unintended changes (such as through the customer portal) while not preventing actions done by the registrar (or the registry) themself, such a lock is not suitable for defending against actions performed illegitimately by the registrar or registry (e.g., due to compromise). Any attack on the registration data that is feasible in the presence of a registrar lock is also feasible regardless of whether DS maintenance is done automatically; in other words, DS automation is orthogonal to the attack vector that a registrar lock protects against.
 
@@ -290,7 +319,7 @@ When an out-of-band (e.g., manual) DS update is performed while CDS/CDNSKEY reco
 
 One option is to suspend DS automation after a manual DS update, but only until a resumption signal is observed. In the past, it was proposed that seeing an updated SOA serial in the child zone may serve as a resumption signal. However, as any arbitrary modification of zone contents — including the regular updating of DNSSEC signature validity timestamps  — typically causes a change in SOA serial, resumption of DS automation after a serial change comes with a high risk of surprise. Additional issues arise if nameservers have different serial offsets (e.g., in a multi-provider setup). It is therefore advised to not follow this practice.
 
-Note also that "automatic rollback" due to old CDS/CDNSKEY RRsets can only occur if they are signed with a key authorized by one of new DS records. Validity checks described in {{validity}} further ensure that updates do not break validation.
+Note also that "automatic rollback" due to old CDS/CDNSKEY RRsets can only occur if they are signed with a key authorized by one of new DS records. Acceptance checks described in {{acceptance}} further ensure that updates do not break validation.
 
 Removal of a DS record set is triggered either through a CDS/CDNSKEY "delete" signal observed by the party performing the automation ({{!RFC8078, Section 4}}), or by receiving a removal request out-of-band (e.g., via EPP or a web form). In the first case, it is useful to keep automation active for the delegation in question, to facilitate later DS bootstrapping. In the second case, it is likely that the registrant intends to disable DNSSEC for the domain, and DS automation is best suspended (until a new DS record is provisioned somehow).
 
@@ -319,44 +348,11 @@ All in all:
 
 ### Concurrent Automatic Updates
 
-When the RRR model is used, there is a potential for collision if both the registry and the registrar are automating DS provisioning by scanning the child for CDS/CDNSKEY records. No disruptive consequences are expected if both parties perform DS automation. An exception is when during a key rollover, registry and registrar see different versions of the Child's DS update requests, such as when CDS/CDNSKEY records are retrieved from different vantage points. Although unlikely due to Recommendation 1a of {{validity}}, this may lead to flapping of DS updates; however, it is not expected to be harmful as either DS RRset will allow for the validation function to continue to work, as ensured by Recommendation 1b of {{validity}}. The effect subsides as the Child's state eventually becomes consistent (roughly, within the child's replication delay); any flapping until then will be a minor nuisance only.
+When the RRR model is used, there is a potential for collision if both the registry and the registrar are automating DS provisioning by scanning the child for CDS/CDNSKEY records. No disruptive consequences are expected if both parties perform DS automation. An exception is when during a key rollover, registry and registrar see different versions of the Child's DS update requests, such as when CDS/CDNSKEY records are retrieved from different vantage points. Although unlikely due to Recommendation 1a of {{acceptance}}, this may lead to flapping of DS updates; however, it is not expected to be harmful as either DS RRset will allow for the validation function to continue to work, as ensured by Recommendation 1b of {{acceptance}}. The effect subsides as the Child's state eventually becomes consistent (roughly, within the child's replication delay); any flapping until then will be a minor nuisance only.
 
 The issue disappears entirely when scanning is replaced by notifications that trigger DS maintenance through one party's designated endpoint {{!RFC9859}}, and can otherwise be mitigated if the registry and registrar agree that only one of them will perform scanning.
 
 As a standard aspect of key rollovers (RFC 6781), the Child DNS operator is expected to monitor propagation of Child zone updates to all authoritative nameserver instances, and only proceed to the next step once replication has succeeded everywhere and the DS record set was subsequently updated (and in no case before the DS RRset's TTL has passed). Any breakage resulting from improper timing on the Child side is outside of the Parent's sphere of influence, and thus out of scope of DS automation considerations.
-
-
-# CDS vs. CDNSKEY
-
-This section provides recommendations to address the following question:
-
-- Are parameters for DS automation best conveyed as CDNSKEY or CDS records, or both?
-
-## Recommendations
-
-1. DNS operators SHOULD publish both CDNSKEY records as well as CDS records, and follow best practice for the choice of hash digest type {{DS-IANA}}.
-
-2. Registries (or registrars) scanning for CDS/CDNSKEY records SHOULD verify that any published CDS and CDNSKEY records are consistent with each other, and otherwise cancel the update {{!I-D.ietf-dnsop-cds-consistency}}.
-
-## Analysis {#analysis_dichotomy}
-
-DS records can be generated from information provided either in DS format (CDS) or in DNSKEY format (CDNSKEY). While the format of CDS records is identical to that of DS records (so the record data be taken verbatim), generation of a DS record from CDNSKEY information involves computing a hash.
-
-Whether a Parent processes CDS or CDNSKEY records depends on their preference:
-
-- Conveying (and storing) CDNSKEY information allows the Parent to control the choice of hash algorithms. The Parent may then unilaterally regenerate DS records with a different choice of hash algorithm(s) whenever deemed appropriate.
-
-- Conveying CDS information allows the Child DNS operator to control the hash digest type used in DS records, enabling the Child DNS operator to deploy (for example) experimental hash digests and removing the need for registry-side changes when new digest types become available.
-
-The need to make a choice in the face of this dichotomy is not specific to DS automation: even when DNSSEC parameters are relayed to the Parent through conventional channels, the Parent has to make some choice about which format(s) to accept.
-
-As there exists no protocol for Child DNS Operators to discover a Parent's input format preference, it seems best for interoperability to publish both CDNSKEY as well as CDS records, in line with {{!RFC7344, Section 5}}. The choice of hash digest type should follow current best practice {{DS-IANA}}.
-
-Publishing the same information in two different formats is not ideal. Still, it is much less complex and costly than burdening the Child DNS operator with discovering each Parent's policy; also, it is very easily automated. Operators should ensure that published RRsets are consistent with each other.
-
-If both RRsets are published, Parents are expected to verify consistency between them {{!I-D.ietf-dnsop-cds-consistency}}, as determined by matching CDS and CDNSKEY records using hash digest algorithms whose support is mandatory {{DS-IANA}}. (Consistency of CDS records with optional or unsupported hash digest types is not required.)
-
-By rejecting the DS update if RRsets are found to be inconsistent, Child DNS operators are held responsible when publishing contradictory information. Note that this does not imply a restriction to the hash digest types found in the CDS RRset: If no inconsistencies are found, the parent can publish DS records with whatever digest type(s) it prefers.
 
 
 # IANA Considerations
@@ -417,6 +413,8 @@ TODO Paste all recommendations here
 # Change History (to be removed before publication)
 
 * draft-ietf-dnsop-ds-automation-02
+
+> Fold CDS/CDNSKEY consistency requirements (Section 6) into Section 2 (on acceptance checks)
 
 > Clarify continuity of validation
 
