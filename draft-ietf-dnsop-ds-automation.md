@@ -416,28 +416,11 @@ RRR Model:
 
 TODO Paste all recommendations here
 
-# Approaches not pursued
-
-## Validity Checks and Safety Measures
-
-### TTLs and Caching
-
-It is not necessary to equally reduce the old DS RRset's TTL before applying a change. If this were done, the rollover itself would have to be delayed without any apparent benefit. With the goal of enabling timely withdrawal of a botched DS RRset, it is not equally important for the previous (functional) DS RRset to be abandoned very quickly. In fact, not reducing the old DS TTL has the advantage of providing some resiliency against a botched DS update, as clients would continue to use the previous DS RRset according to its normal TTL, and the broken RRset could be withdrawn without some of them ever seeing it. Wrong DS RRsets will then only gradually impact clients, minimizing impact overall.
-
-## CDS vs. CDNSKEY
-
-Recommendation not pursued: Parents, independently of their preference for CDS or CDNSKEY, SHOULD require publication of both RRsets, and SHOULD NOT proceed with updating the DS RRset if one is found missing. (this would update RFC 7344 Section 6)
-
-### Analysis
-
-Some registries have chosen to prefer DNSKEY-style input which seemingly comes with greater influence on the delegation's security properties (in particular, the DS hash digest type). It is noted that regardless of the choice of input format, the Parent cannot prevent the Child from following insecure cryptographic practices (such as insecure key storage, or using a key with insufficient entropy). Besides, as the DS format contains a field indicating the hash digest type, objectionable ones (such as those outlawed by {{DS-IANA}}) can still be rejected even when ingesting CDS records, by inspecting that field.
-
-The fact that more than one input type needs to be considered burdens both Child DNS operators and Parents with the need to consider how to handle this dichotomy. Until this is addressed in an industry-wide manner and one of these mechanisms is deprecated in favor of the other, Parents implementing automated DS maintenance should act as to maximize interoperability: Parents, independently of their input format preference, are therefore advised to require publication of both CDS and CDNSKEY records.
-
-Parents can retain whatever benefit their policy choice carries for them, while facilitating a later revision of that choice. This approach also simplifies possible future deprecation of one of the two formats, as no coordination or implementation changes would be needed on the child side.
-
-
 # Change History (to be removed before publication)
+
+* draft-ietf-dnsop-ds-automation-02
+
+> Remove Appendix C ("Approaches not pursued")
 
 * draft-ietf-dnsop-ds-automation-01
 
