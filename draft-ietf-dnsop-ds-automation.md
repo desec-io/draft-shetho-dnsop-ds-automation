@@ -73,7 +73,7 @@ Not all existing DS automation deployments have made the same choices with respe
 
 New deployments of DS automation therefore SHOULD follow the recommendations set out in this document, to achieve a more uniform treatment across suffixes and to minimize user surprise. The recommendations are intended to provide baseline safety and uniformity of behavior across parents. Registries with additional requirements on DS update checks MAY implement any additional checks in line with local policy.
 
-In the following sections, operational questions are first raised and answered with the corresponding recommendations. Each section is concluded with an analysis of its recommendations, and related considerations.
+In the following sections, operational questions are first raised and answered with the corresponding recommendations. Each section is concluded with an analysis of its recommendations, and related considerations. A combined view of the recommendations from all sections is given in {{recommendations_overview}}.
 
 Readers are expected to be familiar with DNSSEC {{!RFC9364}}{{!RFC9615}}{{!RFC9859}}. For terminology, see {{terminology}}.
 
@@ -404,13 +404,66 @@ RRR Model:
 : The registrant-registrar-registry interaction framework, where registrants interact with a registrar to register and manage domain names, and registrars interact with the domain's registry for the provision and management of domain names on the registrant's behalf. This model is common amongst top-level domains.
 
 
-# Recommendations Overview
+# Recommendations Overview {#recommendations_overview}
 
-TODO Paste all recommendations here
+For ease of review, the recommendations from this document are reproduced here without further comment. For background and analysis, see Sections {{<acceptance}}–{{<multiple}}.
+
+## Acceptance Checks and Safety Measures
+
+1. Entities performing automated DS maintenance SHOULD verify
+
+    {:type="a"}
+    1. the unambigious intent of each DS update request as per {{!I-D.ietf-dnsop-cds-consistency}}, by checking its consistency both
+
+        - between any published CDS and CDNSKEY records, and
+        - across all authoritative nameservers in the delegation,
+
+       and
+
+    2. that the resulting DS record set would allow continued DNSSEC validation if deployed,
+
+   and cancel the update if the verifications do not succeed.
+
+2. Parent operators (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when the set of records is changed, and restore the normal TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).
+
+3. DNS operators SHOULD publish both CDNSKEY records as well as CDS records, and follow best practice for the choice of hash digest type {{DS-IANA}}.
+
+## Reporting and Transparency
+
+1. For certain DS updates (see {{analysis_reporting (analysis)}}) and for DS deactivation, relevant points of contact known to the zone operator SHOULD be notified.
+
+2. For error conditions, the child DNS operator and the domain's technical contact (if applicable) SHOULD be first notified. The registrant SHOULD NOT be notified unless the problem persists for a prolonged amount of time (e.g., three days).
+
+3. Child DNS operators SHOULD be notified using a report query {{!RFC9567}} to the agent domain as described in ({{!RFC9859, Section 4}}). Notifications to humans (domain holder) will be performed in accordance with the communication preferences established with the parent-side entity (registry or registrar). The same condition SHOULD NOT be reported unnecessarily frequently to the same recipient.
+
+4. In the RRR model, registries performing DS automation SHOULD inform the registrar of any DS record changes via the EPP Change Poll Extension {{!RFC8590}} or a similar channel.
+
+5. The currently active DS configuration SHOULD be made accessible to the registrant (or their designated party) through the customer portal available for domain management. The DS update history MAY be made available in the same way.
+
+## Registration Locks
+
+1. To secure ongoing operations, automated DS maintenance SHOULD NOT be suspended based on a registrar update lock alone (such as EPP status clientUpdateProhibited).
+
+2. When performed by the registry, automated DS maintenance SHOULD NOT be suspended based on a registry update lock alone (such as EPP status serverUpdateProhibited).
+
+## Multiple Submitting Parties
+
+1. Registries and registrars SHOULD provide another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
+
+2. DS update requests SHOULD be executed immediately after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
+
+3. When processing a CDS/CDNSKEY "delete" signal to remove the entire DS record set ({{!RFC8078, Section 4}}), DS automation SHOULD NOT be suspended. For all other removal requests (such as when received via EPP or a web form), DS automation SHOULD be suspended, in order to prevent accidental re-initialization when the registrant intended to disable DNSSEC.
+
+4. Whenever a non-empty DS record set is provisioned, through whichever channel, DS automation SHOULD NOT (or no longer) be suspended (including after an earlier removal).
+
+5. In the RRR model, a registry SHOULD NOT automatically initialize DS records when it is known that the registrar does not provide a way for the domain holder to later disable DNSSEC. If the registrar has declared to be performing automated DS maintenance, the registry SHOULD publish the registrar's {{!RFC9859}} notification endpoint (if applicable) and refrain from registry-side DS automation.
+
 
 # Change History (to be removed before publication)
 
 * draft-ietf-dnsop-ds-automation-02
+
+> Add Appendix with recommendations overview
 
 > Editorial changes
 
