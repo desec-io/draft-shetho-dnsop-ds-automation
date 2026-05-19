@@ -109,9 +109,11 @@ RRR Model:
 
 # Recommendations for Deployments of DS Automation
 
-Deployments of DS automation SHOULD follow the recommendations set out in this document, both to achieve a more uniform treatment across suffixes — minimizing user surprise — and to prevent disruption of DNS and DNSSEC functionality. The recommendations are intended to provide baseline safety and uniformity of behavior across parents.
+The guidelines for deploying DS automation set out in this document are meant to achieve more uniform treatment across suffixes — minimizing user surprise and providing baseline safety and uniformity of behavior.
+They are also intended to prevent disruption of DNS and DNSSEC functionality.
+At a minimum, compliance with this RFC requires support for both DNSSEC bootstrapping {{!RFC9615}} and subsequent updates {{!RFC7344}}, {{!RFC8078}} under the implementation guidance below.
 
-Recommendations in this document optimize interoperability and safety. In certain cases, local policy may take precedence, such as when a registry is subjected to national cryptographic policy requirements.
+The recommendations optimize interoperability and safety. In certain cases, local policy may take precedence, such as when a registry is subjected to national cryptographic policy requirements or performs out-of-band verification of DS changes with a human for high-stake domains.
 However, not following any requirements designated with the "SHOULD" key word will generally lead to undesirable effects of ambiguity and interoperability issues.
 When implementing these recommendations, operators have to carefully weigh whether any particular deviation is justified in their particular context.
 
@@ -128,7 +130,7 @@ This section provides recommendations to address the following operational quest
 
 ## Recommendations
 
-1. Entities performing automated DS maintenance SHOULD verify:
+1. Entities performing automated DS maintenance MUST verify:
 
     {:type="a"}
     1. the unambiguous intent of each DS update request as per {{!I-D.ietf-dnsop-cds-consistency}}, by checking its consistency both
@@ -142,7 +144,7 @@ This section provides recommendations to address the following operational quest
 
    and cancel the update if the verifications do not succeed.
 
-2. Parent-side entities (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when the set of records is changed, and restore the normal TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).
+2. Parent-side entities (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when a new set of records is published, and restore the normal TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).
 
 3. DNS operators SHOULD publish both CDNSKEY and CDS records, and follow best practice for the choice of hash digest type {{DS-IANA}}.
 
@@ -166,7 +168,7 @@ Any failures — such as a missing DNSKEY due to improper rollover timing ({{?RF
 
 To further reduce the impact of any misconfigured DS record set — be it from automated or from manual provisioning — the option to quickly roll back the delegation's DNSSEC parameters is of great importance. This is achieved by setting a comparatively low TTL on the DS record set in the parent domain, at the cost of reduced resiliency against nameserver unreachability due to the earlier expiration of cached records. The availability risk can be mitigated by limiting such TTLs to a brief time period after a change to the DS configuration, during which rollbacks are most likely to occur.
 
-Registries therefore should significantly lower the DS RRset's TTL for some time following an update. Pragmatic values for the reduced TTL value range between 5–15 minutes.  Such low TTLs might be expected to cause increased load on the corresponding authoritative nameservers; however, recent measurements have demonstrated them to have negligible impact on the overall load of a registry's authoritative nameserver infrastructure {{LowTTL}}.
+Registries therefore should significantly lower the DS RRset's TTL for some time following bootstrapping or an update. Pragmatic values for the reduced TTL value range between 5–15 minutes.  Such low TTLs might be expected to cause increased load on the corresponding authoritative nameservers; however, recent measurements have demonstrated them to have negligible impact on the overall load of a registry's authoritative nameserver infrastructure {{LowTTL}}.
 
 The reduction should be in effect at least for a couple of days and until the previous DS record set has expired from caches, that is, the period during which the low-TTL is applied typically will significantly exceed the normal TTL value. When using the Extensible Provisioning Protocol (EPP) {{?RFC5730}}, the domain `<info>` command described in {{Section 2.1.1.2 of ?RFC9803}} is available for advertising the server's TTL policy.
 
@@ -276,9 +278,9 @@ This section provides recommendations to address the following operational quest
 
 ## Recommendations
 
-1. To secure ongoing operations, automated DS maintenance SHOULD NOT be suspended based on a registrar update lock alone (such as EPP status clientUpdateProhibited {{?RFC5731}}).
+1. To secure ongoing operations, automated DS maintenance MUST NOT be suspended based on a registrar update lock alone (such as EPP status clientUpdateProhibited {{?RFC5731}}).
 
-2. When performed by the registry, automated DS maintenance SHOULD NOT be suspended based on a registry update lock alone (such as EPP status serverUpdateProhibited {{?RFC5731}}).
+2. When performed by the registry, automated DS maintenance MUST NOT be suspended based on a registry update lock alone (such as EPP status serverUpdateProhibited {{?RFC5731}}).
 
 ## Analysis {#analysis_locks}
 
@@ -323,11 +325,11 @@ This section provides recommendations to address the following operational quest
 
 ## Recommendations
 
-1. Registries and registrars SHOULD provide another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
+1. Registries and registrars MUST provide another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
 
 2. DS update requests SHOULD be executed immediately after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
 
-3. When processing a CDS/CDNSKEY "delete" signal to remove the entire DS record set ({{!RFC8078, Section 4}}), DS automation SHOULD NOT be suspended. For all other removal requests (such as when received via EPP or a web form), DS automation SHOULD be suspended until a new DS record set has been provisioned, in order to prevent accidental re-initialization when the registrant intended to disable DNSSEC.
+3. When processing a CDS/CDNSKEY "delete" signal to remove the entire DS record set ({{!RFC8078, Section 4}}), DS automation MUST NOT be suspended. For all other removal requests (such as when received via EPP or a web form), DS automation SHOULD be suspended until a new DS record set has been provisioned, in order to prevent accidental re-initialization when the registrant intended to disable DNSSEC.
 
 4. Whenever a non-empty DS record set is provisioned, through whichever channel, DS automation SHOULD NOT (or no longer) be suspended (including after an earlier removal).
 
@@ -410,7 +412,7 @@ This document considers security aspects throughout, and has no separate conside
 
 The authors would like to thank the members of ICANN's Security and Stability Advisory Committee (SSAC) who wrote the {{SAC126}} report on which this document is based.
 
-Additional thanks are extended to the following individuals (in the order of their first contribution or review): Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque (Document Shepherd), Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink, Viktor Dukhovni, Hugo Salgado, Wes Hardaker, Mohamed Boucadair (Area Director), Meir Goldman, Thomas Fossati, Peter van Dijk, Jiankang Yao, Donald Eastlake, James Gannon
+Additional thanks are extended to the following individuals (in the order of their first contribution or review): Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque (Document Shepherd), Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink, Viktor Dukhovni, Hugo Salgado, Wes Hardaker, Mohamed Boucadair (Area Director), Meir Goldman, Thomas Fossati, Peter van Dijk, Jiankang Yao, Donald Eastlake, James Gannon, Roman Danyliw
 
 --- back
 
@@ -420,7 +422,7 @@ For ease of review and referencing, the recommendations from this document are r
 
 ## Acceptance Checks and Safety Measures
 
-1. Entities performing automated DS maintenance SHOULD verify:
+1. Entities performing automated DS maintenance MUST verify:
 
     {:type="a"}
     1. the unambiguous intent of each DS update request as per {{!I-D.ietf-dnsop-cds-consistency}}, by checking its consistency both
@@ -434,7 +436,7 @@ For ease of review and referencing, the recommendations from this document are r
 
    and cancel the update if the verifications do not succeed.
 
-2. Parent-side entities (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when the set of records is changed, and restore the normal TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).
+2. Parent-side entities (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when a new set of records is published, and restore the normal TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).
 
 3. DNS operators SHOULD publish both CDNSKEY and CDS records, and follow best practice for the choice of hash digest type {{DS-IANA}}.
 
@@ -452,17 +454,17 @@ For ease of review and referencing, the recommendations from this document are r
 
 ## Registration Locks
 
-1. To secure ongoing operations, automated DS maintenance SHOULD NOT be suspended based on a registrar update lock alone (such as EPP status clientUpdateProhibited {{?RFC5731}}).
+1. To secure ongoing operations, automated DS maintenance MUST NOT be suspended based on a registrar update lock alone (such as EPP status clientUpdateProhibited {{?RFC5731}}).
 
-2. When performed by the registry, automated DS maintenance SHOULD NOT be suspended based on a registry update lock alone (such as EPP status serverUpdateProhibited {{?RFC5731}}).
+2. When performed by the registry, automated DS maintenance MUST NOT be suspended based on a registry update lock alone (such as EPP status serverUpdateProhibited {{?RFC5731}}).
 
 ## Multiple Submitting Parties
 
-1. Registries and registrars SHOULD provide another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
+1. Registries and registrars MUST provide another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
 
 2. DS update requests SHOULD be executed immediately after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
 
-3. When processing a CDS/CDNSKEY "delete" signal to remove the entire DS record set ({{!RFC8078, Section 4}}), DS automation SHOULD NOT be suspended. For all other removal requests (such as when received via EPP or a web form), DS automation SHOULD be suspended until a new DS record set has been provisioned, in order to prevent accidental re-initialization when the registrant intended to disable DNSSEC.
+3. When processing a CDS/CDNSKEY "delete" signal to remove the entire DS record set ({{!RFC8078, Section 4}}), DS automation MUST NOT be suspended. For all other removal requests (such as when received via EPP or a web form), DS automation SHOULD be suspended until a new DS record set has been provisioned, in order to prevent accidental re-initialization when the registrant intended to disable DNSSEC.
 
 4. Whenever a non-empty DS record set is provisioned, through whichever channel, DS automation SHOULD NOT (or no longer) be suspended (including after an earlier removal).
 
@@ -471,13 +473,17 @@ For ease of review and referencing, the recommendations from this document are r
 
 # Change History (to be removed before publication)
 
+* draft-ietf-dnsop-ds-automation-08
+
+> Elevate some defining features of DS automation from SHOULD to MUST
+
 * draft-ietf-dnsop-ds-automation-07
 
-* Editorial changes from proofreading
+> Editorial changes from proofreading
 
-* Editorial changes (Telechat review, James Gannon)
+> Editorial changes (Telechat review, James Gannon)
 
-* Editorial changes (IETF LC, Donald Eastlake)
+> Editorial changes (IETF LC, Donald Eastlake)
 
 * draft-ietf-dnsop-ds-automation-06
 
