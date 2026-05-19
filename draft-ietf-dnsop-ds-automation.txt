@@ -1079,7 +1079,7 @@ A.4.  Multiple Submitting Parties
 
 Appendix B.  Change History (to be removed before publication)
 
-   *  draft-ietf-dnsop-ds-automation-07
+   *  draft-ietf-dnsop-ds-automation-08
 
       Elevate some defining features of DS automation from SHOULD to
       MUST
