@@ -5,8 +5,8 @@
 DNSOP Working Group                                             S. Sheng
 Internet-Draft                                                          
 Intended status: Best Current Practice                      P. Thomassen
-Expires: 15 November 2026                                          deSEC
-                                                             14 May 2026
+Expires: 20 November 2026                                          deSEC
+                                                             19 May 2026
 
 
 Operational Recommendations for DNSSEC Delegation Signer (DS) Automation
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 November 2026.
+   This Internet-Draft will expire on 20 November 2026.
 
 Copyright Notice
 
@@ -182,8 +182,8 @@ Table of Contents
 
 3.  Recommendations for Deployments of DS Automation
 
-   Deployments of DS automation SHOULD follow the recommendations set
-   out in this document, both to achieve a more uniform treatment across
+   Following the guidelines set out in this document for deploying DS
+   automation is meant to achieve a more uniform treatment across
    suffixes — minimizing user surprise — and to prevent disruption of
    DNS and DNSSEC functionality.  The recommendations are intended to
    provide baseline safety and uniformity of behavior across parents.
@@ -191,11 +191,13 @@ Table of Contents
    Recommendations in this document optimize interoperability and
    safety.  In certain cases, local policy may take precedence, such as
    when a registry is subjected to national cryptographic policy
-   requirements.  However, not following any requirements designated
-   with the "SHOULD" key word will generally lead to undesirable effects
-   of ambiguity and interoperability issues.  When implementing these
-   recommendations, operators have to carefully weigh whether any
-   particular deviation is justified in their particular context.
+   requirements or performs out-of-band verification of DS changes with
+   a human for high-stake domains.  However, not following any
+   requirements designated with the "SHOULD" key word will generally
+   lead to undesirable effects of ambiguity and interoperability issues.
+   When implementing these recommendations, operators have to carefully
+   weigh whether any particular deviation is justified in their
+   particular context.
 
    Registries with additional requirements on DS update checks MAY
    implement any additional checks in line with local policy.
@@ -219,7 +221,7 @@ Table of Contents
 
 4.1.  Recommendations
 
-   1.  Entities performing automated DS maintenance SHOULD verify:
+   1.  Entities performing automated DS maintenance MUST verify:
 
        a.  the unambiguous intent of each DS update request as per
            [I-D.ietf-dnsop-cds-consistency], by checking its consistency
@@ -365,13 +367,15 @@ Table of Contents
    them, responsibility to clearly express each update request is placed
    on the Child DNS operator.
 
-   The CDS digest field need only be verified when the hash digest
-   algorithm is designated as "MUST" in the "Implement for DNSSEC
-   Delegation" column of the "Digest Algorithms" registry [DS-IANA], and
-   may otherwise be ignored when the digest type is unsupported.  Note
-   that this does not imply a restriction to the DS hash digest types:
-   if no inconsistencies are found, the parent can publish DS records
-   with whatever digest type(s) it prefers.
+   CDS records need only be considered for CDNSKEY consistency when
+   their digest type field is designated as "MUST" in the "Implement for
+   DNSSEC Delegation" column of the "Digest Algorithms" registry
+   [DS-IANA].  Consistency of records with other digest types need not
+   be verified, especially when the digest type is unsupported; such
+   records can be ignored.  Note that this does not imply a restriction
+   on the DS hash digest types: if no inconsistencies are found, the
+   parent can publish DS records with whatever digest type(s) it
+   prefers.
 
 5.  Reporting and Transparency
 
@@ -384,8 +388,8 @@ Table of Contents
 5.1.  Recommendations
 
    1.  For certain DS updates (see analysis (Section 5.2)) and for DS
-       deactivation, relevant points of contact known to the zone
-       operator SHOULD be notified.
+       deactivation, relevant points of contact known to the parent-side
+       entity (registry or registrar) SHOULD be notified.
 
    2.  For error conditions, the child DNS operator and the domain's
        technical contact (if applicable) SHOULD be notified first.  The
@@ -396,9 +400,9 @@ Table of Contents
        query [RFC9567] to the agent domain as described in Section 4 of
        [RFC9859].  Notifications to humans (domain holder) will be
        performed in accordance with the communication preferences
-       established with the parent-side entity (registry or registrar).
-       The same condition SHOULD NOT be reported unnecessarily
-       frequently to the same recipient.
+       established with the parent-side entity.  The same condition
+       SHOULD NOT be reported unnecessarily frequently to the same
+       recipient.
 
    4.  In the RRR model, registries performing DS automation SHOULD
        inform the registrar of any DS record changes via the EPP Change
@@ -523,13 +527,13 @@ Table of Contents
 
 6.1.  Recommendations
 
-   1.  To secure ongoing operations, automated DS maintenance SHOULD NOT
+   1.  To secure ongoing operations, automated DS maintenance MUST NOT
        be suspended based on a registrar update lock alone (such as EPP
        status clientUpdateProhibited [RFC5731]).
 
-   2.  When performed by the registry, automated DS maintenance SHOULD
-       NOT be suspended based on a registry update lock alone (such as
-       EPP status serverUpdateProhibited [RFC5731]).
+   2.  When performed by the registry, automated DS maintenance MUST NOT
+       be suspended based on a registry update lock alone (such as EPP
+       status serverUpdateProhibited [RFC5731]).
 
 6.2.  Analysis
 
@@ -647,7 +651,7 @@ Table of Contents
 
 7.1.  Recommendations
 
-   1.  Registries and registrars SHOULD provide another (e.g., manual)
+   1.  Registries and registrars MUST provide another (e.g., manual)
        channel for DS maintenance in order to enable recovery when the
        Child has lost access to its signing key(s).  This out-of-band
        channel is also needed when a DNS operator does not support DS
@@ -658,7 +662,7 @@ Table of Contents
        are received in-band or via an out-of-band channel.
 
    3.  When processing a CDS/CDNSKEY "delete" signal to remove the
-       entire DS record set ([RFC8078], Section 4), DS automation SHOULD
+       entire DS record set ([RFC8078], Section 4), DS automation MUST
        NOT be suspended.  For all other removal requests (such as when
        received via EPP or a web form), DS automation SHOULD be
        suspended until a new DS record set has been provisioned, in
@@ -859,7 +863,8 @@ Table of Contents
    Shumon Huque (Document Shepherd), Libor Peltan, Josh Simpson, Johan
    Stenstam, Stefan Ubbink, Viktor Dukhovni, Hugo Salgado, Wes Hardaker,
    Mohamed Boucadair (Area Director), Meir Goldman, Thomas Fossati,
-   Peter van Dijk, Jiankang Yao, Donald Eastlake, James Gannon
+   Peter van Dijk, Jiankang Yao, Donald Eastlake, James Gannon, Roman
+   Danyliw
 
 12.  References
 
@@ -975,7 +980,7 @@ Appendix A.  Recommendations Overview
 
 A.1.  Acceptance Checks and Safety Measures
 
-   1.  Entities performing automated DS maintenance SHOULD verify:
+   1.  Entities performing automated DS maintenance MUST verify:
 
        a.  the unambiguous intent of each DS update request as per
            [I-D.ietf-dnsop-cds-consistency], by checking its consistency
@@ -1005,8 +1010,8 @@ A.1.  Acceptance Checks and Safety Measures
 A.2.  Reporting and Transparency
 
    1.  For certain DS updates (see analysis (Section 5.2)) and for DS
-       deactivation, relevant points of contact known to the zone
-       operator SHOULD be notified.
+       deactivation, relevant points of contact known to the parent-side
+       entity (registry or registrar) SHOULD be notified.
 
    2.  For error conditions, the child DNS operator and the domain's
        technical contact (if applicable) SHOULD be notified first.  The
@@ -1017,9 +1022,9 @@ A.2.  Reporting and Transparency
        query [RFC9567] to the agent domain as described in Section 4 of
        [RFC9859].  Notifications to humans (domain holder) will be
        performed in accordance with the communication preferences
-       established with the parent-side entity (registry or registrar).
-       The same condition SHOULD NOT be reported unnecessarily
-       frequently to the same recipient.
+       established with the parent-side entity.  The same condition
+       SHOULD NOT be reported unnecessarily frequently to the same
+       recipient.
 
    4.  In the RRR model, registries performing DS automation SHOULD
        inform the registrar of any DS record changes via the EPP Change
@@ -1032,17 +1037,17 @@ A.2.  Reporting and Transparency
 
 A.3.  Registration Locks
 
-   1.  To secure ongoing operations, automated DS maintenance SHOULD NOT
+   1.  To secure ongoing operations, automated DS maintenance MUST NOT
        be suspended based on a registrar update lock alone (such as EPP
        status clientUpdateProhibited [RFC5731]).
 
-   2.  When performed by the registry, automated DS maintenance SHOULD
-       NOT be suspended based on a registry update lock alone (such as
-       EPP status serverUpdateProhibited [RFC5731]).
+   2.  When performed by the registry, automated DS maintenance MUST NOT
+       be suspended based on a registry update lock alone (such as EPP
+       status serverUpdateProhibited [RFC5731]).
 
 A.4.  Multiple Submitting Parties
 
-   1.  Registries and registrars SHOULD provide another (e.g., manual)
+   1.  Registries and registrars MUST provide another (e.g., manual)
        channel for DS maintenance in order to enable recovery when the
        Child has lost access to its signing key(s).  This out-of-band
        channel is also needed when a DNS operator does not support DS
@@ -1053,7 +1058,7 @@ A.4.  Multiple Submitting Parties
        are received in-band or via an out-of-band channel.
 
    3.  When processing a CDS/CDNSKEY "delete" signal to remove the
-       entire DS record set ([RFC8078], Section 4), DS automation SHOULD
+       entire DS record set ([RFC8078], Section 4), DS automation MUST
        NOT be suspended.  For all other removal requests (such as when
        received via EPP or a web form), DS automation SHOULD be
        suspended until a new DS record set has been provisioned, in
@@ -1076,9 +1081,16 @@ Appendix B.  Change History (to be removed before publication)
 
    *  draft-ietf-dnsop-ds-automation-07
 
-   *  Editorial changes (Telechat review, James Gannon)
+      Elevate some defining features of DS automation from SHOULD to
+      MUST
 
-   *  Editorial changes (IETF LC, Donald Eastlake)
+   *  draft-ietf-dnsop-ds-automation-07
+
+      Editorial changes from proofreading
+
+      Editorial changes (Telechat review, James Gannon)
+
+      Editorial changes (IETF LC, Donald Eastlake)
 
    *  draft-ietf-dnsop-ds-automation-06
 
