@@ -194,7 +194,7 @@ Table of Contents
    The recommendations optimize interoperability and safety.  In certain
    cases, local policy may take precedence, such as when a registry is
    subjected to national cryptographic policy requirements or performs
-   out-of-band verification of DS changes with a human high-stake
+   out-of-band verification of DS changes with a human for high-stake
    domains.  However, not following any requirements designated with the
    "SHOULD" key word will generally lead to undesirable effects of
    ambiguity and interoperability issues.  When implementing these
