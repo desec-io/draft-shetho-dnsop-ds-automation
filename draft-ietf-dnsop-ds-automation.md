@@ -32,8 +32,8 @@ normative:
     author:
       org: IANA
   DS-IANA:
-    target: "http://www.iana.org/assignments/ds-rr-types"
-    title: Delegation Signer (DS) Resource Record (RR) Type Digest Algorithms
+    target: "https://www.iana.org/assignments/ds-rr-types"
+    title: DNSSEC Delegation Signer (DS) Resource Record (RR) Type Digest Algorithms
     author:
       org: IANA
 
