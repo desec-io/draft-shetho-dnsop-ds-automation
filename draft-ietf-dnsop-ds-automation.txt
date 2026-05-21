@@ -246,9 +246,9 @@ Table of Contents
        unavailable, default) TTL value at a later occasion (but not
        before the previous DS RRset's TTL has expired).
 
-   3.  DNS operators SHOULD publish both CDNSKEY and CDS records, and
-       follow best practice for the choice of hash digest type
-       [DS-IANA].
+   3.  DNS operators MUST publish both CDNSKEY and CDS records (unless
+       the parent's preference is known), and follow best practice for
+       the choice of hash digest type [DS-IANA].
 
 4.2.  Analysis
 
@@ -300,11 +300,13 @@ Table of Contents
 
    Registries therefore should significantly lower the DS RRset's TTL
    for some time following bootstrapping or an update.  Pragmatic values
-   for the reduced TTL value range between 5–15 minutes.  Such low TTLs
-   might be expected to cause increased load on the corresponding
-   authoritative nameservers; however, recent measurements have
-   demonstrated them to have negligible impact on the overall load of a
-   registry's authoritative nameserver infrastructure [LowTTL].
+   for the reduced TTL value range between 5–15 minutes.  Using values
+   below 5 minutes risks excessive queries, and using values greater
+   than 15 minutes may impact recovery from operational mistakes.
+
+   Note that recent measurements have demonstrated low TTLs like the
+   above to have negligible impact on the overall load of a registry's
+   authoritative nameserver infrastructure [LowTTL].
 
    The reduction should be in effect at least for a couple of days and
    until the previous DS record set has expired from caches, that is,
@@ -507,12 +509,16 @@ Table of Contents
 
    The registrant (or their designated party) should be able to retrieve
    the current DS configuration through the customer portal available
-   for domain management.  Ideally, the history of DS updates would also
-   be available.  However, due to the associated state requirements and
-   the lack of direct operational impact, implementation of this is
-   optional.  If supported by the registry, the DS TTL currently in
-   effect can be obtained using the RDAP TTL extension
-   [I-D.ietf-regext-rdap-ttl-extension].
+   for domain management.  Failure to provide the registrant a means to
+   inspect the current configuration after it has been changed may
+   hinder recovery from operational incidents because the registrant may
+   have out-of-date information.
+
+   Ideally, the history of DS updates would also be available.  However,
+   due to the associated state requirements and the lack of direct
+   operational impact, implementation of this is optional.  If supported
+   by the registry, the DS TTL currently in effect can be obtained using
+   the RDAP TTL extension [I-D.ietf-regext-rdap-ttl-extension].
 
    For troubleshooting, dispute resolution, and post-incident analysis,
    it is instrumental for the Parental Agent to retain structured
@@ -1017,9 +1023,9 @@ A.1.  Acceptance Checks and Safety Measures
        unavailable, default) TTL value at a later occasion (but not
        before the previous DS RRset's TTL has expired).
 
-   3.  DNS operators SHOULD publish both CDNSKEY and CDS records, and
-       follow best practice for the choice of hash digest type
-       [DS-IANA].
+   3.  DNS operators MUST publish both CDNSKEY and CDS records (unless
+       the parent's preference is known), and follow best practice for
+       the choice of hash digest type [DS-IANA].
 
 A.2.  Reporting and Transparency
 
@@ -1096,7 +1102,7 @@ Appendix B.  Change History (to be removed before publication)
 
    *  draft-ietf-dnsop-ds-automation-09
 
-      Editorial changes and two more MUSTs from IESG review
+      Editorial changes and three more MUSTs from IESG review
 
    *  draft-ietf-dnsop-ds-automation-08
 
