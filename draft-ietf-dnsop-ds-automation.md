@@ -133,7 +133,7 @@ This section provides recommendations to address the following operational quest
 1. Entities performing automated DS maintenance MUST verify:
 
     {:type="a"}
-    1. the unambiguous intent of each DS bootstrapping or update request as per {{!I-D.ietf-dnsop-cds-consistency}}, by checking its consistency both
+    1. {:#acceptance-rec1a} the unambiguous intent of each DS bootstrapping or update request as per {{!I-D.ietf-dnsop-cds-consistency}}, by checking its consistency both
 
         - between any published CDS and CDNSKEY records, and
         - across all authoritative nameservers in the delegation,
@@ -323,7 +323,7 @@ In case of a domain not yet secured with DNSSEC, automatic DS initialization is 
 Further, some domains are equipped with an update lock by default. Not honoring DNSSEC bootstrapping requests then imposes an additional burden on the registrant, who has to unlock and relock the domain in order to facilitate DS provisioning after registration. This is a needless cost especially for large domain portfolios. It is also unexpected, as the registrant already has arranged for the necessary CDS/CDNSKEY records to be published. DS initialization and rollovers therefore should be treated the same way with respect to locks.
 
 
-# Multiple Submitting Parties {#multiple}
+# Multiple Submitting Parties and Suspension of Automation {#multiple}
 
 This section provides recommendations to address the following operational questions:
 
@@ -336,7 +336,7 @@ This section provides recommendations to address the following operational quest
 
 2. DS bootstrapping and update requests MUST be executed at the next publication opportunity after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
 
-3. When processing a CDS/CDNSKEY "delete" signal to remove the entire DS record set ({{!RFC8078, Section 4}}), DS automation MUST NOT be suspended. For all other removal requests (such as when received via EPP or a web form), DS automation SHOULD be suspended until a new DS record set has been provisioned, in order to prevent accidental re-initialization when the registrant intended to disable DNSSEC.
+3. {:#multiple-rec3} When processing a CDS/CDNSKEY "delete" signal to remove the entire DS record set ({{!RFC8078, Section 4}}), DS automation MUST NOT be suspended. For all other removal requests (such as when received via EPP or a web form), DS automation SHOULD be suspended until a new DS record set has been provisioned, in order to prevent accidental re-initialization when the registrant intended to disable DNSSEC.
 
 4. Whenever a non-empty DS record set is provisioned, through whichever channel, DS automation SHOULD NOT (or no longer) be suspended (including after an earlier removal).
 
@@ -412,14 +412,19 @@ The document provides operational recommendations for DNSSEC DS automation. Ther
 
 # Security Considerations
 
-This document considers security aspects throughout, and has no separate considerations.
+The recommendations in this document are designed to improve the safety and interoperability of DNSSEC delegation maintenance. Relevant security implications and various trade-offs are explained in the analysis subsections above. This section notes additional aspects worth considering.
 
+When inconsistencies between CDS/CDNSKEY RRsets are ignored (contrary to {{acceptance-rec1a (Recommendation 4.1.1.a)}}{: format="none"}), a number of security risks result. For example, when a nameserver domain expires and is re-registered maliciously, the adversary may be able to initialize a DS RRset and subsequently redelegate the domain using CSYNC synchronization {{?RFC7477}}, resulting in a full hijack of the domain. For details, refer to {{!I-D.ietf-dnsop-cds-consistency, Appendix A}}.
+
+Similar risks of total adversarial control exist when the child's SEP key is compromised, as this key can authorize DS update or removal requests if consistently published on all nameservers. This reinforces that loss of key control poses severe risks; utmost care must be taken when managing SEP keys.
+
+When a domain is stripped of its DNSSEC protection by removing the DS RRset — either manually or using an automatic delete signal ({{multiple-rec3 (Recommendation 7.1.3)}}{: format="none"}) —, DNSSEC security guarantees and associated benefits are no longer in effect. For example, an email operator may enforce DANE for domains previously observed to support it, and as a result experience a service disruption in email delivery. Both child and parent DNS operators MUST take such service disruptions into account when considering removal of the DS RRset for their zone.
 
 # Acknowledgments
 
 The authors would like to thank the members of ICANN's Security and Stability Advisory Committee (SSAC) who wrote the {{SAC126}} report on which this document is based.
 
-Additional thanks are extended to the following individuals (in the order of their first contribution or review): Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque (Document Shepherd), Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink, Viktor Dukhovni, Hugo Salgado, Wes Hardaker, Mohamed Boucadair (responsible Area Director), Meir Goldman, Thomas Fossati, Peter van Dijk, Jiankang Yao, Donald Eastlake, James Gannon, Roman Danyliw, Andy Newton, Éric Vyncke, Mike Bishop, Mahesh Jethanandani
+Additional thanks are extended to the following individuals (in the order of their first contribution or review): Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque (Document Shepherd), Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink, Viktor Dukhovni, Hugo Salgado, Wes Hardaker, Mohamed Boucadair (responsible Area Director), Meir Goldman, Thomas Fossati, Peter van Dijk, Jiankang Yao, Donald Eastlake, James Gannon, Roman Danyliw, Andy Newton, Éric Vyncke, Mike Bishop, Mahesh Jethanandani, Deb Cooley, Charles Eckel, Christopher Inacio, Ketan Talaulikar
 
 --- back
 
@@ -465,7 +470,7 @@ For ease of review and referencing, the recommendations from this document are r
 
 2. When performed by the registry, automated DS maintenance MUST NOT be suspended based on a registry update lock alone (such as EPP status serverUpdateProhibited {{?RFC5731}}).
 
-## Multiple Submitting Parties
+## Multiple Submitting Parties and Suspension of Automation
 
 1. Registries and registrars MUST provide another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
 
@@ -481,6 +486,8 @@ For ease of review and referencing, the recommendations from this document are r
 # Change History (to be removed before publication)
 
 * draft-ietf-dnsop-ds-automation-09
+
+> Add substance to Security Considerations based on IESG review
 
 > Editorial changes and three more MUSTs from IESG review
 
