@@ -146,7 +146,7 @@ This section provides recommendations to address the following operational quest
 
 2. Parent-side entities (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when a new set of records is published, and restore the previous (or, if unavailable, default) TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).
 
-3. DNS operators SHOULD publish both CDNSKEY and CDS records, and follow best practice for the choice of hash digest type {{DS-IANA}}.
+3. DNS operators MUST publish both CDNSKEY and CDS records (unless the parent's preference is known), and follow best practice for the choice of hash digest type {{DS-IANA}}.
 
 
 ## Analysis {#analysis_acceptance}
@@ -168,7 +168,10 @@ Any failures — such as a missing DNSKEY due to improper rollover timing ({{?RF
 
 To further reduce the impact of any misconfigured DS record set — be it from automated or from manual provisioning — the option to quickly roll back the delegation's DNSSEC parameters is of great importance. This is achieved by setting a comparatively low TTL on the DS record set in the parent domain, at the cost of reduced resiliency against nameserver unreachability due to the earlier expiration of cached records. The availability risk can be mitigated by limiting such TTLs to a brief time period after a change to the DS configuration, during which rollbacks are most likely to occur.
 
-Registries therefore should significantly lower the DS RRset's TTL for some time following bootstrapping or an update. Pragmatic values for the reduced TTL value range between 5–15 minutes.  Such low TTLs might be expected to cause increased load on the corresponding authoritative nameservers; however, recent measurements have demonstrated them to have negligible impact on the overall load of a registry's authoritative nameserver infrastructure {{LowTTL}}.
+Registries therefore should significantly lower the DS RRset's TTL for some time following bootstrapping or an update. Pragmatic values for the reduced TTL value range between 5–15 minutes.
+Using values below 5 minutes risks excessive queries, and using values greater than 15 minutes may impact recovery from operational mistakes.
+
+Note that recent measurements have demonstrated low TTLs like the above to have negligible impact on the overall load of a registry's authoritative nameserver infrastructure {{LowTTL}}.
 
 The reduction should be in effect at least for a couple of days and until the previous DS record set has expired from caches, that is, the period during which the low-TTL is applied typically will significantly exceed the normal TTL value. When using the Extensible Provisioning Protocol (EPP) {{?RFC5730}}, the domain `<info>` command described in {{Section 2.1.1.2 of ?RFC9803}} can be used by the registrar to obtain the registry's TTL policy.
 
@@ -265,7 +268,10 @@ When the RRR model is used and the registry performs DS automation, the registra
 
 Overly frequent reporting of the same condition to the same recipient is discouraged (e.g., no more than twice in a row). For example, when CDS and CDNSKEY records are inconsistent and prevent DS initialization, the registrant may be notified twice. Additional notifications may be sent with some back-off mechanism (in increasing intervals).
 
-The registrant (or their designated party) should be able to retrieve the current DS configuration through the customer portal available for domain management. Ideally, the history of DS updates would also be available. However, due to the associated state requirements and the lack of direct operational impact, implementation of this is optional.
+The registrant (or their designated party) should be able to retrieve the current DS configuration through the customer portal available for domain management.
+Failure to provide the registrant a means to inspect the current configuration after it has been changed may hinder recovery from operational incidents because the registrant may have out-of-date information.
+
+Ideally, the history of DS updates would also be available. However, due to the associated state requirements and the lack of direct operational impact, implementation of this is optional.
 If supported by the registry, the DS TTL currently in effect can be obtained using the RDAP TTL extension {{?I-D.ietf-regext-rdap-ttl-extension}}.
 
 For troubleshooting, dispute resolution, and post-incident analysis, it is instrumental for the Parental Agent to retain structured records of DS automation decisions, including timestamp, triggering CDS/CDNSKEY RRsets, notification channel, authoritative nameservers consulted, verification results, decision outcome, and the applied DS RRset or cancellation reason.
@@ -439,7 +445,7 @@ For ease of review and referencing, the recommendations from this document are r
 
 2. Parent-side entities (such as registries) SHOULD reduce a DS record set's TTL to a value between 5–15 minutes when a new set of records is published, and restore the previous (or, if unavailable, default) TTL value at a later occasion (but not before the previous DS RRset's TTL has expired).
 
-3. DNS operators SHOULD publish both CDNSKEY and CDS records, and follow best practice for the choice of hash digest type {{DS-IANA}}.
+3. DNS operators MUST publish both CDNSKEY and CDS records (unless the parent's preference is known), and follow best practice for the choice of hash digest type {{DS-IANA}}.
 
 ## Reporting and Transparency
 
@@ -476,7 +482,7 @@ For ease of review and referencing, the recommendations from this document are r
 
 * draft-ietf-dnsop-ds-automation-09
 
-> Editorial changes and two more MUSTs from IESG review
+> Editorial changes and three more MUSTs from IESG review
 
 * draft-ietf-dnsop-ds-automation-08
 
