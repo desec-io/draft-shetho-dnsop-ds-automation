@@ -5,8 +5,8 @@
 DNSOP Working Group                                             S. Sheng
 Internet-Draft                                                          
 Intended status: Best Current Practice                      P. Thomassen
-Expires: 21 November 2026                                          deSEC
-                                                             20 May 2026
+Expires: 22 November 2026                                          deSEC
+                                                             21 May 2026
 
 
 Operational Recommendations for DNSSEC Delegation Signer (DS) Automation
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 November 2026.
+   This Internet-Draft will expire on 22 November 2026.
 
 Copyright Notice
 
@@ -880,9 +880,9 @@ Table of Contents
               <https://www.iana.org/assignments/dns-sec-alg-numbers/dns-
               sec-alg-numbers.xml#dns-sec-alg-numbers-1>.
 
-   [DS-IANA]  IANA, "Delegation Signer (DS) Resource Record (RR) Type
-              Digest Algorithms", n.d.,
-              <http://www.iana.org/assignments/ds-rr-types>.
+   [DS-IANA]  IANA, "DNSSEC Delegation Signer (DS) Resource Record (RR)
+              Type Digest Algorithms", n.d.,
+              <https://www.iana.org/assignments/ds-rr-types>.
 
    [I-D.ietf-dnsop-cds-consistency]
               Thomassen, P., "Clarifications on CDS/CDNSKEY and CSYNC
@@ -945,9 +945,9 @@ Table of Contents
    [I-D.ietf-regext-rdap-ttl-extension]
               Brown, G., "RDAP Extension for DNS Time-To-Live (TTL
               Values)", Work in Progress, Internet-Draft, draft-ietf-
-              regext-rdap-ttl-extension-10, 14 May 2026,
+              regext-rdap-ttl-extension-11, 21 May 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-regext-
-              rdap-ttl-extension-10>.
+              rdap-ttl-extension-11>.
 
    [LowTTL]   Špaček, P., "DS and DNSKEY low TTL experiments", at DNS
               OARC 41, 6 September 2023, <https://indico.dns-
