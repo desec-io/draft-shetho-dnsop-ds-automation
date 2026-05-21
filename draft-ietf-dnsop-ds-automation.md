@@ -133,7 +133,7 @@ This section provides recommendations to address the following operational quest
 1. Entities performing automated DS maintenance MUST verify:
 
     {:type="a"}
-    1. the unambiguous intent of each DS update request as per {{!I-D.ietf-dnsop-cds-consistency}}, by checking its consistency both
+    1. the unambiguous intent of each DS bootstrapping or update request as per {{!I-D.ietf-dnsop-cds-consistency}}, by checking its consistency both
 
         - between any published CDS and CDNSKEY records, and
         - across all authoritative nameservers in the delegation,
@@ -304,11 +304,11 @@ DS automation by the registry further is consistent with {{Section 2.3 of ?RFC57
 
 Pre-DNSSEC, it was possible for a registration to be set up once, then locked and left alone (no maintenance required). With DNSSEC comes a change to this operational model: the configuration may have to be maintained in order to remain secure and operational. For example, the Child DNS operator may switch to another signing algorithm if the previous one is no longer deemed appropriate, or roll its Secure Entry Point (SEP) key for other reasons. Such changes entail updating the delegation's DS records.
 
-If authenticated, these operations do not qualify as accidental or malicious change, but as legitimate and normal activity for securing ongoing operation. The CDS/CDNSKEY method provides an automatic, authenticated means to convey DS update requests. The resulting DS update is subject to the parent's acceptance checks; in particular, it is not applied when it would break the delegation (see {{acceptance}}).
+If authenticated, these operations do not qualify as accidental or malicious change, but as legitimate and normal activity for securing ongoing operation. The CDS/CDNSKEY method provides an automatic, authenticated means to convey DS bootstrapping and update requests {{!RFC9615}}{{!RFC7344}}. The resulting operation is subject to the parent's acceptance checks; in particular, it is not applied when it would break the delegation (see {{acceptance}}).
 
-Given that registrar locks protect against unintended changes (such as through the customer portal) while not preventing actions done by the registrar (or the registry) themself, such a lock is not suitable for defending against actions performed illegitimately by the registrar or registry (e.g., due to compromise). Any attack on the registration data that is feasible in the presence of a registrar lock is also feasible regardless of whether DS maintenance is done automatically; in other words, DS automation is orthogonal to the attack vector that a registrar lock protects against.
+Given that registrar locks protect against unintended changes (such as through the customer portal) while not preventing actions done by the registrar (or the registry) itself, such a lock is not suitable for defending against actions performed illegitimately by the registrar or registry (e.g., due to compromise). Any attack on the registration data that is feasible in the presence of a registrar lock is also feasible regardless of whether DS maintenance is done automatically; in other words, DS automation is orthogonal to the attack vector that a registrar lock protects against.
 
-Considering that automated DS updates are required to be authenticated and validated for correctness, it thus appears that honoring such requests, while in the registrant's interest, comes with no additional associated risk. Suspending automated DS maintenance therefore does not seem justified.
+Considering that automated DS bootstrapping and update requests are required to be authenticated and validated for correctness, it thus appears that honoring such requests, while in the registrant's interest, comes with no additional associated risk. Suspending automated DS maintenance therefore does not seem justified.
 
 Following this line of thought, at the time of document writing some registries (e.g., .ch/.cz/.li) perform automated DS maintenance even when an "update lock" is in place. Registries offering proprietary locks should carefully consider for each lock whether its scope warrants suspension.
 
@@ -322,13 +322,13 @@ Further, some domains are equipped with an update lock by default. Not honoring 
 This section provides recommendations to address the following operational questions:
 
 - How are conflicts resolved when DS parameters are accepted through multiple channels (e.g., via a conventional channel and via automation)?
-- In case both the registry and the registrar are automating DS updates, how to resolve potential collisions?
+- In case both the registry and the registrar are automating DS provisioning, how to resolve potential collisions?
 
 ## Recommendations
 
 1. Registries and registrars MUST provide another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
 
-2. DS update requests MUST be executed at the next publication opportunity after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
+2. DS bootstrapping and update requests MUST be executed at the next publication opportunity after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
 
 3. When processing a CDS/CDNSKEY "delete" signal to remove the entire DS record set ({{!RFC8078, Section 4}}), DS automation MUST NOT be suspended. For all other removal requests (such as when received via EPP or a web form), DS automation SHOULD be suspended until a new DS record set has been provisioned, in order to prevent accidental re-initialization when the registrant intended to disable DNSSEC.
 
@@ -340,7 +340,7 @@ This section provides recommendations to address the following operational quest
 
 In the RRR model, there are multiple channels through which DS parameters can be accepted:
 
-- The registry can retrieve information about an intended DS update automatically from the Child DNS operator and apply the update directly;
+- The registry can retrieve information about an intended DS provisioning request automatically from the Child DNS operator and apply the it directly;
 
 - The registrar can retrieve the same and relay it to the registry;
 
@@ -383,7 +383,7 @@ All in all:
 
 - It is advisable to generally not suspend in-band DS automation when an out-of-band DS update has occurred.
 
-- An exception from this rule is when the entire DS record set was removed through an out-of-band request, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.
+- An exception to this rule is when the entire DS record set was removed through an out-of-band request, in which case the registrant likely wants to disable DNSSEC for the domain. DS automation should then be suspended so that automatic re-initialization (bootstrapping) does not occur.
 
 - In all other cases, any properly authenticated DS updates received, including through an automated method, are to be considered as the current intent of the domain holder.
 
@@ -413,7 +413,7 @@ This document considers security aspects throughout, and has no separate conside
 
 The authors would like to thank the members of ICANN's Security and Stability Advisory Committee (SSAC) who wrote the {{SAC126}} report on which this document is based.
 
-Additional thanks are extended to the following individuals (in the order of their first contribution or review): Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque (Document Shepherd), Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink, Viktor Dukhovni, Hugo Salgado, Wes Hardaker, Mohamed Boucadair (Area Director), Meir Goldman, Thomas Fossati, Peter van Dijk, Jiankang Yao, Donald Eastlake, James Gannon, Roman Danyliw, Andy Newton, Éric Vyncke
+Additional thanks are extended to the following individuals (in the order of their first contribution or review): Barbara Jantzen, Matt Pounsett, Matthijs Mekking, Ondřej Caletka, Oli Schacher, Kim Davies, Jim Reid, Q Misell, Scott Hollenbeck, Tamás Csillag, Philip Homburg, Shumon Huque (Document Shepherd), Libor Peltan, Josh Simpson, Johan Stenstam, Stefan Ubbink, Viktor Dukhovni, Hugo Salgado, Wes Hardaker, Mohamed Boucadair (responsible Area Director), Meir Goldman, Thomas Fossati, Peter van Dijk, Jiankang Yao, Donald Eastlake, James Gannon, Roman Danyliw, Andy Newton, Éric Vyncke, Mike Bishop, Mahesh Jethanandani
 
 --- back
 
@@ -426,7 +426,7 @@ For ease of review and referencing, the recommendations from this document are r
 1. Entities performing automated DS maintenance MUST verify:
 
     {:type="a"}
-    1. the unambiguous intent of each DS update request as per {{!I-D.ietf-dnsop-cds-consistency}}, by checking its consistency both
+    1. the unambiguous intent of each DS bootstrapping or update request as per {{!I-D.ietf-dnsop-cds-consistency}}, by checking its consistency both
 
         - between any published CDS and CDNSKEY records, and
         - across all authoritative nameservers in the delegation,
@@ -463,7 +463,7 @@ For ease of review and referencing, the recommendations from this document are r
 
 1. Registries and registrars MUST provide another (e.g., manual) channel for DS maintenance in order to enable recovery when the Child has lost access to its signing key(s). This out-of-band channel is also needed when a DNS operator does not support DS automation or refuses to cooperate.
 
-2. DS update requests MUST be executed at the next publication opportunity after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
+2. DS bootstrapping and update requests MUST be executed at the next publication opportunity after verification of their authenticity, regardless of whether they are received in-band or via an out-of-band channel.
 
 3. When processing a CDS/CDNSKEY "delete" signal to remove the entire DS record set ({{!RFC8078, Section 4}}), DS automation MUST NOT be suspended. For all other removal requests (such as when received via EPP or a web form), DS automation SHOULD be suspended until a new DS record set has been provisioned, in order to prevent accidental re-initialization when the registrant intended to disable DNSSEC.
 
