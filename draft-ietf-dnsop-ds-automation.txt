@@ -84,7 +84,7 @@ Table of Contents
      6.2.  Analysis
        6.2.1.  Registrar vs. Registry Lock
        6.2.2.  Detailed Rationale
-   7.  Multiple Submitting Parties
+   7.  Multiple Submitting Parties and Suspension of Automation
      7.1.  Recommendations
      7.2.  Analysis
        7.2.1.  Necessity of Non-automatic Updates
@@ -102,7 +102,7 @@ Table of Contents
      A.1.  Acceptance Checks and Safety Measures
      A.2.  Reporting and Transparency
      A.3.  Registration Locks
-     A.4.  Multiple Submitting Parties
+     A.4.  Multiple Submitting Parties and Suspension of Automation
    Appendix B.  Change History (to be removed before publication)
    Authors' Addresses
 
@@ -648,7 +648,7 @@ Table of Contents
    CDS/CDNSKEY records to be published.  DS initialization and rollovers
    therefore should be treated the same way with respect to locks.
 
-7.  Multiple Submitting Parties
+7.  Multiple Submitting Parties and Suspension of Automation
 
    This section provides recommendations to address the following
    operational questions:
@@ -859,8 +859,34 @@ Table of Contents
 
 10.  Security Considerations
 
-   This document considers security aspects throughout, and has no
-   separate considerations.
+   The recommendations in this document are designed to improve the
+   safety and interoperability of DNSSEC delegation maintenance.
+   Relevant security implications and various trade-offs are explained
+   in the analysis subsections above.  This section notes additional
+   aspects worth considering.
+
+   When inconsistencies between CDS/CDNSKEY RRsets are ignored (contrary
+   to Recommendation 4.1.1.a), a number of security risks result.  For
+   example, when a nameserver domain expires and is re-registered
+   maliciously, the adversary may be able to initialize a DS RRset and
+   subsequently redelegate the domain using CSYNC synchronization
+   [RFC7477], resulting in a full hijack of the domain.  For details,
+   refer to [I-D.ietf-dnsop-cds-consistency], Appendix A.
+
+   Similar risks of total adversarial control exist when the child's SEP
+   key is compromised, as this key can authorize DS update or removal
+   requests if consistently published on all nameservers.  This
+   reinforces that loss of key control poses severe risks; utmost care
+   must be taken when managing SEP keys.
+
+   When a domain is stripped of its DNSSEC protection by removing the DS
+   RRset — either manually or using an automatic delete signal
+   (Recommendation 7.1.3) —, DNSSEC security guarantees and associated
+   benefits are no longer in effect.  For example, an email operator may
+   enforce DANE for domains previously observed to support it, and as a
+   result experience a service disruption in email delivery.  Both child
+   and parent DNS operators MUST take such service disruptions into
+   account when considering removal of the DS RRset for their zone.
 
 11.  Acknowledgments
 
@@ -877,7 +903,8 @@ Table of Contents
    Mohamed Boucadair (responsible Area Director), Meir Goldman, Thomas
    Fossati, Peter van Dijk, Jiankang Yao, Donald Eastlake, James Gannon,
    Roman Danyliw, Andy Newton, Éric Vyncke, Mike Bishop, Mahesh
-   Jethanandani
+   Jethanandani, Deb Cooley, Charles Eckel, Christopher Inacio, Ketan
+   Talaulikar
 
 12.  References
 
@@ -981,6 +1008,10 @@ Table of Contents
               DOI 10.17487/RFC6840, February 2013,
               <https://www.rfc-editor.org/rfc/rfc6840>.
 
+   [RFC7477]  Hardaker, W., "Child-to-Parent Synchronization in DNS",
+              RFC 7477, DOI 10.17487/RFC7477, March 2015,
+              <https://www.rfc-editor.org/rfc/rfc7477>.
+
    [RFC9803]  Brown, G., "Extensible Provisioning Protocol (EPP) Mapping
               for DNS Time-to-Live (TTL) Values", RFC 9803,
               DOI 10.17487/RFC9803, June 2025,
@@ -1065,7 +1096,7 @@ A.3.  Registration Locks
        be suspended based on a registry update lock alone (such as EPP
        status serverUpdateProhibited [RFC5731]).
 
-A.4.  Multiple Submitting Parties
+A.4.  Multiple Submitting Parties and Suspension of Automation
 
    1.  Registries and registrars MUST provide another (e.g., manual)
        channel for DS maintenance in order to enable recovery when the
@@ -1101,6 +1132,8 @@ A.4.  Multiple Submitting Parties
 Appendix B.  Change History (to be removed before publication)
 
    *  draft-ietf-dnsop-ds-automation-09
+
+      Add substance to Security Considerations based on IESG review
 
       Editorial changes and three more MUSTs from IESG review
 
