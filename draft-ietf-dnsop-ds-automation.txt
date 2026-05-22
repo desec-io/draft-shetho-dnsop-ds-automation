@@ -5,8 +5,8 @@
 DNSOP Working Group                                             S. Sheng
 Internet-Draft                                                          
 Intended status: Best Current Practice                      P. Thomassen
-Expires: 22 November 2026                                          deSEC
-                                                             21 May 2026
+Expires: 23 November 2026                                          deSEC
+                                                             22 May 2026
 
 
 Operational Recommendations for DNSSEC Delegation Signer (DS) Automation
@@ -48,7 +48,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 November 2026.
+   This Internet-Draft will expire on 23 November 2026.
 
 Copyright Notice
 
@@ -193,13 +193,11 @@ Table of Contents
 
    The recommendations optimize interoperability and safety.  In certain
    cases, local policy may take precedence, such as when a registry is
-   subjected to national cryptographic policy requirements or performs
-   out-of-band verification of DS changes with a human for high-stake
-   domains.  However, not following any requirements designated with the
-   "SHOULD" key word will generally lead to undesirable effects of
-   ambiguity and interoperability issues.  When implementing these
-   recommendations, operators MUST mitigate issues arising from any
-   particular deviation.
+   subjected to national cryptographic policy requirements.  However,
+   not following any requirements designated with the "SHOULD" key word
+   will generally lead to undesirable effects of ambiguity and
+   interoperability issues.  When implementing these recommendations,
+   operators MUST mitigate issues arising from any particular deviation.
 
    Registries with additional requirements on DS update checks MAY
    implement any additional checks in line with local policy.
@@ -254,9 +252,9 @@ Table of Contents
 
 4.2.1.  Continuity of Resolution
 
-   To maintain the basic resolution function, it is important to avoid
-   the deployment of flawed DS record sets in the parent zone.  It is
-   therefore desirable for the Parent to verify that the DS record set
+   To maintain the basic resolution function, it is critical to avoid
+   deployment of flawed DS record sets in the parent zone.  It is
+   therefore necessary for the Parent to verify that the DS record set
    resulting from an automated (or even manual) update does not break
    DNSSEC validation if deployed, and otherwise cancel the update.
 
@@ -353,10 +351,10 @@ Table of Contents
    choice about which format(s) to accept.
 
    As there exists no protocol for Child DNS operators to discover a
-   Parent's input format preference, it is best for interoperability to
-   publish both CDNSKEY as well as CDS records, in line with Section 5
-   of [RFC7344].  The choice of hash digest type should follow current
-   best practice [DS-IANA].
+   Parent's input format preference, interoperability requires
+   publication of both CDNSKEY as well as CDS records, in line with
+   Section 5 of [RFC7344].  The choice of hash digest type should follow
+   current best practice [DS-IANA].
 
    Publishing the same information in two different formats is not
    ideal.  Still, it is much less complex and costly than burdening the
@@ -570,8 +568,8 @@ Table of Contents
    Under such a security model, no tangible security benefit is gained
    by preventing automated DS maintenance based on a registrar lock
    alone, while preventing it would make maintenance needlessly
-   difficult.  It therefore seems reasonable not to suspend automation
-   when such a lock is present.
+   difficult.  It is therefore not justified to suspend automation when
+   such a lock is present.
 
    When a registry-side update lock is in place, the registrar cannot
    apply any changes (for security or delinquency or other reasons).
@@ -580,7 +578,7 @@ Table of Contents
    status, which demands only that the registrar's "[r]equests to update
    the object [...] MUST be rejected" (Section 2.3 of [RFC5731]).  This
    type of lock therefore precludes DS automation by the registrar,
-   while registry-side automation may continue.
+   while registry-side automation remains unaffected.
 
    DS automation by the registry further is consistent with Section 2.3
    of [RFC5731], which explicitly notes that an EPP server (registry)
@@ -620,10 +618,11 @@ Table of Contents
    attack vector that a registrar lock protects against.
 
    Considering that automated DS bootstrapping and update requests are
-   required to be authenticated and validated for correctness, it thus
-   appears that honoring such requests, while in the registrant's
-   interest, comes with no additional associated risk.  Suspending
-   automated DS maintenance therefore does not seem justified.
+   required to be authenticated and validated for correctness, honoring
+   such requests — while in the registrant's interest — comes with no
+   additional associated risk when compared to other authenticated
+   update methods.  Suspending automated DS maintenance therefore is not
+   justified.
 
    Following this line of thought, at the time of document writing some
    registries (e.g., .ch/.cz/.li) perform automated DS maintenance even
@@ -719,14 +718,15 @@ Table of Contents
    key rollover is impossible as the Child DNS operator can no longer
    authenticate the associated information.  Another example is when
    several providers are involved, but one no longer cooperates (e.g.,
-   when removing a provider from a multi-provider setup).  Disabling
-   manual DS management interfaces is therefore strongly discouraged.
+   when removing a provider from a multi-provider setup).  Disabling all
+   other DS management interfaces therefore poses significant
+   operational risk.
 
-   Similarly, when the registrar is known to not support DNSSEC (or to
-   lack a DS provisioning interface), it seems adequate for registries
-   to not perform automated DS maintenance, in order to prevent
-   situations in which a misconfigured delegation cannot be repaired by
-   the registrant.
+   Similarly, when the registrar is known to not support DNSSEC
+   (especially, to not provide a means to remove a DS RRset), registries
+   are cautioned against automatically initializing DS records, in order
+   to prevent situations in which a misconfigured or undesired DS RRset
+   cannot be repaired by the registrant.
 
 7.2.2.  Impact of Non-automatic Updates: When to Suspend Automation
 
@@ -756,8 +756,8 @@ Table of Contents
    Removal of a DS record set is triggered either through a CDS/CDNSKEY
    "delete" signal observed by the party performing the automation
    ([RFC8078], Section 4), or by receiving a removal request out-of-band
-   (e.g., via EPP or a web form).  In the first case, it is useful to
-   keep automation active for the delegation in question, to facilitate
+   (e.g., via EPP or a web form).  In the first case, the registrant can
+   expect automation to be kept active for the delegation to facilitate
    later DS bootstrapping.  In the second case, it is likely that the
    registrant intends to disable DNSSEC for the domain, and DS
    automation is best suspended (until a new DS record is provisioned
@@ -871,7 +871,7 @@ Table of Contents
    maliciously, the adversary may be able to initialize a DS RRset and
    subsequently redelegate the domain using CSYNC synchronization
    [RFC7477], resulting in a full hijack of the domain.  For details,
-   refer to [I-D.ietf-dnsop-cds-consistency], Appendix A.
+   refer to Appendix A of [I-D.ietf-dnsop-cds-consistency].
 
    Similar risks of total adversarial control exist when the child's SEP
    key is compromised, as this key can authorize DS update or removal
@@ -883,10 +883,11 @@ Table of Contents
    RRset — either manually or using an automatic delete signal
    (Recommendation 7.1.3) —, DNSSEC security guarantees and associated
    benefits are no longer in effect.  For example, an email operator may
-   enforce DANE for domains previously observed to support it, and as a
-   result experience a service disruption in email delivery.  Both child
-   and parent DNS operators MUST take such service disruptions into
-   account when considering removal of the DS RRset for their zone.
+   enforce DANE [RFC7672] for domains previously observed to support it,
+   and as a result experience a service disruption in email delivery.
+   Both child and parent DNS operators MUST take such service
+   disruptions into account when considering removal of the DS RRset for
+   their zone.
 
 11.  Acknowledgments
 
@@ -1011,6 +1012,12 @@ Table of Contents
    [RFC7477]  Hardaker, W., "Child-to-Parent Synchronization in DNS",
               RFC 7477, DOI 10.17487/RFC7477, March 2015,
               <https://www.rfc-editor.org/rfc/rfc7477>.
+
+   [RFC7672]  Dukhovni, V. and W. Hardaker, "SMTP Security via
+              Opportunistic DNS-Based Authentication of Named Entities
+              (DANE) Transport Layer Security (TLS)", RFC 7672,
+              DOI 10.17487/RFC7672, October 2015,
+              <https://www.rfc-editor.org/rfc/rfc7672>.
 
    [RFC9803]  Brown, G., "Extensible Provisioning Protocol (EPP) Mapping
               for DNS Time-to-Live (TTL) Values", RFC 9803,
