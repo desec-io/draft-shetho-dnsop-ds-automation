@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-17T03:45:53.632042+00:00",
+  "timestamp": "2026-05-24T03:56:04.266539+00:00",
   "repo": "desec-io/draft-ietf-dnsop-ds-automation",
   "labels": [
     {
@@ -584,6 +584,34 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDONCQOHM7d4Dhq",
+      "title": "Update URL and title to match the IANA registry",
+      "url": "https://github.com/desec-io/draft-ietf-dnsop-ds-automation/pull/11",
+      "state": "MERGED",
+      "author": "boucadair",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-05-21T09:35:27Z",
+      "updatedAt": "2026-05-21T11:45:00Z",
+      "baseRepository": "desec-io/draft-ietf-dnsop-ds-automation",
+      "baseRefName": "main",
+      "baseRefOid": "fe21c692f0e8c72840cf0514099a0bbcac869b67",
+      "headRepository": "desec-io/draft-ietf-dnsop-ds-automation",
+      "headRefName": "boucadair-patch-1",
+      "headRefOid": "c808c7b3c6a6cc89947e82f1e0d46bb0e66cdf50",
+      "closedAt": "2026-05-21T11:44:56Z",
+      "mergedAt": "2026-05-21T11:44:56Z",
+      "mergedBy": "peterthomassen",
+      "mergeCommit": {
+        "oid": "1267d8b1129b8a1e5649cc0c0c883909e2330fd4"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
